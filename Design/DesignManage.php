@@ -210,7 +210,7 @@ if(isset($_POST['Save&Submit']))
                 if($JobNo=='NULL')  $UpdateStatus = "UPDATE carton SET CTNStatus='DConfirm' where CTNId=?";
                 else $UpdateStatus = "UPDATE carton SET CTNStatus='Archive' where CTNId=?";
                 $UpdateStatus1=$Controller->QueryData($UpdateStatus ,  [$CTNId] ); 
-                $UpdateDesignInfo=$Controller->QueryData("UPDATE  designinfo SET DesignStatus = ?,CompleteTime=CURRENT_TIMESTAMP  WHERE CaId = ? " ,   [$DesignStatus , $FileName , $DesignCode , $CTNId] ); 
+                $UpdateDesignInfo=$Controller->QueryData("UPDATE  designinfo SET DesignStatus = ?,CompleteTime=CURRENT_TIMESTAMP  WHERE CaId = ? " ,   [$DesignStatus  , $CTNId] ); 
 
                 $CartonComment = $Controller->QueryData("INSERT INTO cartoncomment (EmpId1,EmpComment,CartonId1, ComDepartment) VALUES ( ?, ?, ?, 'Design')" ,   [$_SESSION['EId'] , $Comment , $CTNId ] ); 
 

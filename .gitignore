@@ -1,0 +1,6 @@
+# ignore the following directories and files
+Assets/
+Converter/
+Public/
+Storage/
+.htaccess
