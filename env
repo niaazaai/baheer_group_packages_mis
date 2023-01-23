@@ -1,0 +1,22 @@
+<?php 
+return [
+
+    'APP_NAME' => 'BGIS' , 
+    'APP_KEY' => '' , 
+    'APP_DEBUG' => 'true' , 
+    'APP_URL' => 'http://localhost' , 
+
+
+
+    'DB_CONNECTION' => 'mysql' , 
+    'DB_HOST' => 'localhost' , 
+    'DB_PORT' => '3306' , 
+    'DB_DATABASE' => 'baheer' , 
+    'DB_USERNAME' => 'root' , 
+    'DB_PASSWORD' => '' , 
+
+    # define('' , '') , 
+]; 
+
+
+
