@@ -26,7 +26,6 @@
 <div class="card m-3 shadow ">
     <div class="card-body">
         <table class="table " id="JobTable">
-      
             <thead>
                 <tr class="table-info">
                     <th title="Job No">Job No</th>
@@ -41,54 +40,49 @@
                 </tr>
             </thead>
             <tbody>
-           
-<?php   if($rentouts->num_rows > 0 ){  ?>
-    <?php while ($rent = $rentouts->fetch_assoc()) { ?>
-
-        <tr>
-            <td><?= $rent['JobNo'] ?></td>
-            <td><?= $rent['ProductName'] ?></td>
-            <td>
-                <ul>
-                    <?php 
-                        $string = $rent['employee_id'];
-                        $array = explode(',', $string);  
-                        foreach($array as $value)  
-                        {
-                            $ename = $Controller->QueryData("SELECT Ename FROM employeet WHERE EId = ?" , [$value])->fetch_assoc()['Ename'];
-                            echo '<li>'; 
-                            echo $ename; 
-                            echo '</li>'; 
-                        }
-                    ?>
-                </ul>
-            </td>
-
-            <td>
-                <ul>
-                    <?php 
-                        $string = $rent['machine_id'];
-                        $array = explode(',', $string);  
-                        foreach($array as $value)  
-                        {
-                            $mn = $Controller->QueryData("SELECT machine_name FROM machine WHERE machine_id = ? AND machine_type='Manual' " , [$value])->fetch_assoc()['machine_name'];
-                            echo '<li>'; 
-                            echo $mn; 
-                            echo '</li>'; 
-                        }
-                    ?>
-                </ul>
-            </td>
-
-            <td><?= $rent['rentout_amount'];  ?></td>
-            <td><?= $rent['rent_date'];  ?></td>
-            <td><?= $rent['start_time'] ?></td>
-            <td><?= $rent['end_time'] ?></td>
-            <td><?= $rent['rent_type'] ?></td>
-        </tr>
-    <?php } // END OF NUMROWS FIRST LOOP  ?>
- <?php } // END OF NUMROWS FIRST LOOP  ?>
-
+                <?php if($rentouts->num_rows > 0 ){  ?>
+                    <?php while ($rent = $rentouts->fetch_assoc()) { ?>
+                        <tr>
+                            <td><?= $rent['JobNo'] ?></td>
+                            <td><?= $rent['ProductName'] ?></td>
+                            <td>
+                                <ul>
+                                    <?php 
+                                        $string = $rent['employee_id'];
+                                        $array = explode(',', $string);  
+                                        foreach($array as $value)  
+                                        {
+                                            $ename = $Controller->QueryData("SELECT Ename FROM employeet WHERE EId = ?" , [$value])->fetch_assoc()['Ename'];
+                                            echo '<li>'; 
+                                            echo $ename; 
+                                            echo '</li>'; 
+                                        }
+                                    ?>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <?php 
+                                        $string = $rent['machine_id'];
+                                        $array = explode(',', $string);  
+                                        foreach($array as $value)  
+                                        {
+                                            $mn = $Controller->QueryData("SELECT machine_name FROM machine WHERE machine_id = ? AND machine_type='Manual' " , [$value])->fetch_assoc()['machine_name'];
+                                            echo '<li>'; 
+                                            echo $mn; 
+                                            echo '</li>'; 
+                                        }
+                                    ?>
+                                </ul>
+                            </td>
+                            <td><?= $rent['rentout_amount'];  ?></td>
+                            <td><?= $rent['rent_date'];  ?></td>
+                            <td><?= $rent['start_time'] ?></td>
+                            <td><?= $rent['end_time'] ?></td>
+                            <td><?= $rent['rent_type'] ?></td>
+                        </tr>
+                    <?php } // END OF NUMROWS FIRST LOOP  ?>
+                <?php } // END OF NUMROWS FIRST LOOP  ?>
             </tbody>
         </table>
     </div>

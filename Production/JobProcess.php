@@ -5,14 +5,10 @@
     require '../Assets/Carbon/autoload.php'; 
     use Carbon\Carbon;
 
-
     function GenerateDate($date){
         $a =  Carbon::createFromTimeStamp(strtotime($date),'Asia/Kabul')->diffForHumans();
         return  "<span class = 'badge bg-dark' style = 'font-size:11px;' >{$a}</span>";
     }
-     
-            
-     
 
     if(isset($_REQUEST['machine_id']) && !empty(trim($_REQUEST['machine_id'])) && isset($_REQUEST['CYCLE_ID']) && !empty(trim($_REQUEST['CYCLE_ID']))){
  
@@ -184,9 +180,6 @@
     else {
         header('Location:MachineOpreatorList.php');
     }
-
-    
-
 ?> 
 
 <style>
@@ -202,8 +195,6 @@
         font-family: 'seven-segment'; /*a name to be used later*/
         src: url('../Public/Font/Seven Segment.ttf'); /*URL to font*/
     }
-
-
 </style>
 
     <?php 
@@ -302,7 +293,6 @@
 
     </div>
 </div>
-
 
 <div class="card m-3 shadow">
     <div class="card-body">
@@ -947,7 +937,6 @@
         </tbody>
     </table>
 
-
     <table class="table table-bordered custom-font " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
@@ -1040,57 +1029,11 @@
 </div><!-- end of card  -->
 <?php } //  end of Glue Folder ?>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php $show_double_input = false ; if(isset($CTN_DATA[1]))  $show_double_input = true;   ?>
 
 <!-- Modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog <?=($show_double_input) ? 'modal-lg': '' ; ?>">
     <div class="modal-content <?=($show_double_input) ? 'modal-lg': '' ; ?>  ">
       <div class="modal-header">
         <strong class="modal-title text-end" id="exampleModalLabel">  فورم تولید کارتن و ضایعات  </strong>
@@ -1109,16 +1052,12 @@
                 <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[1]['CTNId']?>">
                 <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[1]['cycle_id']?>">
             <?php endif;  ?>
-            
-          
-                 
-            
                     
             <div class="row mb-3">
                 <div class = "<?=($show_double_input) ? 'col-lg-6': 'col-lg-12' ; ?> col-sm-12 text-center ">
                     <div><?=$CTN_DATA[0]['ProductName'];?></div>
                 </div>
-                <div class="col-lg-6 col-sm-12">
+                <div class="col-lg-6 col-sm-12 text-center">
                     <div><?=isset($CTN_DATA[1]['ProductName']) ? $CTN_DATA[1]['ProductName'] : '';?></div>
                 </div>
             </div>
@@ -1126,14 +1065,14 @@
             <div class="row">
                 <div class="<?=($show_double_input) ? 'col-lg-6': 'col-lg-12' ; ?> col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "<?= $machine_['produced_qty'];?>" placeholder="تعداد تولید" aria-label="produced_qty">
+                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
                         <label for="floatingInput">تعداد تولید</label>
                     </div>
                 </div>
                 <?php if(isset($CTN_DATA[1])): ?>
                 <div class="col-lg-6 col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "<?= $machine_['produced_qty'];?>" placeholder="تعداد تولید" aria-label="produced_qty">
+                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
                         <label for="floatingInput">تعداد تولید</label>
                     </div>
                 </div>
@@ -1143,14 +1082,14 @@
             <div class="row">
                 <div class="<?=($show_double_input) ? 'col-lg-6': 'col-lg-12' ; ?> col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = "<?= $machine_['wast_qty'];?>"  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = ">"  placeholder="تعداد ضایعات" aria-label="produced_qty">
                         <label for="floatingInput"> تعداد ضایعات </label>
                     </div>
                 </div>
                 <?php if(isset($CTN_DATA[1])): ?>
                 <div class="col-lg-6 col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = "<?= $machine_['wast_qty'];?>"  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = ""  placeholder="تعداد ضایعات" aria-label="produced_qty">
                         <label for="floatingInput"> تعداد ضایعات </label>
                     </div>
                 </div>
@@ -1203,7 +1142,6 @@
         }, 1000) 
     }
 
-
     function SetStatus(status){
         let stat = document.getElementById('status');
         stat.value = status; 
@@ -1211,7 +1149,6 @@
         else return ; 
     }
 </script>
-
 
 <script src = "../Public/Js/popper.min.js" ></script>
 <?php  require_once '../App/partials/Footer.inc'; ?>

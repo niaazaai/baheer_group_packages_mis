@@ -489,10 +489,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         </tbody>
     </table>
     </form>
-
- 
-     
-
   
 <!--    
     <div class="row mb-5   mt-2" >
@@ -500,9 +496,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
             <textarea name="comment" id="" cols="20" rows="2" class = "form-control" ></textarea>
         </div>
     </div> -->
- 
-
-
 
     <table class="table table-bordered " >
         <thead style = "border-bottom:2px solid black;">

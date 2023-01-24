@@ -1,7 +1,6 @@
- 
-
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';?>
 <?php 
+    require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
+ 
     $NewJob='SELECT DISTINCT COUNT(CTNId) AS Jobs  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo 
            ON designinfo.CaId=carton.CTNId  where CTNStatus="FConfirm"  order by CTNOrderDate DESC';
     $DataRows=$Controller->QueryData($NewJob,[]);
@@ -30,42 +29,29 @@
 
     $DesignerInfo="SELECT CaId ,DesignId,DesignerName1,DesignName1,COUNT(DesignStatus) AS Design FROM designinfo WHERE DesignStatus='Processing' group by DesignerName1";
     $DataRows=$Controller->QueryData($DesignerInfo,[]);
-     
-
-
 ?>
 
-
-
+<script src="../Public/Js/chart.js"></script>
 <style>
-
     .NewJobs-bg { background-color:#FB7AFC;}
-    
     .circle {
-            width: 90px;
-            height: 90px;
-            line-height: 90px;
-            border-radius: 50%;
-            font-size: 28px;
-            color: #fff;
-            text-align: center;
-            margin:0px; 
-            display:table-cell;
-            vertical-align: middle; 
-        }
-    .circle-jobs { background:#f2f7ff ;  color:#0d6efd ; }
-
-    .circle-jup { background:#f2f7ff ;  color:#ffc107 ; }
-
-    .circle-process { background:#f2f7ff ;  color:#FA05FF ; }
-
-    .circle-pended { background:#f2f7ff ;  color:#FF0000 ; }
-
-    .circle-done { background:#f2f7ff ;  color:#198754 ; }
-     
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        border-radius: 50%;
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+        margin:0px; 
+        display:table-cell;
+        vertical-align: middle; 
+    }
+    .circle-jobs { background:#f2f7ff; }
+    .circle-jup { background:#f2f7ff; color:#ffc107; }
+    .circle-process { background:#f2f7ff; color:#FA05FF; }
+    .circle-pended { background:#f2f7ff; color:#FF0000; }
+    .circle-done { background:#f2f7ff; color:#198754; }
 </style>
-
-
 
 <div class="card m-3 shadow">
     <div class="card-body d-flex justify-content-between">
@@ -109,89 +95,161 @@
 </div>
   
 
-<div class="row m-3"> <!-- Start of the row -->
 
 
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ms-0 p-1 " >
-            <div class="card shadow-lg py-2  "  style = "border:3px solid #0d6efd;"  >
-                <div class="card-body   "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-jobs ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-circle-square" viewBox="0 0 16 16">
-                                <path d="M0 6a6 6 0 1 1 12 0A6 6 0 0 1 0 6z"/>
-                                <path d="M12.93 5h1.57a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1.57a6.953 6.953 0 0 1-1-.22v1.79A1.5 1.5 0 0 0 5.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 4h-1.79c.097.324.17.658.22 1z"/>
-                            </svg>
+<div class = "m-3">
+    <div class="row ">
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-md-3">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #0d6efd;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div>
+                            <h2 class = "p-0 m-0" style= "color:#0d6efd" ><?= sprintf('%02d', $Rows['Jobs']);?></h2>
+                            <span>New Jobs</span>
                         </div>
-                        <div class ="ms-3 my-3 ">
-                            <h3 class = " p-0 m-0 fw-bold"><?=$Rows['Jobs']?></h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;">New Jobs</strong>
+                        <div >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-circle-square" viewBox="0 0 16 16">
+                            <path d="M0 6a6 6 0 1 1 12 0A6 6 0 0 1 0 6z"/>
+                            <path d="M12.93 5h1.57a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-1.57a6.953 6.953 0 0 1-1-.22v1.79A1.5 1.5 0 0 0 5.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 4h-1.79c.097.324.17.658.22 1z"/>
+                        </svg>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
 
-
-
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 p-1" >
-            <div class="card shadow-lg py-2  "style = "border:3px solid #ffc107" >
-                <div class="card-body   "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-jup ">
-                            <svg width="45" height="49" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-sm-3">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #ffc107;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div  style= "color:#ffc107">
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Rows['Jobs']);?></h2>
+                            <span>Under Process</span>
+                        </div>
+                        <div >
+                            <svg width="50" height="50" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15 6H17V8H15V6ZM6.5 6C6.224 6 6 6.224 6 6.5C6 6.776 6.224 7 6.5 7C6.776 7 7 6.776 7 6.5C7 6.224 6.776 6 6.5 6ZM21.5 25H20V23H12V25H10.5C10.224 25 10 25.224 10 25.5C10 25.776 10.224 26 10.5 26H21.5C21.776 26 22 25.776 22 25.5C22 25.224 21.776 25 21.5 25ZM32 3V19C32 20.657 30.657 22 29 22H3C1.343 22 0 20.657 0 19V3C0 1.343 1.343 0 3 0H29C30.657 0 32 1.343 32 3ZM26.966 6.174C26.846 5.602 26.379 5.144 25.806 5.03C25.024 4.876 24.331 5.33 24.093 6H18V5H14V6H7.908C7.67 5.33 6.976 4.876 6.195 5.03C5.622 5.143 5.155 5.602 5.035 6.174C4.83 7.145 5.565 8 6.5 8C7.152 8 7.702 7.581 7.908 7H14V7.224C9.612 8.121 6.255 11.882 6.014 16.47C5.999 16.757 6.227 17 6.515 17C6.778 17 6.999 16.796 7.012 16.533C7.221 12.468 10.146 9.123 14 8.244V9H18V8.243C21.854 9.123 24.779 12.468 24.988 16.532C25.002 16.796 25.222 17 25.485 17C25.773 17 26.001 16.757 25.986 16.47C25.745 11.882 22.388 8.121 18 7.224V7H24.092C24.299 7.581 24.848 8 25.5 8C26.435 8 27.17 7.145 26.966 6.174ZM25.5 6C25.224 6 25 6.224 25 6.5C25 6.776 25.224 7 25.5 7C25.776 7 26 6.776 26 6.5C26 6.224 25.776 6 25.5 6Z" fill="#FFC107"/>
                             </svg>
                         </div>
-                        <div class ="ms-3 my-3  "  >
-                            <h3 class = " p-0 m-0 fw-bold"> <?=$Row['JOBS']?></h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;">   Job Under Process </strong>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
 
-
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 p-1" >
-            <div class="card shadow-lg py-2  "style = "border:3px solid #FA05FF" >
-                <div class="card-body   "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-process ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45S" fill="currentColor" class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-md-3">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #FA05FF;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div  style= "color:#FA05FF">
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Step['Process']);?></h2>
+                            <span>Processing</span>
+                        </div>
+                        <div >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="45" height="45" fill="currentColor" class="bi bi-arrow-repeat" style = "color:#FA05FF" viewBox="0 0 16 16">
                                 <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
                                 <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
                             </svg>
                         </div>
-                        <div class ="ms-3 my-3  "  >
-                            <h3 class = " p-0 m-0 fw-bold"> <?=$Step['Process']?></h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;">   Processing </strong>
-                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
 
-        
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 p-1" >
-            <div class="card shadow-lg py-2  "style = "border:3px solid #FF0000" >
-                <div class="card-body   "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-pended ">
-                            <svg width="45" height="75" viewBox="0 0 45 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-sm-3 ">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #FF0000;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div  style= "color:#FF0000">
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$Pend['Pending']);?></h2>
+                            <span>Pended Jobs</span>
+                        </div>
+                        <div >
+                            <svg width="50" height="50" viewBox="0 0 45 75" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M44.9744 51.2909C44.9985 44.3394 44.9738 22.0222 44.9735 21.8007C44.9857 18.6169 42.6705 16.113 39.7027 16.1006H39.6805C38.5123 16.1006 37.4278 16.4907 36.5404 17.1528V12.0616C36.5462 10.5455 35.9976 9.11936 34.9955 8.04622C33.9866 6.96574 32.6334 6.36734 31.1853 6.36128H31.163C30.0068 6.36128 28.933 6.74761 28.0528 7.4041V5.7C28.0586 4.18356 27.5004 2.75553 26.4809 1.67888C25.4613 0.602394 24.1026 0.0062234 22.6549 0H22.6326C19.631 0 17.1792 2.5366 17.1673 5.65915V7.33468C16.2917 6.68074 15.2248 6.29394 14.0757 6.28915H14.0536C11.0346 6.28915 8.56881 8.82574 8.55678 11.9485V24.5231C7.67548 23.8647 6.60009 23.475 5.44183 23.4701H5.41959C2.44327 23.4701 0.0120382 26.0066 3.17387e-06 29.1316C0.000155516 29.2875 0.0254444 44.8039 3.17387e-06 51.435C-0.000149169 51.5017 0.00518341 51.5678 0.0158474 51.6327C0.115327 64.5354 10.2109 75 22.606 75C28.614 75 34.2448 72.5678 38.4613 68.1515C42.6778 63.7352 45 57.8371 45 51.544C45 51.457 44.9913 51.3724 44.9744 51.2909V51.2909ZM31.176 8.75489C32.0076 8.7584 32.784 9.10117 33.3619 9.72C33.9415 10.3406 34.2588 11.1688 34.2553 12.0568V36.1454L28.0528 36.1246V12.0255C28.0598 10.2222 29.4551 8.75489 31.176 8.75489V8.75489ZM22.606 72.6064C11.4094 72.6064 2.30022 63.1111 2.30022 51.4398C2.30022 51.376 2.29535 51.3134 2.2859 51.2523C2.31028 44.5122 2.28545 29.2821 2.28529 29.1343C2.29215 27.331 3.69827 25.8637 5.43269 25.8637C7.14852 25.8708 8.55007 27.3377 8.55693 29.1287V47.6156C8.55693 48.2746 9.0656 48.8097 9.69493 48.8124C12.8719 48.8258 15.8409 50.1364 18.055 52.5029C20.2658 54.8659 21.4763 58.0109 21.4635 61.3588C21.461 62.0197 21.9705 62.5578 22.6015 62.5604C23.2351 62.5604 23.7462 62.0277 23.7487 61.3684C23.7641 57.3865 22.3215 53.643 19.6871 50.8273C17.3085 48.2853 14.2017 46.763 10.8421 46.4705V11.9532C10.8489 10.1804 12.3196 8.68261 14.0665 8.68261C15.7694 8.68979 17.1605 10.1564 17.1673 11.9472V27.7068C17.1673 28.3677 17.6789 28.9036 18.3099 28.9036C18.9409 28.9036 19.4525 28.3677 19.4525 27.7068V5.66394C19.4593 3.86058 20.886 2.39362 22.6456 2.39362C23.483 2.39713 24.2688 2.74197 24.8585 3.36463C25.4482 3.98729 25.771 4.81324 25.7677 5.69505V36.1168L19.4523 36.0957V32.4941C19.4523 31.8332 18.9407 31.2973 18.3097 31.2973C17.6787 31.2973 17.1672 31.8332 17.1672 32.4941V36.0884L16.0283 36.0846C15.3953 36.0846 14.884 36.6179 14.882 37.2776C14.8801 37.9385 15.3899 38.4761 16.021 38.4782L35.2694 38.5423C35.3116 38.5473 35.3544 38.5503 35.3979 38.5503C35.4394 38.5503 35.4806 38.5476 35.5211 38.5431L37.6793 38.5503C38.3123 38.5503 38.8236 38.017 38.8256 37.3573C38.8275 36.6964 38.3176 36.1588 37.6866 36.1567L36.5404 36.1529V21.7645C36.5473 19.9612 37.956 18.494 39.6935 18.494C41.3799 18.5011 42.6954 19.9494 42.6884 21.7972C42.6885 22.0275 42.7138 44.9074 42.6884 51.5389C42.688 51.6251 42.6966 51.7103 42.7135 51.7932C42.5858 63.2931 33.6148 72.6064 22.606 72.6064V72.6064Z" fill="#FF0000"/>
                             </svg>
                         </div>
-                        <div class ="ms-3 my-3  "  >
-                            <h3 class = " p-0 m-0 fw-bold"> <?=$Pend['Pending']?> </h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;">   Pended Jobs </strong>
+                    </div>
+                </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
+
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 ">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #198754;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div  style= "color:#198754">
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$Done['Done'] ); ?></h2>
+                            <span>Done</span>
+                        </div>
+                        <div >
+                            <svg width="50" height="50" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M199.996 0C89.713 0 0 89.72 0 200C0 310.28 89.713 400 199.996 400C310.279 400 400 310.28 400 200C400 89.72 310.279 0 199.996 0ZM199.996 373.77C104.18 373.77 26.23 295.816 26.23 200C26.23 104.183 104.179 26.231 199.996 26.231C295.813 26.231 373.767 104.184 373.767 200C373.768 295.816 295.812 373.77 199.996 373.77Z" fill="#198754"/>
+                                <path d="M272.406 134.526L169.275 237.652L127.586 195.972C122.463 190.855 114.164 190.852 109.041 195.975C103.916 201.1 103.916 209.4 109.041 214.523L160.004 265.478C162.565 268.036 165.92 269.316 169.275 269.316C172.63 269.316 175.994 268.036 178.554 265.474C178.562 265.463 178.568 265.452 178.581 265.439L290.95 153.071C296.075 147.951 296.075 139.645 290.95 134.525C285.828 129.402 277.523 129.402 272.406 134.526Z" fill="#198754"/>
+                            </svg>
                         </div>
                     </div>
+                </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
+
+
+        
+        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12  ">
+            <a href="JobCenter.php" style = "text-decoration:none;">
+                <div class="card shadow-lg" style="border:2px solid #5E00EC;">
+                    <div class="card-body d-flex justify-content-between align-items-center" >
+                        <div  style= "color:#5E00EC">
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$DesignExist['DesignExist'] ); ?></h2>
+                            <span> Design Exist</span>
+                        </div>
+                        <div >
+                            <svg width="45" height="45" viewBox="0 0 62 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M59 47H1C0.4 47 0 47.4 0 48V59C0 59.6 0.4 60 1 60H59C59.6 60 60 59.6 60 59V48C60 47.4 59.6 47 59 47ZM58 58H51V53H49V58H41V53H39V58H31V53H29V58H21V53H19V58H11V53H9V58H2V49H58V58Z" fill="#5E00EC"/>
+                                <path d="M1 8H7H50C50.1 8 50.1 8 50.2 8C50.4 8 50.5 7.9 50.6 7.8L59.3 4.9C59.7 4.8 60 4.4 60 4C60 3.6 59.7 3.2 59.3 3.1L50.6 0.2C50.5 0.1 50.3 0 50.1 0H50H7H1C0.4 0 0 0.4 0 1V7C0 7.6 0.4 8 1 8ZM51 5.6V2.4L55.8 4L51 5.6ZM49 3H11V5H49V6H8V2H49V3ZM2 2H6V6H2V2Z" fill="#5E00EC"/>
+                                <path d="M2.27557 40V13.8182H19.9176V18.3821H7.81108V24.6207H19.0099V29.1847H7.81108V35.4361H19.9688V40H2.27557ZM29.5089 13.8182L34.7887 22.7415H34.9933L40.2987 13.8182H46.5501L38.56 26.9091L46.729 40H40.3626L34.9933 31.0639H34.7887L29.4194 40H23.0785L31.2731 26.9091L23.2319 13.8182H29.5089Z" fill="#5E00EC"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div> <!-- END OF COL-LG-2 --> 
+         
+    </div> <!-- END OF ROW  --> 
+</div> <!-- END OF M-3 --> 
+</div><!-- End of the row -->
+
+
+<div class = "m-3">
+    <div class="row " >
+        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div><canvas id="myChart"></canvas></div>
                 </div>
             </div>
         </div>
 
+        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+            <div class="card shadow">
+                <div class="card-body">
+                    <div ><canvas id="myChart2" ></canvas></div>
+                </div>
+            </div>
+        </div>
 
-        <div class="   col-lg-6 col-md-12 col-sm-12  col-xs-12 mt-3  m-0 p-0   ">
+        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+            <div class="card shadow">
+                <div class="card-body d-flex justify-content-center">
+                    <div  style = "height:280px;"><canvas style = "height:280px;"  id="myChart1" ></canvas></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div><!-- END OF M-3  -->
+
+
+<!-- <div class="   col-lg-6 col-md-12 col-sm-12  col-xs-12 mt-3  m-0 p-0   ">
         <div class="list-group shadow">
 
         <?php  while($Data=$DataRows->fetch_assoc())   { ?>
@@ -205,56 +263,94 @@
               <?php } ?>
 
         </div>
-        </div>
+        </div> -->
+  
+<script>
 
+    let c5p  = 10000 ; 
+    var xValues = ["  5P", "  3P", "  1", "   2", "  Folder 1" , "Glue   2" ];
+    var yValues = [c5p, 83320, 25000, 70000, 60000 , 34000];
+    const labels = xValues;
 
-        <div class="col-lg-3 col-md-12 col-sm-12  col-xs-12  mt-3 pe-0" >
-            <div class="card shadow-lg py-2  "style = "border:3px solid #198754" >
-                <div class="card-body   "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-done ">
-                            <svg width="50" height="50" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M199.996 0C89.713 0 0 89.72 0 200C0 310.28 89.713 400 199.996 400C310.279 400 400 310.28 400 200C400 89.72 310.279 0 199.996 0ZM199.996 373.77C104.18 373.77 26.23 295.816 26.23 200C26.23 104.183 104.179 26.231 199.996 26.231C295.813 26.231 373.767 104.184 373.767 200C373.768 295.816 295.812 373.77 199.996 373.77Z" fill="#198754"/>
-                                <path d="M272.406 134.526L169.275 237.652L127.586 195.972C122.463 190.855 114.164 190.852 109.041 195.975C103.916 201.1 103.916 209.4 109.041 214.523L160.004 265.478C162.565 268.036 165.92 269.316 169.275 269.316C172.63 269.316 175.994 268.036 178.554 265.474C178.562 265.463 178.568 265.452 178.581 265.439L290.95 153.071C296.075 147.951 296.075 139.645 290.95 134.525C285.828 129.402 277.523 129.402 272.406 134.526Z" fill="#198754"/>
-                            </svg>
-                        </div>
-                        <div class ="ms-3 my-3  "  >
-                            <h3 class = " p-0 m-0 fw-bold"> <?=$Done['Done']?> </h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;"> Done </strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    const data = {
+        labels: labels,
+        datasets: [{
+        label: 'Design Statistics',
+        data: yValues,
+        backgroundColor: [
+            'rgba(255, 99, 132 )',
+            'rgba(255, 159, 64 )',
+            'rgba(255, 205, 86 )',
+            'rgba(75, 192, 192 )',
+            'rgba(54, 162, 235 )',
+            'rgba(153, 102, 255 )',
+            'rgba(201, 203, 207 )',
+            'rgba(153, 102, 255 )',
+        ],
+        }]
+    };
 
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }  
+        },
+    };
+    var myChart = new Chart( document.getElementById('myChart'), config );
 
-        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 mt-3 pe-0">
-            <div class="card shadow-lg py-2  "style = "border:3px solid #5E00EC" >
-                <div class="card-body "> 
-                    <div  class = "d-flex justify-content-start">
-                        <div class="circle circle-done ">
-                            <svg width="45" height="45" viewBox="0 0 62 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M59 47H1C0.4 47 0 47.4 0 48V59C0 59.6 0.4 60 1 60H59C59.6 60 60 59.6 60 59V48C60 47.4 59.6 47 59 47ZM58 58H51V53H49V58H41V53H39V58H31V53H29V58H21V53H19V58H11V53H9V58H2V49H58V58Z" fill="#5E00EC"/>
-                                <path d="M1 8H7H50C50.1 8 50.1 8 50.2 8C50.4 8 50.5 7.9 50.6 7.8L59.3 4.9C59.7 4.8 60 4.4 60 4C60 3.6 59.7 3.2 59.3 3.1L50.6 0.2C50.5 0.1 50.3 0 50.1 0H50H7H1C0.4 0 0 0.4 0 1V7C0 7.6 0.4 8 1 8ZM51 5.6V2.4L55.8 4L51 5.6ZM49 3H11V5H49V6H8V2H49V3ZM2 2H6V6H2V2Z" fill="#5E00EC"/>
-                                <path d="M2.27557 40V13.8182H19.9176V18.3821H7.81108V24.6207H19.0099V29.1847H7.81108V35.4361H19.9688V40H2.27557ZM29.5089 13.8182L34.7887 22.7415H34.9933L40.2987 13.8182H46.5501L38.56 26.9091L46.729 40H40.3626L34.9933 31.0639H34.7887L29.4194 40H23.0785L31.2731 26.9091L23.2319 13.8182H29.5089Z" fill="#5E00EC"/>
-                            </svg>
-                        </div>
-                        <div class ="ms-3 my-3  "  >
-                            <h3 class = " p-0 m-0 fw-bold"> <?=$DesignExist['DesignExist']?></h3>
-                            <strong class = "p-0 m-0 fw-bold" style = "font-size:14px;">   Design Exist </strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    const data1 = {
+        labels: [
+            'Red',
+            'Blue',
+            'Yellow',
+            'green'
+        ],
+        datasets: [{
+            label: 'My First Dataset',
+            data: [15000, 9000, 5000 , 7000],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)', 
+                'rgb(0, 205, 0)'
+            ],
+            hoverOffset: 4
+        }]
+    };
 
+    const config1 = {
+        type: 'doughnut',
+        data: data1,
+        options: {
+            legend: {display: true}
+        }
+    };
+    new Chart( document.getElementById('myChart1'), config1 );
 
+   
+    new Chart("myChart2", {
+    type: "line",
+    data: {
+        labels: [100,200,300,40,500,60,700,],
+        datasets: [ {
+            data: [1600,1700,1700,1900,2000,2700,4000],
+            borderColor:'rgb(75, 192, 192)',
+            fill: false
+        } 
+    ]
+    },
+    options: {
+        legend: {display: false}
+    }
+    });
 
+</script>
 
-
-
-
-</div><!-- End of the row -->
 
  
 

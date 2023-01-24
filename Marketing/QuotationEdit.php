@@ -543,6 +543,7 @@
 
         <!-- FIFTH ROW  -->
         <div class="row  d-flex align-items-center  "  >
+          
           <div class="col-xxl-2 col-xl-2 col-lg-12 col-md-12 col-sm-12 col-xs-12  ">
             <strong class = "fs-5 ms-5 "  > 
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-aspect-ratio" viewBox="0 0 16 16">
@@ -555,7 +556,7 @@
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <label for="NoColor1" class="form-label">Select Color<span class="text-danger"> * </span></label>
             <select class="form-select " name="NoColor1" id="NoColor1">
-                <option selected value="<?= $CTN['CTNColor'] ?>"><?=  ($CTN['CTNColor'] == 0 ) ? 'No Color' : ($CTN['CTNColor'] == 'FullColor') ? 'F-Color' : $CTN['CTNColor'] ;  ?></option>
+              <option selected value="<?= $CTN['CTNColor'] ?>"><?=($CTN['CTNColor'] == 0 ) ? 'No Color' : ( ($CTN['CTNColor'] == 'FullColor') ? 'F-Color' : $CTN['CTNColor']) ;  ?></option>
               <option value="0" >No Color</option>
               <option value="1">1</option>
               <option value="2">2</option>
@@ -564,7 +565,6 @@
               <option value="FullColor">F-Color</option>
             </select>
           </div>
-
 
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="NoColor" class="form-label">Select Polymer<span class="text-danger"> * </span></label>

@@ -136,7 +136,7 @@ else {
     </div>
     <div>
       <div>  <span class = "fs-bold fs-4  ps-2 " >Finance Job Center</span></div>
-      <div  class = "fs-bold  ps-3" > <span class = 'badge bg-danger' ><?=(isset($_POST['ListType'])) ? $_POST['ListType'] .  ' List' : (isset($ListType )) ? $ListType. ' List' : ''   ;  ?> </span> </div>
+      <div  class = "fs-bold  ps-3" > <span class = 'badge bg-danger' ><?=( isset($_POST['ListType'])) ? $_POST['ListType'] .  ' List' : ((isset($ListType )) ? $ListType. ' List' : ''  ) ;  ?> </span> </div>
     </div>
     
       
@@ -157,7 +157,8 @@ else {
       <form action=""  method = "post"  >
         <select class = "form-select" name="ListType" id="ListType" style = "border:3px solid blue; " onchange = "this.form.submit();" >
        
-        <!-- <option value="<?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType'] : (isset($ListType )) ? $ListType  : '' ;?>"> <?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : (isset($ListType )) ? $ListType : ''   ;  ?></option> -->
+        <!-- <option value="<?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType'] :( (isset($ListType )) ? $ListType  : '') ;?>">
+         <?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : ( (isset($ListType )) ? $ListType : '')   ;  ?></option> -->
         <option value="<?=$ListType;?>"><?=$ListType;?></option>
           <option value="New Job">New Job</option>
           <option value="Pending Job">Pending Job</option>

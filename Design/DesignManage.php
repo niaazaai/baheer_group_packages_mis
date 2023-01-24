@@ -553,13 +553,8 @@ if(isset($_POST['Update']))
             </a>
         </h5>
     <div>
-
-
    
-    <?php 
-   
-        if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']))  
-        {?>
+    <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1'])) {?>
             <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
             href="ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
                 
@@ -569,53 +564,24 @@ if(isset($_POST['Update']))
             </svg> Design
 
             </a>
-        <?php 
-        }  
-        else 
-        {
-            echo '<span class = "text-danger fw-bold ">No Design</span>';
-        } 
+    <?php } else  echo '<span class = "text-danger mx-2 fw-bold ">No Design</span>';
+        if(isset($Rows['DieCode']) && !empty($Rows['DieCode'])) {?>
 
-        if(isset($Rows['DieCode']) && !empty($Rows['DieCode']))  
-        {?>
-            <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-            href="ShowDesignImage.php?Url=<?=$Rows['Scatch']?>&ProductName=<?=$Rows['ProductName']?>">
-                
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-            </svg> Scatch
-
+            <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image" href="ShowDesignImage.php?Url=<?=$Rows['Scatch']?>&ProductName=<?=$Rows['ProductName']?>">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                    <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                    <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                </svg> Sketch
             </a>
-        <?php 
-        }  
-        else 
-        {
-            echo '<span class = "text-danger fw-bold  " >No Scatch</span>';
-        } 
-    ?>
+    <?php } else   echo '<span class = "text-danger fw-bold  " >No Scatch</span>'; ?>
+
     </div>
   </div>
 </div>
-
-
-                
-        <?php //echo  htmlspecialchars($component)   ?> 
-
-
         
 <div class="card m-3 shadow">
     <div class="card-body">
         <div class="stepper-wrapper">
-
-            <!-- <div class="stepper-item  completed">
-                <div class="step-counter " >1</div>
-                <div class="step-name">New</div>
-            </div> -->
-
-
-                        
-
 <?php 
                               
     $id= $_GET['CTNId'];
@@ -678,59 +644,32 @@ if(isset($_POST['Update']))
         echo '<h4 class= "text-center blink text-warning"> Design Pended! </h4>';
         $stages = []; 
     }
+    foreach ($stages as $key => $value) { 
+        if ($isYellow) {
+            if ($value ==  $show['DesignStatus'] ) {
+                $class = 'bg-warning  ';
+                $isYellow = false; 
+                $stepper_item = 'active'; 
+                if($show['DesignStatus'] == 'Done' || $show['DesignStatus'] == 'NULL') {
+                    $class = 'bg-success ';
+                }
+            } else {
+                $class = '';
+                $stepper_item = 'completed';
+            }
+        }
+        else {
+            $class = '';
+            $stepper_item = ''; 
+        }
+            
+        ?>
 
-
-
-                // echo $show['DesignStatus'];
-                
-             
-                foreach ($stages as $key => $value) { 
-                  
-                        if ($isYellow) {
-                            if ($value ==  $show['DesignStatus'] ) {
-
-                                $class = 'bg-warning  ';
-                                $isYellow = false; 
-                                $stepper_item = 'active'; 
-
-                                // echo $show['DesignStatus']; 
-                               
-
-                                if($show['DesignStatus'] == 'Done' || $show['DesignStatus'] == 'NULL') {
-                                    $class = 'bg-success ';
-                                }
-
-
-                            } else {
-                                   
-                                $class = '';
-                                $stepper_item = 'completed';
-                            }
-                        }
-                        else {
-                            $class = '';
-                            $stepper_item = ''; 
-
-
-
-                        }
-                        
-                    ?>
-
-                        <div class="stepper-item <?php echo $stepper_item; ?> ">
-                            <div class="step-counter <?=$class?>" > <?=$index ?></div>
-                            <div class="step-name"> <?= $key ?></div>
-                        </div>
-
-
-<?php       $index++;  } 
-
-
-
-?>
-
-       
-
+        <div class="stepper-item <?php echo $stepper_item; ?> ">
+            <div class="step-counter <?=$class?>" > <?=$index ?></div>
+            <div class="step-name"> <?= $key ?></div>
+        </div>
+    <?php $index++;  }  ?>
 
         </div>
     </div>
