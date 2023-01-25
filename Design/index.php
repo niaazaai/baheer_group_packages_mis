@@ -1,34 +1,67 @@
 <?php 
     require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
  
-    $NewJob='SELECT DISTINCT COUNT(CTNId) AS Jobs  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo 
-           ON designinfo.CaId=carton.CTNId  where CTNStatus="FConfirm"  order by CTNOrderDate DESC';
+    $NewJob='SELECT DISTINCT COUNT(CTNId) AS Jobs  FROM `carton` 
+    INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+    LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+    WHERE CTNStatus="FConfirm"  order by CTNOrderDate DESC';
     $DataRows=$Controller->QueryData($NewJob,[]);
     $Rows=$DataRows->fetch_assoc();
 
-    $JobUnderProcess='SELECT DISTINCT COUNT(CTNId) AS JOBS FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo 
-                      ON designinfo.CaId=carton.CTNId  where CTNStatus="DesignProcess" order by CTNOrderDate DESC';
+    $JobUnderProcess='SELECT DISTINCT COUNT(CTNId) AS JOBS FROM `carton` 
+        INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+        INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+        WHERE CTNStatus="DesignProcess" order by CTNOrderDate DESC';
     $DataRows=$Controller->QueryData($JobUnderProcess,[]);
     $Row=$DataRows->fetch_assoc();
 
-    $Process="SELECT COUNT(CaId) AS Process FROM designinfo WHERE DesignStatus='Processing'";
-    $DataRows=$Controller->QueryData($Process,[]);
-    $Step=$DataRows->fetch_assoc();
+    $SFA= $Controller->QueryData('SELECT COUNT(DesignId) AS SFA FROM designinfo WHERE DesignStatus="Sent For Approval"',[])->fetch_assoc()['SFA'];
+    $Step = $Controller->QueryData("SELECT COUNT(CaId) AS Process FROM designinfo WHERE DesignStatus='Processing'",[])->fetch_assoc()['Process'];
+    $Pending = $Controller->QueryData("SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'",[])->fetch_assoc()['Pending'];
+    $Done = $Controller->QueryData("SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'",[])->fetch_assoc()['Done'];
+    $DesignExist = $Controller->QueryData("SELECT COUNT(CaId) AS DesignExist FROM designinfo WHERE DesignStatus='Design Exist'",[])->fetch_assoc()['DesignExist'];
 
-    $Pending="SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'";
-    $DataRows=$Controller->QueryData($Pending,[]);
-    $Pend=$DataRows->fetch_assoc();
+    // get how many films created each month. 
+    // SELECT *
+    // FROM table
+    // WHERE MONTH(columnName) = MONTH(CURRENT_DATE())
+    // AND YEAR(columnName) = YEAR(CURRENT_DATE())
 
-    $done="SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'";
-    $DataRows=$Controller->QueryData($done,[]);
-    $Done=$DataRows->fetch_assoc();
+    // SELECT Alarmdatetime
+    // FROM designinfo
+    // WHERE MONTH(Alarmdatetime) = MONTH(CURRENT_DATE())
+    // AND YEAR(Alarmdatetime) = YEAR(CURRENT_DATE())
 
-    $Designexist="SELECT COUNT(CaId) AS DesignExist FROM designinfo WHERE DesignStatus='Design Exist'";
-    $DataRows=$Controller->QueryData($Designexist,[]);
-    $DesignExist=$DataRows->fetch_assoc();
-
-    $DesignerInfo="SELECT CaId ,DesignId,DesignerName1,DesignName1,COUNT(DesignStatus) AS Design FROM designinfo WHERE DesignStatus='Processing' group by DesignerName1";
-    $DataRows=$Controller->QueryData($DesignerInfo,[]);
+    $FCEM = $Controller->QueryData("SELECT 
+    SUM(IF(month = 'Jan', total, 0)) AS 'Jan',
+    SUM(IF(month = 'Feb', total, 0)) AS 'Feb',
+    SUM(IF(month = 'Mar', total, 0)) AS 'Mar',
+    SUM(IF(month = 'Apr', total, 0)) AS 'Apr',
+    SUM(IF(month = 'May', total, 0)) AS 'May',
+    SUM(IF(month = 'Jun', total, 0)) AS 'Jun',
+    SUM(IF(month = 'Jul', total, 0)) AS 'Jul',
+    SUM(IF(month = 'Aug', total, 0)) AS 'Aug',
+    SUM(IF(month = 'Sep', total, 0)) AS 'Sep',
+    SUM(IF(month = 'Oct', total, 0)) AS 'Oct',
+    SUM(IF(month = 'Nov', total, 0)) AS 'Nov',
+    SUM(IF(month = 'Dec', total, 0)) AS 'Dec',
+    SUM(total) AS total_yearly
+    FROM ( SELECT DATE_FORMAT(CompleteTime, '%b') AS month, COUNT(designinfo.DesignId) as total FROM designinfo
+    WHERE CompleteTime <= NOW() and CompleteTime >= Date_add(Now(),interval - 12 month) AND YEAR(CompleteTime) = YEAR(CURRENT_DATE()) AND design_type = 'Film'
+    GROUP BY DATE_FORMAT(CompleteTime, '%m-%Y')) as sub ",[])->fetch_assoc();    
+    
+    $ColorCount = []; 
+    $a = $Controller->QueryData("SELECT CTNColor as Color , COUNT(*) as Count FROM carton GROUP BY CTNColor ORDER BY CTNColor",[]); 
+    while ($NumberofColors =  $a->fetch_assoc()) {
+        $ColorCount[ $NumberofColors['Color']] =  $NumberofColors['Count']  ; 
+    }
+ 
+    $DataRows=$Controller->QueryData("SELECT CaId ,DesignId,DesignerName1,DesignName1,COUNT(DesignStatus) AS Design 
+    FROM designinfo WHERE DesignStatus='Done' group by DesignerName1",[]);
+    $EmployeesDesign = []; 
+    while($Data=$DataRows->fetch_assoc()) {
+        $EmployeesDesign[$Data['DesignerName1']] = $Data['Design'] ; 
+    }
 ?>
 
 <script src="../Public/Js/chart.js"></script>
@@ -123,8 +156,8 @@
                 <div class="card shadow-lg" style="border:2px solid #ffc107;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#ffc107">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Rows['Jobs']);?></h2>
-                            <span>Under Process</span>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $SFA);?></h2>
+                            <span>Need Approval</span>
                         </div>
                         <div >
                             <svg width="50" height="50" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +174,7 @@
                 <div class="card shadow-lg" style="border:2px solid #FA05FF;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#FA05FF">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Step['Process']);?></h2>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Step);?></h2>
                             <span>Processing</span>
                         </div>
                         <div >
@@ -160,7 +193,7 @@
                 <div class="card shadow-lg" style="border:2px solid #FF0000;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#FF0000">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$Pend['Pending']);?></h2>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d', $Pending );?></h2>
                             <span>Pended Jobs</span>
                         </div>
                         <div >
@@ -178,7 +211,7 @@
                 <div class="card shadow-lg" style="border:2px solid #198754;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#198754">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$Done['Done'] ); ?></h2>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$Done  ); ?></h2>
                             <span>Done</span>
                         </div>
                         <div >
@@ -191,15 +224,13 @@
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
-
-
         
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12  ">
             <a href="JobCenter.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #5E00EC;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#5E00EC">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$DesignExist['DesignExist'] ); ?></h2>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$DesignExist ); ?></h2>
                             <span> Design Exist</span>
                         </div>
                         <div >
@@ -221,26 +252,26 @@
 
 <div class = "m-3">
     <div class="row " >
-        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+        <div class="col-xl-5 col-lg-4 col-sm-12 col-md-4 ">
             <div class="card shadow">
                 <div class="card-body">
-                    <div><canvas id="myChart"></canvas></div>
+                    <div  ><canvas id="myChart"></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+        <div class="col-xl-2 col-lg-4 col-sm-12 col-md-4 ">
             <div class="card shadow">
-                <div class="card-body">
-                    <div ><canvas id="myChart2" ></canvas></div>
+                <div class="card-body  d-flex justify-content-center">
+                    <div  ><canvas id="myChart2" ></canvas></div>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-4 col-lg-4 col-sm-12 col-md-4 ">
+        <div class="col-xl-5 col-lg-4 col-sm-12 col-md-4 ">
             <div class="card shadow">
-                <div class="card-body d-flex justify-content-center">
-                    <div  style = "height:280px;"><canvas style = "height:280px;"  id="myChart1" ></canvas></div>
+                <div class="card-body  ">
+                    <div  ><canvas id="myChart1" ></canvas></div>
                 </div>
             </div>
         </div>
@@ -248,34 +279,23 @@
     </div>
 </div><!-- END OF M-3  -->
 
+<input type="hidden" id = "Film" value = '<?=json_encode($FCEM)?>' >
+<input type="hidden" id = "ColorCount" value = '<?=json_encode($ColorCount)?>' >
+<input type="hidden" id = "EmployeesDesign" value = '<?=json_encode($EmployeesDesign)?>' >
 
-<!-- <div class="   col-lg-6 col-md-12 col-sm-12  col-xs-12 mt-3  m-0 p-0   ">
-        <div class="list-group shadow">
 
-        <?php  while($Data=$DataRows->fetch_assoc())   { ?>
-                                   
-              <a href="#" class="list-group-item list-group-item-action  " aria-current="true">
-                <div class="d-flex w-100 justify-content-between  align-items-center">
-                  <strong class="m-0 p-0"><?=$Data['DesignerName1']?></strong>
-                  <small class = "badge bg-primary" ><?=$Data['Design']?> </small>
-                </div>
-              </a>
-              <?php } ?>
-
-        </div>
-        </div> -->
-  
 <script>
-
-    let c5p  = 10000 ; 
-    var xValues = ["  5P", "  3P", "  1", "   2", "  Folder 1" , "Glue   2" ];
-    var yValues = [c5p, 83320, 25000, 70000, 60000 , 34000];
-    const labels = xValues;
-
+    
+    var xValues = [];
+    var yValues = []; 
+    JSON.parse(document.getElementById('Film').value, function (key, value) {
+        xValues.push(key); 
+        yValues.push(value); 
+    });
     const data = {
-        labels: labels,
+        labels: xValues,
         datasets: [{
-        label: 'Design Statistics',
+        label: 'Film Generated In Each Month',
         data: yValues,
         backgroundColor: [
             'rgba(255, 99, 132 )',
@@ -289,7 +309,6 @@
         ],
         }]
     };
-
     const config = {
         type: 'bar',
         data: data,
@@ -302,60 +321,88 @@
         },
     };
     var myChart = new Chart( document.getElementById('myChart'), config );
+    
 
+
+
+
+
+
+
+
+
+
+    var laabels = []; 
+    var dataaa = []; 
+    JSON.parse(document.getElementById('EmployeesDesign').value, function (key, value) {
+        laabels.push(key); 
+        dataaa.push(value); 
+    });
     const data1 = {
-        labels: [
-            'Red',
-            'Blue',
-            'Yellow',
-            'green'
-        ],
+        labels: laabels,
         datasets: [{
-            label: 'My First Dataset',
-            data: [15000, 9000, 5000 , 7000],
+        label: 'Who Did the Most Designes in Department',
+        data: dataaa,
+        backgroundColor: [
+            'rgba(255, 99, 132 )',
+            'rgba(255, 159, 64 )',
+            'rgba(255, 205, 86 )',
+            'rgba(75, 192, 192 )',
+            'rgba(54, 162, 235 )',
+            'rgba(153, 102, 255 )',
+            'rgba(201, 203, 207 )',
+            'rgba(153, 102, 255 )',
+        ],
+        }]
+    };
+    const config1 = {
+        type: 'bar',
+        data: data1,
+        options: {
+            scales: {
+                y: {
+                beginAtZero: true
+                }
+            }  
+        },
+    };
+    var myChart = new Chart( document.getElementById('myChart1'), config1 );
+
+
+
+
+
+    var labels2 = []; 
+    var data3 = []; 
+    JSON.parse(document.getElementById('ColorCount').value, function (key, value) {
+        labels2.push(key); 
+        data3.push(value); 
+    });
+    const data2 = {
+        labels: labels2,
+        datasets: [{
+            label: 'Jobs According to Color',
+            data: data3,
             backgroundColor: [
                 'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)', 
-                'rgb(0, 205, 0)'
+                '#F637EC',
+                'rgb(255, 205, 86)',
+                '#54E346',
+                'rgb(54, 162, 235)'
             ],
             hoverOffset: 4
         }]
     };
-
-    const config1 = {
-        type: 'doughnut',
-        data: data1,
+    const config2 = {
+        type: 'pie',
+        data: data2,
         options: {
-            legend: {display: true}
+            legend: {display: true} , 
+            position: 'bottom',
+             
         }
     };
-    new Chart( document.getElementById('myChart1'), config1 );
-
-   
-    new Chart("myChart2", {
-    type: "line",
-    data: {
-        labels: [100,200,300,40,500,60,700,],
-        datasets: [ {
-            data: [1600,1700,1700,1900,2000,2700,4000],
-            borderColor:'rgb(75, 192, 192)',
-            fill: false
-        } 
-    ]
-    },
-    options: {
-        legend: {display: false}
-    }
-    });
+    new Chart( document.getElementById('myChart2'), config2 );
 
 </script>
-
-
- 
-
-
 <?php  require_once '../App/partials/Footer.inc'; ?>
-
- 
- 
