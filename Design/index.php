@@ -1,12 +1,9 @@
 <?php 
     require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
  
-    $NewJob='SELECT DISTINCT COUNT(CTNId) AS Jobs  FROM `carton` 
-    INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
-    LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  
-    WHERE CTNStatus="FConfirm"  order by CTNOrderDate DESC';
-    $DataRows=$Controller->QueryData($NewJob,[]);
-    $Rows=$DataRows->fetch_assoc();
+   
+    $NEWJOB=$Controller->QueryData('SELECT COUNT(CTNId) AS new_jobs FROM carton  WHERE CTNStatus="Design" OR  CTNStatus="Film"',[])->fetch_assoc()['new_jobs'];
+ 
 
     $JobUnderProcess='SELECT DISTINCT COUNT(CTNId) AS JOBS FROM `carton` 
         INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
@@ -20,17 +17,6 @@
     $Pending = $Controller->QueryData("SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'",[])->fetch_assoc()['Pending'];
     $Done = $Controller->QueryData("SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'",[])->fetch_assoc()['Done'];
     $DesignExist = $Controller->QueryData("SELECT COUNT(CaId) AS DesignExist FROM designinfo WHERE DesignStatus='Design Exist'",[])->fetch_assoc()['DesignExist'];
-
-    // get how many films created each month. 
-    // SELECT *
-    // FROM table
-    // WHERE MONTH(columnName) = MONTH(CURRENT_DATE())
-    // AND YEAR(columnName) = YEAR(CURRENT_DATE())
-
-    // SELECT Alarmdatetime
-    // FROM designinfo
-    // WHERE MONTH(Alarmdatetime) = MONTH(CURRENT_DATE())
-    // AND YEAR(Alarmdatetime) = YEAR(CURRENT_DATE())
 
     $FCEM = $Controller->QueryData("SELECT 
     SUM(IF(month = 'Jan', total, 0)) AS 'Jan',
@@ -56,12 +42,17 @@
         $ColorCount[ $NumberofColors['Color']] =  $NumberofColors['Count']  ; 
     }
  
-    $DataRows=$Controller->QueryData("SELECT CaId ,DesignId,DesignerName1,DesignName1,COUNT(DesignStatus) AS Design 
+    $DataRows=$Controller->QueryData("SELECT DesignerName1, COUNT(DesignStatus) AS Design 
     FROM designinfo WHERE DesignStatus='Done' group by DesignerName1",[]);
     $EmployeesDesign = []; 
     while($Data=$DataRows->fetch_assoc()) {
         $EmployeesDesign[$Data['DesignerName1']] = $Data['Design'] ; 
     }
+
+    $DP = $Controller->QueryData("SELECT  DesignId,DesignerName1,COUNT(DesignId) AS Design 
+    FROM designinfo WHERE DesignStatus='Processing' group by DesignerName1",[]);
+
+
 ?>
 
 <script src="../Public/Js/chart.js"></script>
@@ -137,7 +128,7 @@
                 <div class="card shadow-lg" style="border:2px solid #0d6efd;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div>
-                            <h2 class = "p-0 m-0" style= "color:#0d6efd" ><?= sprintf('%02d', $Rows['Jobs']);?></h2>
+                            <h2 class = "p-0 m-0" style= "color:#0d6efd" ><?= sprintf('%02d', $NEWJOB);?></h2>
                             <span>New Jobs</span>
                         </div>
                         <div >
@@ -247,43 +238,65 @@
          
     </div> <!-- END OF ROW  --> 
 </div> <!-- END OF M-3 --> 
-</div><!-- End of the row -->
 
-
-<div class = "m-3">
-    <div class="row " >
-        <div class="col-xl-5 col-lg-4 col-sm-12 col-md-4 ">
+<div class= "m-3">
+    <div class="row  " >
+        <div class="col-xl-6 col-lg-6 col-sm-12 col-md-6 mb-3">
             <div class="card shadow">
                 <div class="card-body">
                     <div  ><canvas id="myChart"></canvas></div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-2 col-lg-4 col-sm-12 col-md-4 ">
-            <div class="card shadow">
-                <div class="card-body  d-flex justify-content-center">
-                    <div  ><canvas id="myChart2" ></canvas></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-xl-5 col-lg-4 col-sm-12 col-md-4 ">
+        <div class="col-xl-6 col-lg-6 col-sm-12 col-md-6 mb-3">
             <div class="card shadow">
                 <div class="card-body  ">
-                    <div  ><canvas id="myChart1" ></canvas></div>
+                    <div><canvas id="myChart1" ></canvas></div>
                 </div>
             </div>
         </div>
+    </div><!-- END OF M-3  -->
+</div>
 
+<div class= "m-3">
+    <div class="row " >
+        <div class="col-xl-6 col-lg-6 col-sm-12 col-md-6 ">
+            <div class="card shadow">
+                <div class="card-body  d-flex justify-content-center">
+                    <div><canvas id="myChart2"></canvas></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6">
+            <div class="card shadow">
+                <div class="card-body ">
+                    <ol class="list-group list-group-numbered"> 
+                        <div class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="me-auto">
+                                <div class="fw-bold" > Currently Designing  </div>
+                            </div>
+                        </div>
+                        <?php while($employee = $DP->fetch_assoc()): ?>
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div class="ms-2 me-auto">
+                                <div class="fw-bold"><?= $employee['DesignerName1']; ?> </div>
+                            
+                                </div>
+                                <span class="badge bg-primary rounded-pill"><?= $employee['Design']; ?> Design</span>
+                            </li>
+                        <?php endwhile; ?>
+                    </ol>
+                </div>
+            </div>
+        </div>
     </div>
 </div><!-- END OF M-3  -->
+
+<div style = "height:50px;" ></div>
 
 <input type="hidden" id = "Film" value = '<?=json_encode($FCEM)?>' >
 <input type="hidden" id = "ColorCount" value = '<?=json_encode($ColorCount)?>' >
 <input type="hidden" id = "EmployeesDesign" value = '<?=json_encode($EmployeesDesign)?>' >
-
-
 <script>
     
     var xValues = [];
@@ -321,15 +334,6 @@
         },
     };
     var myChart = new Chart( document.getElementById('myChart'), config );
-    
-
-
-
-
-
-
-
-
 
 
     var laabels = []; 
@@ -341,7 +345,7 @@
     const data1 = {
         labels: laabels,
         datasets: [{
-        label: 'Who Did the Most Designes in Department',
+        label: 'Designes in Department',
         data: dataaa,
         backgroundColor: [
             'rgba(255, 99, 132 )',
@@ -355,6 +359,7 @@
         ],
         }]
     };
+
     const config1 = {
         type: 'bar',
         data: data1,
@@ -369,12 +374,39 @@
     var myChart = new Chart( document.getElementById('myChart1'), config1 );
 
 
-
-
-
     var labels2 = []; 
     var data3 = []; 
     JSON.parse(document.getElementById('ColorCount').value, function (key, value) {
+
+        console.log(  key); 
+        switch(key){
+            case '1':
+                key = 'One Color'; 
+                break;
+            case '2':
+                key = 'Two Color'; 
+            break;
+
+            case '3':
+                key = 'Three Color'; 
+            break;
+
+            case '4':
+                key = 'Four Color'; 
+            break;
+
+            case 'NoColor':
+                key = 'No Color'; 
+            break;
+            
+            case 'FullColor':
+                key = 'Full Color'; 
+            break;
+            default: 
+                break;
+        }
+
+
         labels2.push(key); 
         data3.push(value); 
     });
@@ -394,7 +426,7 @@
         }]
     };
     const config2 = {
-        type: 'pie',
+        type: 'doughnut',
         data: data2,
         options: {
             legend: {display: true} , 

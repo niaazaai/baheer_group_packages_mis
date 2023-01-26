@@ -1,6 +1,6 @@
 <?php 
     session_start();
-    $ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+    $ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
     require_once $ROOT_DIR. 'App/Controller.php'; 
     
     class CustomerPaymentController {
@@ -85,7 +85,6 @@
                 $SELECT_CARTON = $this->Controller->QueryData('SELECT ReceivedAmount , offesetp FROM carton WHERE CTNId=?',  [ $PAYMENT['CTNID'][$index] ]);
                 $OLD_PAYMENT = $SELECT_CARTON->fetch_assoc(); 
                 $AMOUNT = $PAYMENT['PAYMENT'][$index] + $OLD_PAYMENT['ReceivedAmount']; 
-              
                 
                 if(empty($OLD_PAYMENT['ReceivedAmount']) || $OLD_PAYMENT['ReceivedAmount'] == 0 ) {
                    if(trim($OLD_PAYMENT['offesetp']) == 'Yes' ) {
@@ -93,7 +92,7 @@
                     }
                     else {
                         // put it back to recive amount 
-                        $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? , CTNStatus = "Film"  WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
+                        $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? , CTNStatus = "Film" WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
                     }
                 }
                 $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
@@ -129,6 +128,7 @@
 
     if(isset($_POST) && !empty($_POST))
     {
+        var_dump($_POST); 
         // if(isset($_POST['SaveClose']) || isset($_POST['SaveOnly'])) $QUOTATION->CreateQuotation($_POST);  
         if(isset($_POST['SaveNext']) ) $PAYMENT->StorePayment($_POST);  
     } 

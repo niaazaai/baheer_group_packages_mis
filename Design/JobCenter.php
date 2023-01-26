@@ -8,7 +8,6 @@ use Carbon\Carbon;
 
 if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
 {
- 
     $ListType= $_REQUEST['ListType'];
     if($ListType=='NewJob')
     {
@@ -16,16 +15,15 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
         ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
                                 `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" OR CTNStatus="Film" order by CTNOrderDate DESC';
-      
     }
     else if($ListType=='JobUnderProcess')
     {
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
-                                `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus,  CURRENT_TIMESTAMP,
+                                `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
         designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
-        ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="DesignProcess" OR CTNStatus="Film" order by CTNOrderDate DESC';
- 
+        ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+        where CTNStatus="DesignProcess" OR CTNStatus="Film" order by CTNOrderDate DESC';
     } 
 }
 else
@@ -36,12 +34,8 @@ else
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage,CURRENT_TIMESTAMP,
     designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
     ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" OR CTNStatus="Film"  order by CTNOrderDate DESC';
- 
-
 }
-
 $DataRows=$Controller->QueryData($SQL,[]);
- 
 ?>  
   
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
@@ -56,8 +50,6 @@ $DataRows=$Controller->QueryData($SQL,[]);
         </div>
     <?php } ?>
 </div>
- 
-
 <div class="card m-3" >
   <div class="card-body d-flex justify-content-between shadow">
       <h3 class="m-0 p-0"> 
@@ -88,10 +80,8 @@ $DataRows=$Controller->QueryData($SQL,[]);
             </select>
         </form>
       </div>
-      
     </div>
 </div>
-
  <div class="card m-3 shadow">
     <div class="card-body">
       <div class="row d-flex justify-content-between">
@@ -120,16 +110,13 @@ $DataRows=$Controller->QueryData($SQL,[]);
                   JOBS 
                 </a>
           </div>  
-
       </div>
     </div>                
  </div>
  
 <div class="card m-3 shadow ">
   <div class="card-body d-flex justify-content-between ">
-
-
-<table class= "table " id = "JobTable" >
+    <table class= "table " id = "JobTable" >
           <thead>
               <tr class="table-info">
                   <th>#</th>
@@ -151,7 +138,6 @@ $DataRows=$Controller->QueryData($SQL,[]);
                               <th>Comment</th>
                             <?php }
                             else if($_REQUEST['ListType']=='JobUnderProcess')  { ?>
-                                <th title="Design Status">D.Status</th>
                                 <th title="Design Code">Design</th>
                                 <th title="Design By">D.By</th>
                                 <th title="Remain Time">R.Time</th>
@@ -169,25 +155,9 @@ $DataRows=$Controller->QueryData($SQL,[]);
           <tbody>
           <?php 
           
-          
           function isPast( $date ){ 
             return  Carbon::now()->startOfDay()->gte($date);
           }
-     
-          // function CountAndMerge($string){
-          //   // $pieces = explode(" ", $string);
-          //   // $vals = array_count_values($pieces);
-          //   // unset($vals['']);
-          //   // foreach ($vals as $key => $value) {
-          //   //   echo ' '. $value .' '. $key  . ' ';
-          //   //   if ($key !== array_key_last($vals)) echo ',';
-              
-          //   // }
-                               
-          // }
-            // $x = '100.10'; 
-            // $x = preg_replace("/\.?0*$/",'',$x); 
-            // echo $x; $SIZE = preg_replace("/\.?0*$/",'',$Rows['Size'])
 
           $class = '#20c997'; 
           $COUNTER=0;
@@ -244,7 +214,6 @@ $DataRows=$Controller->QueryData($SQL,[]);
                           }
                           else if($_REQUEST['ListType']=='JobUnderProcess')
                           { ?>
-                                <td><?php if($Rows['DesignStatus']=='Done'){echo '<span class="badge" style = "background-color:#14C38E;">'.$Rows['DesignStatus'].'</span>';}else{echo $Rows['DesignStatus'];}?></td>
                                 <td class = " align-item-center " >        
                                   <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']) )  { ?>
                                     <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
@@ -258,18 +227,9 @@ $DataRows=$Controller->QueryData($SQL,[]);
                                 <td><?=$Rows['DesignerName1']?></td>
                                 <td>
                                     <?php 
-
-                                      // echo Carbon::now();
-
-                                      // echo Carbon::create($Rows['Alarmdatetime'])->diffForHumans($Rows['Alarmdatetime']);
-
-
-                                      // echo Carbon::create($Rows['Alarmdatetime'])->longRelativeDiffForHumans('2018');
-
                                           $a =  Carbon::create($Rows['Alarmdatetime'] , 'Asia/Kabul')->diffForHumans(); 
                                           if(isPast( $Rows['Alarmdatetime'] ))  $class = '#dc3545';
                                               echo "<span class = 'badge' style = 'background-color: " . $class . " '>" . $a . "</span>";
-
                                     ?>
                                 </td>
                           <?php
@@ -294,11 +254,22 @@ $DataRows=$Controller->QueryData($SQL,[]);
                       }
                 ?>
                       <td>
+
+
+                      <?php  if($Rows['CTNStatus'] == 'Film'): ?>
+                        <a  href="DesignManage.php?CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>" class="btn btn-outline-dark btn-sm ">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                            <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
+                          </svg> Film
+                        </a>  
+                      <?php else: ?>
                         <a  href="DesignManage.php?CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>" class="btn btn-outline-primary btn-sm ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-fill" viewBox="0 0 16 16">
                                 <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.004-.001.274-.11a.75.75 0 0 1 .558 0l.274.11.004.001 6.971 2.789Zm-1.374.527L8 5.962 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339Z"></path>
                             </svg> Manage
                         </a>
+                      <?php endif; ?>
+                        
                       </td>
                 </tr>
           <?php
@@ -310,7 +281,6 @@ $DataRows=$Controller->QueryData($SQL,[]);
 
   </div>
 </div>
-
 
 <script>
 

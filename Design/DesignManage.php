@@ -789,9 +789,7 @@ if(isset($_POST['Update']))
                         <?php 
                             if(isset($_GET['ListType']))
                             {
-                                $ListType=$_GET['ListType']; 
-                                if($ListType=='ProductList')
-                                {?>
+                                $ListType=$_GET['ListType'];   if($ListType=='ProductList') {?>
                                     <option value="New Design">New Design</option>
                                     <option value="Design Exist">Design Exist</option>
                                     <option value="Edit Exist Design">Edit Exist Design</option>
