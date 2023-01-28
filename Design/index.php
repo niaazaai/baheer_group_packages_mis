@@ -16,7 +16,7 @@
     $Step = $Controller->QueryData("SELECT COUNT(CaId) AS Process FROM designinfo WHERE DesignStatus='Processing'",[])->fetch_assoc()['Process'];
     $Pending = $Controller->QueryData("SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'",[])->fetch_assoc()['Pending'];
     $Done = $Controller->QueryData("SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'",[])->fetch_assoc()['Done'];
-    $DesignExist = $Controller->QueryData("SELECT COUNT(CaId) AS DesignExist FROM designinfo WHERE DesignStatus='Design Exist'",[])->fetch_assoc()['DesignExist'];
+    $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE CTNStatus="Film" order by CTNOrderDate DESC',[])->fetch_assoc()['film'];
 
     $FCEM = $Controller->QueryData("SELECT 
     SUM(IF(month = 'Jan', total, 0)) AS 'Jan',
@@ -148,7 +148,7 @@
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#ffc107">
                             <h2 class = "p-0 m-0" ><?= sprintf('%02d', $SFA);?></h2>
-                            <span>Need Approval</span>
+                            <span>Sent For Approval</span>
                         </div>
                         <div >
                             <svg width="50" height="50" viewBox="0 0 32 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -217,12 +217,12 @@
         </div> <!-- END OF COL-LG-2 --> 
         
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12  ">
-            <a href="JobCenter.php" style = "text-decoration:none;">
+            <a href="Film.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #5E00EC;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#5E00EC">
-                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$DesignExist ); ?></h2>
-                            <span> Design Exist</span>
+                            <h2 class = "p-0 m-0" ><?= sprintf('%02d',$number_of_films ); ?></h2>
+                            <span> Films </span>
                         </div>
                         <div >
                             <svg width="45" height="45" viewBox="0 0 62 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -345,7 +345,7 @@
     const data1 = {
         labels: laabels,
         datasets: [{
-        label: 'Designes in Department',
+        label: 'Design Report',
         data: dataaa,
         backgroundColor: [
             'rgba(255, 99, 132 )',

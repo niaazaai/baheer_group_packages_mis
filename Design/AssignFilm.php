@@ -1,23 +1,15 @@
 <?php 
     
     require_once 'Controller.php'; 
+    if( isset($_POST['DesignId']) && !empty($_POST['DesignId']) && 
+        isset($_POST['film_deadline']) && !empty($_POST['film_deadline']) && 
+        isset($_POST['film_assigned_to']) && !empty($_POST['film_assigned_to'])   ) {
 
-    if( isset($_POST['CaId']) && !empty($_POST['CaId']) && 
-        isset($_POST['DesignCode']) && !empty($_POST['DesignCode']) && 
-        isset($_POST['DesignBy']) && !empty($_POST['DesignBy']) && 
-        isset($_POST['FinishTime']) && !empty($_POST['FinishTime'])) {
-
-            
-            $Query = "INSERT INTO `designinfo`( `DesignName1`, `DesignerName1`, `DesignStatus`, `DesignImage`, `CaId`, `Alarmdatetime`, `DesignCode1`, `CompleteTime`, `DesignStartTime`, `DesignDep`, `OriginalFile`, `design_type`) 
-            VALUES (NULL,?,'Assigned',NULL,?,?,?,NULL,NULL,'Design',NULL,'Film')";
-                
-            $AssignFilm = $Controller->QueryData($Query ,  [$_POST['DesignBy'] , $_POST['CaId'] ,$_POST['FinishTime'], $_POST['DesignCode']  ]);  
+            $AssignFilm = $Controller->QueryData("UPDATE `designinfo` SET film_deadline = ?,  film_assigned_to = ?, film_status= 'Assigned' WHERE DesignId =?" ,
+              [$_POST['film_deadline'] , $_POST['film_assigned_to'] ,$_POST['DesignId']]);  
 
             if($AssignFilm) {
-                header('Location:Film.php?msg=Assigned to '. $_POST['DesignBy'] .' successfully &class=success'); 
+                header('Location:Film.php?msg=Assigned to '. $_POST['film_assigned_to'] .' successfully &class=success'); 
             }
-
-
-
     }
     else header('Location:Film.php?msg=Post Not Complete&class=danger'); 

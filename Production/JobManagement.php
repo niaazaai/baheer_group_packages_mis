@@ -568,7 +568,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 <input class="form-control form-control-sm mt-2" readonly type="text" value = "<?=(isset($UsedPaper['PSPN_'.$index])) ? "L" . $index . "- " . $UsedPaper['PSPN_'.$index]  : '';  ?>"  />
                                 <input class="form-control form-control-sm mt-2" name="ReelSizeWithCountry_<?=$index?>"  id="ReelSizeWithCountry_<?=$index?>" readonly type="text" value = "<?=(isset($UsedPaper['RSC_'.$index])) ? $UsedPaper['RSC_'.$index]  : '';  ?>"  />
                                 <input class="form-control form-control-sm mt-2"  name="PaperLayerWeight_<?=$index?>" id="PaperLayerWeight_<?=$index?>" readonly  type="text" />
-                                <input class="form-control form-control-sm mt-2" name="Paper_GSM_Layer_<?=$index?>" id="Paper_GSM_Layer_<?=$index?>" readonly type="hidden" value = "<?=$SelectedPaperGSMArray['SPG_Layer_'.$index];?>"  />
+                                <input class="form-control form-control-sm mt-2" name="Paper_GSM_Layer_<?=$index?>" id="Paper_GSM_Layer_<?=$index?>" readonly type="hidden" value = "<?= isset($SelectedPaperGSMArray['SPG_Layer_'.$index]) ? $SelectedPaperGSMArray['SPG_Layer_'.$index] : '';?>"  />
 
                             </div> 
                         <?php endfor; ?>
