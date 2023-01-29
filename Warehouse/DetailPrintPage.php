@@ -133,8 +133,12 @@
                           <td class = "text-end"><?php echo number_format($Rows['ProQty'] - $Rows['CtnOutQty']);    $Remain +=   $Rows['ProQty'] - $Rows['CtnOutQty'] ;  ?></td>
                           <td class="text-center"><?= $Rows['CoutComment'] ?></td>
                           <td class="text-center">
-                                <a href="GatePassPrint.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CtnoutId=<?=$Rows['CtnoutId']?>" class="btn btn-outline-primary btn-sm m-1 border-3 fw-bold" target="_blank">
-                                    Print
+                                <a href="GatePassPrint.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CtnoutId=<?=$Rows['CtnoutId']?>" class="btn btn-outline-primary  btn-sm" target="_blank">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+                                      <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+                                      <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                                  </svg>
+                                  Print
                                 </a>  
                           </td>
                       </tr>

@@ -525,9 +525,9 @@
 
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" >
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
-              <select class="form-select" name="DieExist" id="DieExist"   >
-                <option selected value="No Die"> No Die</option>
+              <select class="form-select" name="DieExist" id="DieExist" onchange = "CheckDiePriceInput(this.value);"  >
                 <option value="New Die">New Die</option>
+                <option value="No Die"> No Die</option>
                 <option value="Die Exist" >Die Exist</option>
                 <option value="Personal Die" >Personal Die</option>
                 <option value="Free Die" >Free Die </option>
@@ -541,7 +541,7 @@
 
           <div class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12" id="DiePrice">
             <label for="DiePrice" class="form-label" >Die Price  </label>
-            <input class="form-control"   placeholder="Die Price" id = "DiePriceInput" name="DiePrice"  type="text" onchange = "AddInputValues(this.name , this.value)" value = ""  />
+            <input class="form-control"   placeholder="Die Price" id = "DiePriceInput" name="DiePrice"     type="text" onchange = "AddInputValues(this.name , this.value)" value = ""  />
           </div>
 
        
@@ -757,9 +757,8 @@
         value = RemoveComma(value) ;
       }  
     }
-    
-    value = Precision(value)
 
+    value = Precision(value)
     InputValues[name] = value; 
     CalculateUnitPrice(InputValues , NoFlip );  
  
@@ -868,7 +867,7 @@
       else PaperTotalPrice = PaperTotalPrice + Values[property];
     } // end of loop 
 
-    console.log(PaperWeight);
+    // console.log(PaperWeight);
     // calculate paper weight 
     CalculatePaperWeight(UserLength , UserWidth , UserHeight, PaperWeight , BoxQuantity  ); 
 
@@ -979,11 +978,11 @@
 
       // Top Flip = (L+W) *2 +5cm, H= W/2 +H   // Without flip = (L+W) *2 +5cm, H= H  // Full Flip = = (L+W) *2 +5cm, H= W +H
       let UserLength =  Number(document.getElementById('PaperLength').value) || 0;
-      let UserWidth =   Number(document.getElementById('PaperWidth').value) || 0;   
+      let UserWidth =   Number(document.getElementById('PaperWidth').value ) || 0;   
       let UserHeight =  Number(document.getElementById('PaperHeight').value) || 0; 
 
       var Length , Height ;   
-      if(NoFlip == 'TF')   Height = (UserWidth / 2 ) + UserHeight; 
+      if(NoFlip == 'TF') Height = (UserWidth / 2 ) + UserHeight; 
       else if(NoFlip == 'WF') Height = UserHeight; 
       else if(NoFlip == 'FF') Height = UserWidth + UserHeight; 
 
@@ -991,7 +990,10 @@
       document.getElementById('NoFlipLength').value  =  (UserLength + UserWidth ) * 2  + 50
       document.getElementById('NoFlipHeight').value  =  Height
 
+      console.log( InputValues['PaperHeight']) ; 
       InputValues['PaperHeight'] = Height   // Number(document.getElementById('PaperHeight').value  ); 
+      console.log( InputValues['PaperHeight']) ; 
+      console.log( InputValues) ; 
       CalculateUnitPrice(InputValues , true );  
 
   } // SHOW NO FLIP 
@@ -1161,12 +1163,20 @@
 
   // CalculatePaperWeight(120 , 320 , 100 , PaperWeight , 15000);
 
-function ChangeDieckle(value) {
- let W =  document.getElementById('PaperWidth').value-0;
- let H =  document.getElementById('PaperHeight').value-0;
- document.getElementById('DieckleInput').value = ( W+H ) * value ; 
+  function ChangeDieckle(value) {
+    let W =  document.getElementById('PaperWidth').value-0;
+    let H =  document.getElementById('PaperHeight').value-0;
+    document.getElementById('DieckleInput').value = ( W+H ) * value ; 
+  }
 
-}
+  function CheckDiePriceInput(value){
+    if(value == 'No Die' || value == 'Die Exist') {
+      document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
+    }//end of if block 
+    else {
+      document.getElementById('DiePriceInput').removeAttribute('disabled')
+    }
+  }// end of function 
 
 </script>
 <?php  require_once '../App/partials/Footer.inc'; ?>

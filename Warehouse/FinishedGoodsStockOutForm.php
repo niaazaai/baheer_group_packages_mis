@@ -30,7 +30,7 @@ if(isset($_POST['StockOut']))
 {
     $FAQ=$_REQUEST['FAQ']; 
 
-    $ProOutQty=$_POST['ProOutQty'];
+    $ProOutQty= (int)$_POST['ProOutQty'];
     $CTNId=$_GET['CTNId'];
     $PROId=$_GET['PROId'];
     $CustId=$_GET['CustId'];
@@ -48,7 +48,7 @@ if(isset($_POST['StockOut']))
     $TotalPackes=$_POST['TotalPackes'];
     $PerPackes=$_POST['PerPackes'];
     $Pieces=$_POST['Pieces'];
-    $TotalQTY=$_POST['TotalQTY'];
+    $TotalQTY= (int)$_POST['TotalQTY'];
 
     $Total=$ProOutQty+$TotalQTY;
         

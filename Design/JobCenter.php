@@ -14,7 +14,7 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
                                 `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  FROM `carton` INNER JOIN ppcustomer 
-        ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" OR CTNStatus="Film" order by CTNOrderDate DESC';
+        ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design"   order by CTNOrderDate DESC';
     }
     else if($ListType=='JobUnderProcess')
     {
@@ -23,7 +23,7 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
         designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
-        where CTNStatus="DesignProcess" OR CTNStatus="Film" order by CTNOrderDate DESC';
+        where CTNStatus="DesignProcess" order by CTNOrderDate DESC';
     } 
 }
 else
@@ -33,7 +33,7 @@ else
     ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage,CURRENT_TIMESTAMP,
     designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
-    ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" OR CTNStatus="Film"  order by CTNOrderDate DESC';
+    ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" order by CTNOrderDate DESC';
 }
 $DataRows=$Controller->QueryData($SQL,[]);
 $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE CTNStatus="Film" order by CTNOrderDate DESC',[])->fetch_assoc()['film'];

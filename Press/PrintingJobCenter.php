@@ -45,7 +45,7 @@ else
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
     <?php if(isset($_GET['msg']) && !empty($_GET['msg'])) { ?>
-        <div class="alert alert-<?=$_GET['class']?>  alert-dismissible fade show shadow" role="alert">
+        <div class="alert alert-<?=(isset($_GET['class'])) ? $_GET['class'] : 'info' ?>  alert-dismissible fade show shadow" role="alert">
             <strong>
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -59,7 +59,6 @@ else
 
 <div class="card m-3 shadow ">
   <div class="card-body d-flex justify-content-between    ">
-<!--  style = "border-bottom:4px dotted black ;" -->
     <div class = "d-flex justify-content-between  " >
 
     <div class = "my-2">
@@ -80,7 +79,6 @@ else
     </div>
  
     </div>
-
      
     <div class= "d-flex justify-content-center   my-3">
           <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary me-2  " style = "margin-top:4px;"  title="Click to Read the User Guide ">
@@ -93,8 +91,8 @@ else
 
           <form action=""  method = "post"  >
               <select class = "form-select" name="ListType" id="ListType" style = "border:3px solid green; " onchange = "this.form.submit();" > 
-                <option value="<?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : (isset($ListType )) ? $ListType  : ''   ;  ?>">
-                   <?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : (isset($ListType )) ? $ListType : ''   ;  ?>
+                <option value="<?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  :  ( (isset($ListType )) ? $ListType  : '')   ;  ?>">
+                   <?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : ((isset($ListType )) ? $ListType : ''  ) ;  ?>
                 </option>
                 <option value="NewJobPKG">New Job PKG</option>
                 <option value="NewJobPP">New Job PP</option>

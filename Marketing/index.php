@@ -1,5 +1,12 @@
 <?php    require_once '../App/partials/Header.inc';  ?>
-<?php   require_once '../App/partials/Menu/MarketingMenu.inc'; ?>  
+<?php   require_once '../App/partials/Menu/MarketingMenu.inc'; 
+
+//  $user_id = $Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = ? AND notification_type = ?" , [ 'Design' , 'NEW-JOB'])->fetch_assoc()['user_id'];
+// echo $user_id; 
+?>  
+
+
+
 
 <?php if(isset($_GET['msg']) && !empty($_GET['msg']))  {
           echo' <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
@@ -52,9 +59,62 @@
           
         </div>
     </div>
-  
-   
+    
+    <div  id="livesearch" class="list-group shadow z-index-2 position-absolute text-center  w-25 mt-3"></div>
+    <audio id="notification" src="../Public/Sound/notification_sound.wav" muted></audio>
+    <!-- <button onclick="playSound()">Play</button>   -->
   </div>
+  
+  <script>
+      
+
+    function GetNotification(str) {
+      document.getElementById('livesearch').style.display = '';
+        if (str.trim().length === 0) {
+          return false;
+        } else {
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200)  {
+                    var response = JSON.parse(this.responseText);
+                    var html = ''; 
+                        if(response !=  '-1'){
+                          for(var count = 0; count < response.length; count++) {
+                                html += '<a href="#" class="list-group-item list-group-item-action" aria-current="true">' ; 
+                                html += response[count].title + ' - ' +  response[count].alert_comment + ' - ' +  response[count].created_at ; 
+                                html += '   </a>';
+                                document.getElementById('notification').muted = false;
+ document.getElementById('notification').play();
+                          }
+                        }
+                        else html += '<a href="#" class="list-group-item list-group-item-action " aria-current="true"> No Match Found</a> ';
+                        document.getElementById('livesearch').innerHTML = html;  
+              }
+          }
+          xmlhttp.open("GET", "GetNotification.php?query=" + str, true);
+          xmlhttp.send();
+        }
+    }
+
+
+    window.onload = function() {
+      GetNotification('more');
+    };
+
+    setInterval(() => {
+      GetNotification('more');
+    }, 1000);
+
+
+    function playSound() {
+      const audio = new Audio('../Public/Sound/notification_sound.wav');
+      audio.play();
+    }
+
+  </script>
+
+
+
 <?php  require_once '../App/partials/Footer.inc'; ?>
 
 

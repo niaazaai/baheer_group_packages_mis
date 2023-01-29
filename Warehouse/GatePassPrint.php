@@ -1,7 +1,7 @@
 <?php 
 
 
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 // $ROOT_DIR = '/var/www/html/BGIS/';
 require_once $ROOT_DIR. 'App/Controller.php'; 
  
@@ -71,7 +71,7 @@ if(isset($_GET['CTNId']) && !empty($_GET['CTNId'])) {
                     </th>
                 
                     <th  style = "border: 0px; text-align:right; ">
-                        <img src="http://localhost:4001/BGIS/Public/Img/logo-brand.png" width="150" height="100" alt="">
+                        <img src="http://localhost:1000/BGIS/Public/Img/logo-brand.png" width="150" height="80" alt="">
                     </th>
                 </tr>
             </table> 

@@ -201,8 +201,16 @@
 
             if($_POST['Page'] == 'CustomerOrderPage') {  
                 // the edit comes from order page then if it is not job then it should be in the order page else send it to finance for payment 
-                if($request['JobNo'] == 'NULL') $Status = 'Order'; 
-                else  $Status = 'FNew'; 
+                if($request['JobNo'] == 'NULL') {$Status = 'Order'; 
+                } else  {
+                    $Status = 'FNew'; 
+                    // THIS PART IS USED FOR CREATING THE NOTIFICATION 
+                    $user = $this->Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = ? AND notification_type = ?" , [ 'Finance' , 'NEW-JOB']); 
+                    $user_id = 0 ; 
+                    $alert_comment = 'New Job Arrived ' . $request['JobNo']; 
+                    if($user->num_rows > 0 ) $user_id  =  $user->fetch_assoc()['user_id'];
+                    $this->Controller->QueryData("INSERT INTO alert (department,user_id,title,alert_comment, `type`) VALUES ('Finance',?,'New Job',?,'NEW-JOB')" , [$user_id ,  $alert_comment ]);
+                } 
             }
                 
                 // echo $_POST['Page'];
@@ -259,6 +267,9 @@
                         header("Location:IndividualQuotation.php");
                     }
                     elseif( isset($_POST['COP_EditOnly']) ){
+
+
+
                         header("Location:". $_POST['Page']. ".php");
                          
                     }
