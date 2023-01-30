@@ -391,9 +391,7 @@ require_once  $ROOT_DIR . '/App/Controller.php';
       display: none;
     }
   }
-
   </style>
-
 </head>
 <body >
 
@@ -691,19 +689,39 @@ require_once  $ROOT_DIR . '/App/Controller.php';
 
 
         <li class="nav-item dropdown">
-          <a  class="nav-link  btn-sm" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"  style = "color: black;    padding-top:10px; padding-bottom: 10px;"  >
+          <a  class="nav-link btn-sm" href="#" id="offcanvasNavbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"  style = "color: black;    padding-top:10px; padding-bottom: 10px;"  >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
               <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zM8 1.918l-.797.161A4.002 4.002 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4.002 4.002 0 0 0-3.203-3.92L8 1.917zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5.002 5.002 0 0 1 13 6c0 .88.32 4.2 1.22 6z"/>
             </svg>
-
             <span class="badge bg-danger">4</span>
           </a>
-          <ul class="dropdown-menu" aria-labelledby="offcanvasNavbarDropdown">
-            <li><a class="dropdown-item" href="#">Noti - 1 </a></li>
-            <li><a class="dropdown-item" href="#">Noti - 2</a></li>
-            <li><a class="dropdown-item" href="#">Noti - 3 </a></li>
-            <li><a class="dropdown-item" href="#">Noti - 4 </a></li>
-            <li><a class="dropdown-item" href="#">Noti - 5 </a></li>
+          <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="offcanvasNavbarDropdown" id = "NotificationNavbar__" >
+
+            
+            <!-- <li> 
+              <a class="dropdown-item p-0  " style = "font-size:12px; width:300px; " href="#" onclick = "RemoveNotification()">
+              <div class="m-0 " style = "border-radius:0px; ">
+                <div class="row ps-2 pe-2">
+                  <div class="col-2 py-2 text-center " >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                      </svg>
+                  </div>
+                  <div class="col-10 my-1 p-0">
+                      <div class=" d-flex justify-content-between ">
+                          <div><strong>New Job</strong> </div>
+                          <div class = "me-4">1 day ago </div>
+                      </div>
+                      <div class="">
+                          New Job arrived  54  
+                      </div>
+                  </div>
+                </div>
+                </div>
+              </a>
+            </li> -->
+
+ 
           </ul>
         </li>
 
@@ -764,3 +782,87 @@ require_once  $ROOT_DIR . '/App/Controller.php';
     sidebar.classList.toggle("close");
   });
 </script>
+
+
+
+<script>
+
+    var skipped_once = false;
+    var old_time = 0
+    var last_time_notfication = 0; 
+
+    function GetNotification(str) {
+      
+        if (str.trim().length === 0) {
+          return false;
+        } else {
+          var xmlhttp = new XMLHttpRequest();
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200)  {
+                    var response = JSON.parse(this.responseText);
+                    var html = ''; 
+                        if(response !=  '-1'){
+                          for(var count = 0; count < response.length; count++) {
+                            html += '<li><a class="dropdown-item p-0  " style = "font-size:12px; width:300px; " href="#" onclick = "RemoveNotification()">'; 
+                            html += '<div class="m-0" style = "border-radius:0px;"><div class="row ps-2 pe-2"><div class="col-2 py-2 text-center " >'; 
+                            html += '<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">'; 
+                            html += '<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>';
+                            html += '</svg></div>';
+                            html += '<div class="col-10 my-1 p-0"><div class=" d-flex justify-content-between ">';      
+                            html += `<div><strong>${response[count].title}</strong> </div>`;
+                            html += `<div class = "me-4">${response[count].created_at} </div> `;
+                            html += ' </div><div class="">';
+                            html += response[count].alert_comment
+                            html += '</div></div></div></div></a></li>';
+                            last_time_notfication =  response[count].last_time ; 
+                          }
+                        }
+
+                        document.getElementById('NotificationNavbar__').innerHTML = html;  
+              }
+          }
+          xmlhttp.open("GET", "GetNotification.php?query=" + str, true);
+          xmlhttp.send();
+        }
+    }
+
+    window.onload = function() {
+      GetNotification('more');
+    };
+
+
+    function playSound() {
+      const audio = new Audio('../Public/Sound/notification_sound.wav');
+      audio.play();
+    }
+
+
+    
+    setInterval(() => {
+      if (old_time != last_time_notfication) {
+        //do not play sound on first page load
+        if (skipped_once) {
+          playSound();
+        }
+        skipped_once = true;
+        old_time = last_time_notfication;       
+      }
+      console.log(last_time_notfication); 
+      GetNotification('more');
+    }, 1 * 1000);
+
+
+    function playSound() {
+      // const audio = new Audio('../Public/Sound/notification_sound.wav');
+      // audio.play();
+    }
+
+    function RemoveNotification(){
+      alert('working!'); 
+
+    }
+
+    
+
+  </script>
+

@@ -207,7 +207,7 @@
                     // THIS PART IS USED FOR CREATING THE NOTIFICATION 
                     $user = $this->Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = ? AND notification_type = ?" , [ 'Finance' , 'NEW-JOB']); 
                     $user_id = 0 ; 
-                    $alert_comment = 'New Job Arrived ' . $request['JobNo']; 
+                    $alert_comment = 'Job with ID (' . $request['JobNo'] . ') Arrived'; 
                     if($user->num_rows > 0 ) $user_id  =  $user->fetch_assoc()['user_id'];
                     $this->Controller->QueryData("INSERT INTO alert (department,user_id,title,alert_comment, `type`) VALUES ('Finance',?,'New Job',?,'NEW-JOB')" , [$user_id ,  $alert_comment ]);
                 } 

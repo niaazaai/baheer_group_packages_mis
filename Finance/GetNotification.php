@@ -6,7 +6,6 @@
     $DataRows = $Controller->QueryData("SELECT * FROM alert WHERE department = 'Finance' AND user_id = '108' AND status = 1 " , []);
     if($DataRows->num_rows > 0 ){
       while ($Customer = $DataRows->fetch_assoc()) {
-          $Customer['last_time'] = $Customer['created_at']; 
           $Customer['created_at'] = Carbon::create( Carbon::parse($Customer['created_at'])->format('Y-m-d H:i:s')  , 'Asia/Kabul')->diffForHumans(); 
           $arr [] =  $Customer; 
       } 
