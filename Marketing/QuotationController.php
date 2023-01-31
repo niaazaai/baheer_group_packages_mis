@@ -22,7 +22,8 @@
             
             // if the record is job it will activate customer and conditon to working  
             if($request['JobNo'] != 'NULL'){
-                $QuotationRows = $this->Controller->QueryData("UPDATE ppcustomer SET CusStatus = ? , PPCondition = ? WHERE CustId = ?" , ['Active' , 'Working' , $request['CustomerId'] ]); 
+                $QuotationRows = $this->Controller->QueryData("UPDATE ppcustomer SET CusStatus = ? , PPCondition = ? WHERE CustId = ?" , 
+                ['Active' , 'Working' , $request['CustomerId'] ]); 
             }
    
             if(isset($request['CartonQTY'] )   ) {
@@ -37,6 +38,18 @@
             else if($request['JobNo'] == 'NULL' && isset($request['RorderToDesign'])) $Status = 'Design';              
             else if($request['JobNo'] != 'NULL' && isset($request['RorderToDesign'])) header("Location:QuotationEdit.php?CTNId=". $request['CTNId'] ."msg='Please Remove Job Number'&Page=". $_POST['Page']  );                    
             // else { header("Location:Quotation.php?CustId=". $request['CustomerId'] ." &CTNId=". $request['CTNId'] ."&msg='JobNo is not set correctly'&Page=". $_POST['Page']  );}
+
+            // this part is used for design notification
+            if($Status == 'Design') {
+                $alert_comment = 'Please check new quotation arrived'; 
+                $user = $this->Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = 'Design' AND notification_type = 'NEW-JOB'" , []);
+                if($user->num_rows > 0 ) {
+                    $user_id  =  $user->fetch_assoc()['user_id'];
+                    $this->Controller->QueryData("INSERT INTO alert (department,user_id,title,alert_comment, `type`) 
+                    VALUES ('Design',?,'New Job',?,'NEW-JOB')" , [$user_id,$alert_comment]);
+                }
+            }// END OF DESIGN 
+
 
             $CheckBoxs = [ 
                 'CSlotted' => 'SLOTTED' ,

@@ -32,23 +32,35 @@ if(isset($_GET['CTNId']) && !empty($_GET['CTNId']) && isset($_GET['ButtonType'] 
     {
 
 
-        $SELECT_CARTON = $Controller->QueryData('SELECT offesetp FROM carton WHERE CTNId=?',  [ $CTNId ]);
+        $SELECT_CARTON = $Controller->QueryData('SELECT offesetp,JobNo FROM carton WHERE CTNId=?',  [ $CTNId ]);
         $CARTON = $SELECT_CARTON->fetch_assoc();
 
         // var_dump($CARTON); 
 
+        $Department = ''; 
+        $alert_comment = '';
+    
         if(trim($CARTON['offesetp']) == 'Yes' ) {
             $Controller->QueryData('UPDATE carton SET CTNStatus = "Printing"  WHERE CTNId=?' , [$CTNId]);
+            $Department = 'Printing';
+            $alert_comment = 'New Job with ID (' . $CARTON['JobNo'] . ') Arrived'; 
         }
         else {
             // put it back to recive amount 
             $Controller->QueryData('UPDATE carton SET CTNStatus = "Film" WHERE CTNId=?', [$CTNId]);
+            $Department = 'Design'; 
+            $alert_comment = 'New Film with JobNo (' . $CARTON['JobNo'] . ') Arrived'; 
+            
         }
 
-        // OLD QUERY BEFORE FILE NEED TO DELETE AFTER A WHILE 
-        // $Updata=$Controller->QueryData("UPDATE carton SET CTNStatus = 'Archive' WHERE CTNId = ?",[ $CTNId]);
         $message='You have Sucessfully Proccessed the Job Without Any Payment';
-        // die();
+
+        $user = $Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department =  ? AND notification_type = 'NEW-JOB' ", [$Department  ]); 
+        if($user->num_rows > 0 ) {
+            $user_id  =  $user->fetch_assoc()['user_id'];
+            $Controller->QueryData("INSERT INTO alert (department,user_id,title,alert_comment, `type`) 
+            VALUES (?,?,'New Job',?,'NEW-JOB')" , [$Department , $user_id , $alert_comment]);
+        }
     }
     header("Location:JobCenter.php?ListType=$ListType&msg=".$message.'&class=success' );
 }
