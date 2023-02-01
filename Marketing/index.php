@@ -15,7 +15,6 @@
                 </div>'; 
       }  
 ?>
-
   <div class="m-3">
     <div class="card text-white" style = "background-color:#F37053;" >
       <div class="card-body d-flex justify-content-between shadow">

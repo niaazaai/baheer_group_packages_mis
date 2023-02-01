@@ -968,7 +968,7 @@
                     $total_length = 0 ; 
                     // TOTAL WIDTH BETWEEN  flexo_1p - flexo_2p - AND Default which is normal is the same 
                     $total_width = $CTN_DATA[0]['CTNWidth'] + $CTN_DATA[0]['CTNHeight'] ; 
-                    switch ($Product['production_job_type']) {
+                    switch ( $CTN_DATA[0]['production_job_type']) {
                         case 'Offset 1 Piece':
                             $total_width = $CTN_DATA[0]['CTNWidth'] + $CTN_DATA[0]['CTNHeight'] + 2.5; 
                             $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) * 2  + 3; 
@@ -1020,9 +1020,8 @@
             </tr>
         </tbody>
     </table>
-
     <div >
-        <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
 
     </div><!-- end of card-body -->

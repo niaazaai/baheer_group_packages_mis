@@ -52,7 +52,7 @@
                 production_cycle.cycle_id ,carton.JobNo, carton.ProductName ,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) , ' - ', CTNType , ' Ply'  ) AS Size ,CTNUnit,   
                 used_paper.ups , used_paper.reel , used_paper.creesing , production_cycle.cut_qty , carton.CTNQTY , production_cycle.cycle_plan_qty , carton.ProductQTY  ,
                  used_paper.comment , production_cycle.cycle_flute_type , 
-                PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7,used_machine.id as umid,used_machine.status as machine_status
+                PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7,used_machine.id as umid,used_machine.status as machine_status,  production_cycle.page_arrival_time
                 FROM carton 
                 INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
                 INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -79,7 +79,7 @@
                 <th class="text-center">OPS</th>'; 
             $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , carton.JobNo,carton.ProductName ,   CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) , ' - ', CTNType , ' Ply'  ) AS Size,
                 CTNUnit, CTNColor , carton.CTNQTY , production_cycle.cycle_plan_qty , carton.ProductQTY  ,  used_paper.comment, production_cycle.cycle_flute_type , 
-                PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7  ,used_machine.id as umid,used_machine.status as machine_status
+                PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7  ,used_machine.id as umid,used_machine.status as machine_status ,  production_cycle.page_arrival_time
                 FROM carton
                 INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
                 INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -103,7 +103,7 @@
             $table_query = "SELECT 
             carton.CTNId, machine.machine_id , production_cycle.cycle_id , carton.JobNo, carton.ProductName ,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) , ' - ', CTNType , ' Ply'  ) AS Size,
             CTNUnit , CTNColor , production_cycle.cycle_flute_type, 
-            PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7,used_machine.id as umid ,used_machine.status as machine_status
+            PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7,used_machine.id as umid ,used_machine.status as machine_status,  production_cycle.page_arrival_time
             FROM carton
             INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
             INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -233,6 +233,7 @@
                             <option value="3">Flexo #1 </option>
                             <option value="4">Flexo #2 </option>
                             <option value="5">Glue Folder </option>
+                            <option value="6">4 Khat </option>
                         </select>
                         <label for="sss">Select Machines</label>
                     </div>

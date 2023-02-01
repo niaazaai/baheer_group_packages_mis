@@ -230,7 +230,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
 
                 <th scope="col">
                     <div  class ="text-secondary">Order Qty:</div>
-                    <div id = "OrderQty"><?=$Product['CTNQTY'];?></div>
+                    <div id = "OrderQty"><?=number_format($Product['CTNQTY'] );?></div>
                 </th>
                 <th scope="col">
                     <div  class ="text-secondary">Order Date:</div>
@@ -766,15 +766,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                             </svg>
                         </a>
                         
-                        <a href="ChangeCycleStatus.php?cycle_id=<?=$cycle['cycle_id']?>" 
-                            onclick="return confirm('ایا مطمین استید در ارسال نمودن این جاب به تاسک لست')" 
-                            class="btn btn-outline-primary btn-sm" title = "send to task list" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
-                                <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/>
-                                <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
-                            </svg>  
-                        </a>
+                        
 
                         <a type="button" data-bs-toggle="modal" style = "color:yellow; margin-left:2px;" data-bs-target="#exampleModal" onclick = "AddCycleId(<?=$cycle['cycle_id']?>)" > 
                             <svg width="30" height="30" x="0px" y="0px"   
@@ -821,7 +813,15 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                     S78.037,174.129,73.873,174.129z"/>
                             </svg>
                         </a>
-
+                        <a href="ChangeCycleStatus.php?cycle_id=<?=$cycle['cycle_id']?>" 
+                            onclick="return confirm('ایا مطمین استید در ارسال نمودن این جاب به تاسک لست')" 
+                            class="btn btn-outline-primary btn-sm" title = "send to task list" >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5H2zM3 3H2v1h1V3z"/>
+                                <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1h-9z"/>
+                                <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5V7zM2 7h1v1H2V7zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H2zm1 .5H2v1h1v-1z"/>
+                            </svg>  
+                        </a>
 
                         <?php if(!$isComplete) { ?>
                             <a href="MarkAsComplete.php?cycle_id=<?=$cycle['cycle_id']?>&CTNId=<?=$CTNId?>" class = "btn btn-outline-dark btn-sm mx-1 ">

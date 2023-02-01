@@ -130,6 +130,7 @@ require_once '../App/partials/Header.inc'; ?>
                 <div class = "text-start" >
                     <span class = "fw-bold">Order Date: </span> <?php echo $Rows['CTNOrderDate'];?><br>
                     <span class = "fw-bold">DeadLine: </span><?php echo $Rows['CTNFinishDate']; ?><br>
+                    <span class = "fw-bold">Customer ID: </span><?php echo $Rows['CustId1']; ?><br>
                 </div>
             </div>
         </div>
@@ -155,9 +156,7 @@ require_once '../App/partials/Header.inc'; ?>
                 <tbody>
             <?php
                 $total=0; $i=1;
-                 
-                    foreach ($_POST['design'] as $check) 
-                    {
+                    foreach ($_POST['design'] as $check) {
                         $Query='SELECT CTNId,ProductName, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size  ,CTNUnit,CTNColor,CTNPaper,CTNQTY,CTNPrice,
                                 CTNTotalPrice,MarketingNote,CTNOrderDate,CTNFinishDate, CFluteType,CTNType,CTNPolimarPrice,FinalTotal,CTNDiePrice,CtnCurrency,employeet.Ename , `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` FROM carton INNER JOIN employeet ON carton.EmpId = employeet.EId WHERE CTNId = ?';
@@ -447,10 +446,9 @@ require_once '../App/partials/Header.inc'; ?>
     }
 
 </script>
-
  
 <!-- width:21cm -->
-<div id="print_area" class = "m-5" style = "display:none ; width:21cm " >
+<div id="print_area" class = "m-5" style = "display:none;width:21cm;" >
     
 <?php 
     $CustomerData ="SELECT DISTINCT carton.CustId1,carton.CTNOrderDate,carton.CTNFinishDate,ppcustomer.CustName,ppcustomer.CustMobile,ppcustomer.CustAddress ,CTNUnit
@@ -479,6 +477,7 @@ require_once '../App/partials/Header.inc'; ?>
         <div style=" text-align:right;">
                 <span style = "font-weight:bold;">Order Date: </span> <?php echo $Rows['CTNOrderDate'];?><br>
                 <span style = "font-weight:bold;">DeadLine: </span><?php echo $Rows['CTNFinishDate']; ?><br>
+                <span style = "font-weight:bold;">Customer ID: </span><?php echo $Rows['CustId1']; ?><br>
         </div>
     </div>
 
@@ -637,7 +636,7 @@ require_once '../App/partials/Header.inc'; ?>
       
     </div><!-- end of row div --> 
 
-    <div style="margin-top:2cm; display:none;" id="remove_image_print"> 
+    <div style="margin-top:2cm; " id="remove_image_print"> 
         <?php
                 foreach ($_POST['design'] as $check1)
                 {
