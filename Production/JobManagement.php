@@ -104,17 +104,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     .custom-font-lg  { 
         font-size:16px;
     }
-
-    .plan-qty {
-          
-    }
-    .plan-qty:hover {
-        background-color:#393E46; 
-        color:white; 
-        cursor: pointer;
-        font-size:20px;
-        transition:250ms;
-    }
 </style>
  
 <?php  if(isset($_GET['msg'])) {  ?>
@@ -449,7 +438,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <td style = "width:180px;">
                     <div class="form-floating"  >
                         <select class="form-select form-select-sm" name="Ups" id="Ups" onchange = "ReelWastUps()" aria-label=""   >
-                            <option value = "<?=(isset($UsedPaper['ups'])) ? $UsedPaper['ups'] : '';?> " selected > <?=(isset($UsedPaper['ups'])) ? $UsedPaper['ups'] : '';?></option>
+                            <option selected value = "<?=(isset($UsedPaper['ups'])) ? $UsedPaper['ups'] : '';?> " selected > <?=(isset($UsedPaper['ups'])) ? $UsedPaper['ups'] : '';?></option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -489,14 +478,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         </tbody>
     </table>
     </form>
-  
-<!--    
-    <div class="row mb-5   mt-2" >
-        <div class=" col-xxl-10 col-xl-10 col-lg-10 col-md-8 col-sm-12 col-xs-12">
-            <textarea name="comment" id="" cols="20" rows="2" class = "form-control" ></textarea>
-        </div>
-    </div> -->
-
     <table class="table table-bordered " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
@@ -560,7 +541,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                     <option selected value='<?=$Product['PaperP'.$index]?>'>L<?=$index?>- <?=$Product['Ctnp'.$index]; ?></option>
                                     <?php foreach ($PaperPrice as $key => $value)   echo "<option value='$value'>L$index- $key</option>";  ?>
                                 </select>  
-
                                 
                                 <input type="text"  id="" readonly class = "form-control form-control-sm " value = "L<?=$index?>- <?=$Product['Ctnp'.$index]; ?>"  id="PaperLayerPrice_<?=$index?>"  >
                                 
@@ -585,12 +565,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
             </tr>
         </tbody>
     </table>
-
-
-            
-
-
-
  
     <table class="table table-bordered  "  >
         <thead style = "border-bottom:2px solid black;" >
@@ -612,8 +586,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 </svg>
                                 New Cycle
                             </a> 
-                            
-                            
                             <div class="collapse multi-collapse " style = "width:500px;" id="multiCollapseExample1">
                                 <div class="card card-body">
                                     <ul class="list-group">
@@ -638,7 +610,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <th scope="col" class ="text-secondary"> Machines</th>
                 <th scope="col" class ="text-secondary"> Cycle Status</th>
                 <th scope="col" class ="text-secondary"> Plan Qty</th>
-
                 <th scope="col" class ="text-secondary"> Cut Qty (cm)</th>
                 <th scope="col" class ="text-secondary"> Produced Qty</th>
                 <th scope="col" class ="text-secondary"> Flute Type</th>
@@ -690,8 +661,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                     </a>"; 
         ?>
 
-        
-
             <tr class ="" >
                 <th scope="col">  <?php echo chr($i); $i++; ?> <?php // echo $cycle['cycle_id'] ?>  </th>
                 <th scope="col" class = "custom-font-lg text-center">  <?=$machine_td ?>   </th>
@@ -716,31 +685,20 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
 
                     ?>  
                 </th>
-                <th 
-                    class ="plan-qty" 
-                    onclick = "UpdateCyclePlanQTY(<?=  $cycle['cycle_id']?> , <?=$Product['CTNQTY'];?> , )"
-                    id = "PlanQty" > <?=$cycle['cycle_plan_qty']; ?>  
+                <!-- class ="plan-qty" -->
+
+                <th style = "max-width:100px;" > 
+                    <input type="text" 
+                        name="cycle_plan_qty" class = "form-control form-control-sm" 
+                        id = "PlanQty" onchange=  "UpdateCyclePlanQTY(<?=  $cycle['cycle_id']?> , <?=$Product['CTNQTY'];?> , this.value , <?=$UsedPaper['ups']?>)" 
+                        value = "<?=isset($cycle['cycle_plan_qty']) ? $cycle['cycle_plan_qty'] : 0; ?>" >
                 </th>
                 <th class = "" style = "max-width:100px;">
-
-                    <?php 
-                        $cut_qty = 0 ; 
-                        if( isset($cycle['cycle_plan_qty']) && isset($UsedPaper['ups']) ) {
-                            $cut_qty = $cycle['cycle_plan_qty'] / $UsedPaper['ups'];
-                            $percentage = $cut_qty / 100 ;
-                            $cut_qty += $percentage; 
-                            // echo number_format($cut_qty , 2); 
-                        }  
-                    ?>
-
                    <input type="text" class="form-control form-control-sm m-0 "   placeholder = "Cut Qty (cm)" id="CutQty" 
-                    name="CutQty" disabled value = "<?= number_format($cut_qty , 2) ?>" >
+                    name="CutQty" disabled value = "<?=isset($cycle['cut_qty']) ? $cycle['cut_qty'] : 0; ?>" >
                 </th>
 
-
                 <th scope="col"  > <?=$cycle['cycle_produce_qty']; ?>  </th>
-                
-                
                 
                 <th scope="col" style = "width:120px;"  > 
                     <form action="ChangeCycleFluteType.php" method="post">
@@ -765,8 +723,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 <path d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm-6.106 4.5L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
                             </svg>
                         </a>
-                        
-                        
 
                         <a type="button" data-bs-toggle="modal" style = "color:yellow; margin-left:2px;" data-bs-target="#exampleModal" onclick = "AddCycleId(<?=$cycle['cycle_id']?>)" > 
                             <svg width="30" height="30" x="0px" y="0px"   
@@ -830,21 +786,15 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 </svg> Mark as Complete
                             </a>
                         <?php } ?>
-                        
- 
-
 
                     <?php  } // END OF COMPLETED IF BLOCK   
                     else if($cycle['cycle_status'] == 'Incomplete') { ?>
-
                     <?php  } // END OF COMPLETED IF BLOCK  ?>
-
                 </th>
             </tr>
 
         <?php } // end of production cycle loop  ?>
-        <?php } //  else die('Somthing Went Wrong In Cycle:(');  ?>
-           
+        <?php } else echo '<span id = "PlanQty" style = "display:none;">0</span> ' ; //  else die('Somthing Went Wrong In Cycle:(');  ?>
         </tbody>
     </table>  
 
@@ -853,30 +803,24 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         <input type="hidden" id = "cycle_plan_qty_input" name = "cycle_plan_qty_input"  >
         <input type="hidden" id = "cycle_id_for_plan_qty" name = "cycle_id_for_plan_qty"  >
         <input type="hidden" name="CTNId" value = "<?=$_GET['CTNId']?>" >
+        <input type="hidden" name="apps" id = "cycle_apps_input">
     </form>
  
     <script>
-        
-        function UpdateCyclePlanQTY(cycle_id , CTNQTY ){
-            let plan_qty = prompt('مقدار کاری را تعین نمایید'); 
-
+        function UpdateCyclePlanQTY(cycle_id , CTNQTY , plan_qty , apps=1 ){
             if(plan_qty == null || plan_qty == 0 ) return ; 
-
             if(plan_qty > CTNQTY ) {
                 alert('The Plan Quantity Must not be greater than Order QTY') ;
                 return ; 
             } 
-
             let cycle_qty = document.getElementById('cycle_plan_qty_input'); 
             cycle_qty.value = plan_qty; 
 
             document.getElementById('cycle_id_for_plan_qty').value = cycle_id; 
+            document.getElementById('cycle_apps_input').value = apps; 
             cycle_qty.form.submit(); 
         }
-
     </script>
-
-
     </div>
 </div>
  
@@ -894,12 +838,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <input type="hidden" id = "CYCLE_ID_" name="CYCLE_ID"  >
                 <input type="hidden" name="CTNId" value= "<?=$_REQUEST['CTNId'];?>" >
                 
-                <?php if ($machine_db_list->num_rows > 0) {  while($MACHINE = $machine_db_list->fetch_assoc()){    
-                    // if( $MACHINE['used_machine_status'] == 'Complete') {
-                    //     echo '<label class="list-group-item text-white fw-bold" style="background-color:#1CD6CE" > '.  $MACHINE['machine_name']  . ' is Completed</label>'; 
-                    //     continue;
-                    // } 
-                ?> 
+                <?php if ($machine_db_list->num_rows > 0) {  while($MACHINE = $machine_db_list->fetch_assoc()){    ?> 
                     <label class="list-group-item">
                         <input class="form-check-input me-1 _cycle_machine_ " 
                         name = "machine_<?=$MACHINE['machine_id'];?>"   
@@ -912,9 +851,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                     <input class="form-check-input me-1" name = "HasManual"   value = "Manual"  type="checkbox"  >
                     Use Manual Also 
                 </label>  
-
             </div>
-            
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -1059,7 +996,9 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         let Creesing =   document.getElementById('Creesing'); 
         let Width =   Number(Precision( document.getElementById('Width').innerHTML)); 
         let Height =   Number(Precision( document.getElementById('Height').innerHTML)); 
-        let PlanQty =  Number(Precision(  document.getElementById('PlanQty').innerHTML)); 
+        
+        
+        let PlanQty =  Number(Precision(  document.getElementById('PlanQty').innerHTML) ); 
         
         if(Reel > 180 || Reel < 40 ) { 
             alert('The reel size must be between 40 and 180'); 
@@ -1075,16 +1014,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         //  calculate creesing
         let c1 = ((Width * 10) / 2 ) + 5 ;
         Creesing.value =   c1 + ' x ' + Height * 10 + ' x ' + c1  ; 
-
-        // calculate cut quantity 
-        let CutQty = PlanQty / Ups ; 
-
-        let CutPercent = (CutQty  * 1 ) / 100  ;
-        CutQty += CutPercent;
-        
-        if(CutQty >= 1000) CutQty += 200; 
-        document.getElementById('CutQty').value = Precision(CutQty, 2 ); 
-
     }
 
     ReelWastUps();
@@ -1109,7 +1038,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
 
     function AddCycleId(cycle_id ){
         document.getElementById('CYCLE_ID_').value = cycle_id; 
-        
         var selected_cycle_machine =  document.getElementsByClassName('selected_cycle_machine_'+cycle_id); 
         var _cycle_machine_ =  document.getElementsByClassName('_cycle_machine_'); 
 
@@ -1125,23 +1053,13 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 }
             }
         }
-
     }
-
-
-
     function RemoveCycle(cycle_id){
         if(!confirm('ایا مطمین استید برای حذف نمودن این دوره' + ' ' +cycle_id )) return ; 
         document.getElementById('cycle_id_main').value = cycle_id; 
         document.getElementById('cycle_id_main').form.submit();
     }
-
- 
-
- 
-
 </script>
-
 
 <?php 
     $Exct = "<script>" ; 
@@ -1149,5 +1067,4 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     $Exct .= "</script>" ;
     echo $Exct; 
 ?>
-
 <?php  require_once '../App/partials/Footer.inc'; ?>

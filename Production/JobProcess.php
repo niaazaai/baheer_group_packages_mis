@@ -46,7 +46,7 @@
         if( $double_job == '-1' && $CTNId != '-1' ) {
             $Row = $Controller->QueryData('SELECT CTNId,ppcustomer.CustName, CTNType,  JobNo,CTNOrderDate,CTNStatus,ProductQTY,JobType,CTNFinishDate,CTNQTY,CTNUnit,CTNColor, ProductName ,CTNStatus,  	PolyId   , DieId , 
             CTNLength , CTNWidth ,CTNHeight,ProductQTY,designinfo.DesignImage,designinfo.DesignCode1,  CFluteType ,Ctnp1,Ctnp2,Ctnp3,Ctnp4,Ctnp5,Ctnp6,Ctnp7
-            ,CSlotted,CDieCut,CPasting,CStitching,flexop,offesetp,Note,MachineName ,carton.production_job_type
+            ,CSlotted,CDieCut,CPasting,CStitching,flexop,offesetp,Note,MachineName ,carton.production_job_type ,MarketingNote
             FROM carton 
             INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
             INNER JOIN designinfo ON designinfo.CaId=carton.CTNId 
@@ -54,7 +54,7 @@
 
             array_push($CTN_DATA,$Row);
             array_push($UsedPaper,$Controller->QueryData('SELECT * FROM used_paper WHERE carton_id = ?', [$CTNId])->fetch_assoc());
-            array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty FROM production_cycle WHERE cycle_id = ?', [$CYCLE_ID])->fetch_assoc());
+            array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty,cycle_plan_qty  FROM production_cycle WHERE cycle_id = ?', [$CYCLE_ID])->fetch_assoc());
            
         }
         else {
@@ -63,7 +63,7 @@
 
                 $Row = $Controller->QueryData('SELECT CTNId,ppcustomer.CustName, CTNType,  JobNo,CTNOrderDate,CTNStatus,ProductQTY,JobType,CTNFinishDate,CTNQTY,CTNUnit,CTNColor, ProductName ,CTNStatus,  	PolyId   , DieId , 
                 CTNLength , CTNWidth ,CTNHeight,ProductQTY,designinfo.DesignImage,designinfo.DesignCode1,  CFluteType ,Ctnp1,Ctnp2,Ctnp3,Ctnp4,Ctnp5,Ctnp6,Ctnp7
-                ,CSlotted,CDieCut,CPasting,CStitching,flexop,offesetp,Note,MachineName ,carton.production_job_type
+                ,CSlotted,CDieCut,CPasting,CStitching,flexop,offesetp,Note,MachineName ,carton.production_job_type,MarketingNote
                 FROM carton 
                 INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
                 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId 
@@ -71,14 +71,9 @@
                 
                 array_push($CTN_DATA,$Row);
                 array_push($UsedPaper,$Controller->QueryData('SELECT * FROM used_paper WHERE carton_id = ?', [$um['double_job_carton_id']])->fetch_assoc());
-                array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty FROM production_cycle WHERE cycle_id = ?', [$um['cycle_id']])->fetch_assoc());
-                // echo 'double job '; 
-
+                array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty,cycle_plan_qty FROM production_cycle WHERE cycle_id = ?', [$um['cycle_id']])->fetch_assoc());
             }
         }
-
-
-    //    var_dump($CTN_DATA); 
 
         /*
         |--------------------------------------------------------------------------
@@ -197,23 +192,23 @@
     }
 </style>
 
-    <?php 
-        /*
-        |--------------------------------------------------------------------------
-        |  if($mp_history->num_rows > 0){
-        |--------------------------------------------------------------------------
-        | this block of code determines the color of text status and bottom border  
-        | machine input  according to machine status 
-        | red - #FF0032  green - #38E54D   yellow - #ffc107 
-        */
+<?php 
+    /*
+    |--------------------------------------------------------------------------
+    |  if($mp_history->num_rows > 0){
+    |--------------------------------------------------------------------------
+    | this block of code determines the color of text status and bottom border  
+    | machine input  according to machine status 
+    | red - #FF0032  green - #38E54D   yellow - #ffc107 
+    */
 
-        $class = '#FF0032'; 
-        if($machine_state == 'first time') $class = '#FF0032';  
-        else if(trim($machine_state) == 'Continue Job' || $machine_state == 'Start Production') $class = '#38E54D';
-        else  if($machine_state == 'Start Configuration') $class = '#ffc107'; 
-        else  if($machine_state == 'Job Completed') {$class = '#333333'; $stop_counter = 'yes'; }  
-        else $class = '#FF0032'; 
-    ?> 
+    $class = '#FF0032'; 
+    if($machine_state == 'first time') $class = '#FF0032';  
+    else if(trim($machine_state) == 'Continue Job' || $machine_state == 'Start Production') $class = '#38E54D';
+    else  if($machine_state == 'Start Configuration') $class = '#ffc107'; 
+    else  if($machine_state == 'Job Completed') {$class = '#333333'; $stop_counter = 'yes'; }  
+    else $class = '#FF0032'; 
+?> 
 
 
 <div class="card m-3 shadow" >
@@ -379,9 +374,9 @@
                 </th>
                 
                 <th scope="col"  >
-                    <div class ="text-black" >Plan Qty (cm) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
-                    <div class=""><?=(isset($Cut_Qty[0]['cycle_produce_qty'])) ? $Cut_Qty[0]['cycle_produce_qty'] : '' ?></div>
-                    <div class=""><?=(isset($Cut_Qty[1]['cycle_produce_qty']) ) ? $Cut_Qty[1]['cycle_produce_qty'] : '';?></div>
+                    <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
+                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                    <div class=""><?=(isset($Cut_Qty[1]['cycle_plan_qty']) ) ? $Cut_Qty[1]['cycle_plan_qty'] : '';?></div>
                 </th>
 
                 <th scope="col">
@@ -389,7 +384,6 @@
                     <div><?= GenerateDate($CTN_DATA[0]['CTNOrderDate']) ;?></div>
                     <div><?=isset($CTN_DATA[1]['CTNOrderDate']) ? GenerateDate($CTN_DATA[1]['CTNOrderDate']): '';?></div>
                 </th>
-                
 
                 <th scope="col">
                     <div  class ="text-secondary">Deadline:</div>
@@ -612,8 +606,8 @@
 
                 <th scope="col"  >
                     <div class ="text-secondary" >Flute Type</div>
-                    <div class=""><?=$CTN_DATA[0]['CFluteType']?></div>
-                    <div class=""><?=(isset($CTN_DATA[1]['CFluteType']) ) ? $CTN_DATA[1]['CFluteType'] : '';?></div>
+                    <div class=""><?=$Cut_Qty[0]['cycle_flute_type']?></div>
+                    <div class=""><?=(isset($Cut_Qty[1]['cycle_flute_type']) ) ? $CTN_DATA[1]['cycle_flute_type'] : '';?></div>
                 </th>
 
             </tr>
@@ -705,6 +699,22 @@
         </table>
     <?php } ?>
 
+    <div class="form-floating mb-3">
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
+            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
+        </textarea>
+        <label for="floatingTextarea">Comments for first Job</label>
+    </div>
+
+    <?php if(isset($Cut_Qty[1]['MarketingNote']) && !empty($Cut_Qty[1]['MarketingNote']) ): ?>
+    <div class="form-floating">
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
+            <?=(isset($Cut_Qty[1]['MarketingNote'])) ? $Cut_Qty[1]['MarketingNote'] : '' ?>
+        </textarea>
+        <label for="floatingTextarea">Comments for second Job</label>
+    </div>
+    <?php endif; ?>
+
     </div>
 </div>
 <?php } //  end of CARROGATION 5 PLY AND CARROGATION 3 PLY  ?>
@@ -747,6 +757,11 @@
                     <div  class ="text-secondary">Order Qty:</div>
                     <div><?=$CTN_DATA[0]['CTNQTY'];?></div>
                     <div><?=isset($CTN_DATA[1]['CTNQTY']) ? $CTN_DATA[1]['CTNQTY'] : '';?></div>
+                </th>
+
+                <th scope="col"  >
+                    <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
+                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
                 </th>
             </tr>
         </tbody>
@@ -835,6 +850,12 @@
                             ?>  
                     </div>
                 </th>
+
+                <th scope="col"  >
+                    <div class ="text-secondary" >Flute Type</div>
+                    <div class=""><?=$Cut_Qty[0]['cycle_flute_type']?></div>
+                </th>
+
             </tr>
         </tbody>
     </table>
@@ -843,7 +864,6 @@
         // this block is used to get polymer and die information for Flexo Job Card 
         $CPolymer = $Controller->QueryData('SELECT CPNumber , CartSample FROM cpolymer WHERE CPid  = ?',[$CTN_DATA[0]['PolyId']]);
         $CDie = $Controller->QueryData('SELECT DieCode , DieType FROM cdie WHERE CDieId = ?',[$CTN_DATA[0]['DieId']]);
-
         $Polymer = $CPolymer->fetch_assoc(); 
         $Die = $CDie->fetch_assoc(); 
     ?>
@@ -877,7 +897,7 @@
                     <div class=""><?=isset($Polymer['CartSample']) ? $Polymer['CartSample'] : '' ;?></div>
                 </th>
                 <th scope="col"  >
-                    <div class ="text-secondary" >Sample No</div>
+                    <div class ="text-secondary" >Color </div>
                     <div class=""><?=isset($CTN_DATA[0]['CTNColor']) ? $CTN_DATA[0]['CTNColor'] : '' ;?></div>
                 </th>
                 <th scope="col"  >
@@ -891,8 +911,16 @@
         </tbody>
     </table>
 
+
+    <div class="form-floating mb-3">
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
+            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
+        </textarea>
+        <label for="floatingTextarea">Comments for first Job</label>
+    </div>
+
     <div >
-        <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+        <!-- <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image"> -->
     </div> 
 
     </div><!-- end of card-body -->
@@ -932,6 +960,10 @@
                 <th scope="col">
                     <div  class ="text-secondary">Order Qty:</div>
                     <div><?=$CTN_DATA[0]['CTNQTY'];?></div>
+                </th>
+                <th scope="col"  >
+                    <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
+                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
                 </th>
             </tr>
         </tbody>
@@ -1017,9 +1049,24 @@
                             ?>  
                     </div>
                 </th>
+
+                <th scope="col"  >
+                    <div class ="text-secondary" >Flute Type</div>
+                    <div class=""><?=$Cut_Qty[0]['cycle_flute_type']?></div>
+                    <div class=""><?=(isset($Cut_Qty[1]['cycle_flute_type']) ) ? $CTN_DATA[1]['cycle_flute_type'] : '';?></div>
+                </th>
+
             </tr>
         </tbody>
     </table>
+
+    <div class="form-floating mb-3 ">
+        <textarea class="form-control" readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
+            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
+        </textarea>
+        <label for="floatingTextarea">Comments for first Job</label>
+    </div>
+
     <div >
         <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
@@ -1027,6 +1074,156 @@
     </div><!-- end of card-body -->
 </div><!-- end of card  -->
 <?php } //  end of Glue Folder ?>
+
+
+
+<?php if(trim($machine_['machine_name']) == '4 Khat') { ?>
+<div class="card m-3 shadow">
+    <div class="card-body">
+    
+    <table class="table table-bordered custom-font " >
+        <thead style = "border-bottom:2px solid black;">
+            <tr>
+                <th scope="col" colspan=6 class ="py-1" > 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                    </svg>
+                Customer Information  </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class ="text-center" >
+                <th scope="col"  >
+                    <div class ="text-secondary" >Job No: </div>
+                    <div class =""><?=$CTN_DATA[0]['JobNo'];?></div>
+                </th>
+                <th scope="col" >
+                    <div  class ="text-secondary">Company Name:</div>
+                    <div><?=$CTN_DATA[0]['CustName'];?></div>
+                </th>
+                <th scope="col">
+                    <div  class ="text-secondary">Product Name:</div>
+                    <div><?=$CTN_DATA[0]['ProductName'];?></div>
+                </th>
+
+                <th scope="col">
+                    <div  class ="text-secondary">Order Qty:</div>
+                    <div><?=$CTN_DATA[0]['CTNQTY'];?></div>
+                </th>
+                <th scope="col"  >
+                    <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
+                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                </th>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered custom-font " >
+        <thead style = "border-bottom:2px solid black;">
+            <tr>
+                <th scope="col" colspan=6 class ="py-1" >  
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16" style = "transform:rotate(180deg)">
+                        <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
+                    </svg>
+                    Size Information  
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class ="text-center" >
+                <th scope="col">
+                    <div class ="text-secondary" >L: </div>
+                    <div><?=$CTN_DATA[0]['CTNLength'];?></div>
+                </th>
+                <th scope="col" >
+                    <div class ="text-secondary" >W:</div>
+                    <div><?=$CTN_DATA[0]['CTNWidth'];?></div>
+                </th>
+                <th scope="col">
+                    <div class ="text-secondary" >H:</div>
+                    <div><?=$CTN_DATA[0]['CTNHeight'];?></div>
+                </th>
+
+                <?php 
+                    $total_width = 0 ; 
+                    $total_length = 0 ; 
+                    // TOTAL WIDTH BETWEEN  flexo_1p - flexo_2p - AND Default which is normal is the same 
+                    $total_width = $CTN_DATA[0]['CTNWidth'] + $CTN_DATA[0]['CTNHeight'] ; 
+                    switch ( $CTN_DATA[0]['production_job_type']) {
+                        case 'Offset 1 Piece':
+                            $total_width = $CTN_DATA[0]['CTNWidth'] + $CTN_DATA[0]['CTNHeight'] + 2.5; 
+                            $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) * 2  + 3; 
+                            break;
+                        case 'Offset 2 Piece':
+                            $total_width = $CTN_DATA[0]['CTNWidth'] + $CTN_DATA[0]['CTNHeight'] + 2.5; 
+                            $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) + 3; 
+                            break;
+                        case 'Flexo 1 Piece':
+                            $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) * 2 + 3; 
+                            break;
+                        case 'Flexo 2 Piece':
+                            $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) + 3; 
+                            break;
+                        default:
+                            $total_length = ($CTN_DATA[0]['CTNLength'] + $CTN_DATA[0]['CTNWidth']) * 2 +3 ; 
+                            break;
+                    }
+                ?>
+
+                <th scope="col">
+                    <div class ="text-secondary"  >Total Length:</div>
+                    <div id = "1212" ><?=$total_length?> </div>
+                </th>
+
+                <th scope="col">
+                    <div class ="text-secondary"  >Total Width:</div>
+                    <div id = "" ><?=$total_width;?></div>
+                </th>
+                                
+                <th scope="col">
+                    <div class ="text-secondary">Paper Type:</div>
+                    <div>   <?php
+                                $arr = []; 
+                                for ($index=1; $index <= 7 ; $index++) { 
+                                    if(empty($CTN_DATA[0]['Ctnp'.$index])) continue; 
+                                    $arr[] = $CTN_DATA[0]['Ctnp'.$index];   
+                                } 
+                                $arr = array_count_values($arr);
+                                foreach ($arr as $key => $value) {
+                                    if(trim($key) === 'Flute') echo $value . " " . $key ;
+                                    else  echo $key ; 
+                                    if ($key === array_key_last($arr)) continue ; 
+                                    echo " x ";
+                                }  
+                            ?>  
+                    </div>
+                </th>
+
+                <th scope="col"  >
+                    <div class ="text-secondary" >Flute Type</div>
+                    <div class=""><?=$Cut_Qty[0]['cycle_flute_type']?></div>
+                    <div class=""><?=(isset($Cut_Qty[1]['cycle_flute_type']) ) ? $CTN_DATA[1]['cycle_flute_type'] : '';?></div>
+                </th>
+
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-floating mb-3">
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
+            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
+        </textarea>
+        <label for="floatingTextarea">Comments for first Job</label>
+    </div>
+
+    <div >
+        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+    </div> 
+
+    </div><!-- end of card-body -->
+</div><!-- end of card  -->
+<?php } //  end of Glue Folder ?>
+
 
 <?php $show_double_input = false ; if(isset($CTN_DATA[1]))  $show_double_input = true;   ?>
 
@@ -1041,7 +1238,6 @@
       <form action="ChangeUsedMachineStatus.php" id = "machine_form" method = "post" >
         <div class="modal-body">
             <input type="hidden" name="double_job" value = "<?=$double_job?>">
-            
             
             <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
             <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[0]['CTNId']?>">
@@ -1106,6 +1302,7 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">تکمیل نمودن جاب</button>
         </div>
+
       </form>
     </div>
   </div>
