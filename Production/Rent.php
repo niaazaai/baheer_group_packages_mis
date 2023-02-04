@@ -2,7 +2,8 @@
 
     $rentouts  = $Controller->QueryData("SELECT *  FROM carton_rentout  
     INNER JOIN carton ON carton_rentout.CTNId = carton.CTNId" , []);
-    // INNER JOIN carton ON production_cycle.CTNId = carton.CTNId WHERE cycle_status = 'Incomplete' AND has_manual = 'Yes'
+
+    
 ?>
 
 
@@ -52,9 +53,10 @@
                                         $array = explode(',', $string);  
                                         foreach($array as $value)  
                                         {
-                                            $ename = $Controller->QueryData("SELECT Ename FROM employeet WHERE EId = ?" , [$value])->fetch_assoc()['Ename'];
+                                            $ename = $Controller->QueryData("SELECT EmpName , EmpIdNo  FROM employees WHERE EmpIdNo = ?" , [$value]);
+                                            $Employee = $ename->fetch_assoc();
                                             echo '<li>'; 
-                                            echo $ename; 
+                                            echo $Employee['EmpName'] . " - " . $Employee['EmpIdNo'] ; 
                                             echo '</li>'; 
                                         }
                                     ?>

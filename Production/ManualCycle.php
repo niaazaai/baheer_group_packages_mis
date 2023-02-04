@@ -6,7 +6,7 @@
     , CTNUnit ,CTNType,  CTNQTY , CTNColor , ProductQTY 
     FROM production_cycle
     INNER JOIN carton ON production_cycle.CTNId = carton.CTNId
-    WHERE cycle_status = 'Incomplete' AND has_manual = 'Yes'",[]);
+    WHERE (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes'",[]);
 
         // SELECT ALL MACHINES FOR USER TO SELECT FOR EACH JOB CYCLE  
     $machine_db_list = $Controller->QueryData('SELECT * FROM machine WHERE machine_type=? ',['Manual']);

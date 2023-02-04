@@ -3,7 +3,7 @@ require_once 'Controller.php';
 
 if(isset($_GET['name']) && !empty(trim($_GET['name'])) ) {
     $name = $Controller->CleanInput($_GET['name']);
-    $Rows = $Controller->QueryData("SELECT EId , Ename FROM employeet WHERE Ename LIKE '%$name%' AND EDepartment = 'Production'", []);
+    $Rows = $Controller->QueryData("SELECT EmpName , EmpIdNo FROM employees WHERE EmpName LIKE '%$name%' AND EmpDepartment = 'Production'", []);
     if($Rows->num_rows > 0 ){
         while ($DataRows = $Rows->fetch_assoc()) {
           $arr [] =  $DataRows; 

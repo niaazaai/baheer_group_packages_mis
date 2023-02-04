@@ -30,7 +30,6 @@ if(
 
   ) {
 
-
     foreach ($_POST as $key => $value) {
         if($key == 'machine_id' || $key == 'employee_id') continue; 
         $_POST[$key] = $Controller->CleanInput($_POST[$key]); 
@@ -54,6 +53,11 @@ if(
         $employee_id .= $value; 
         if(++$i !== $numItems) $employee_id .= ','; 
     }
+
+    
+    // var_dump($_POST['employee_id']);
+    // die(); 
+
 
     $rent_outs = $Controller->QueryData(
         "INSERT INTO carton_rentout ( employee_id,CTNId, cycle_id, machine_id, rentout_amount,rent_date,start_time,end_time,rent_reason,rent_type) 
@@ -185,9 +189,9 @@ if(
         .then(function (json) {
             let data = []
             for (let i = 0; i < json.length; i++) {
-                data.push({text: json[i].Ename, value:json[i].EId })
+                data.push({text: json[i].EmpName + ' - ' + json[i].EmpIdNo  , value:json[i].EmpIdNo })
             }
-        //    console.log(json);
+        //    console.log(json); EmpName , EmpIdNo 
         //    console.log(data);
 
             callback(data)

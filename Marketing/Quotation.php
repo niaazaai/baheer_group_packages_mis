@@ -349,10 +349,23 @@
           <input class="form-control" id="ProductName" placeholder="Write Product Name "  name="ProductName"   type="text" required  />
         </div>
 
+       
+
+
         <div class="col-xxl-2  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
           <label for="FinishDate" class="form-label">DeadLine <span class="text-danger " > * </span></label>
-          <input type="Date" class="form-control" id="FinishDate" name="FinishDate" type="text" required  />
+          <input type="Date" class="form-control" id="FinishDate" name="FinishDate" min = 0  type="text" required  />
         </div>
+
+        <script language="javascript">
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+
+            today = yyyy + '-' + mm + '-' + dd;
+            document.getElementById('FinishDate').setAttribute('min',today);
+        </script>
 
         <div class="col-xxl-2  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
           <label for="PaperGrade" class="form-label">Grade <span class="text-danger"> * </span></label>

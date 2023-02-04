@@ -24,14 +24,11 @@
         INNER JOIN production_cycle ON production_cycle.CTNId = carton.CTNId
         INNER JOIN used_machine ON production_cycle.cycle_id = used_machine.cycle_id
         INNER JOIN machine ON used_machine.machine_id = machine.machine_id
-    WHERE  cycle_status = 'Incomplete' AND has_manual = 'Yes' AND machine.machine_type = 'Manual' AND JobNo != 'NULL'  AND used_machine.status = 'Incomplete' "; 
+    WHERE  (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes' AND machine.machine_type = 'Manual' AND JobNo != 'NULL'  AND used_machine.status = 'Incomplete' "; 
   
         
     if(isset($_REQUEST['machine_id']) && !empty(trim($_REQUEST['machine_id']))){
-
         $condition = "AND machine.machine_id = ". $_REQUEST['machine_id']; 
-       
-
         if($_REQUEST['machine_id'] == "ALL") $condition = ''; 
         $Query = "
         SELECT
@@ -51,7 +48,7 @@
             INNER JOIN production_cycle ON production_cycle.CTNId = carton.CTNId
             INNER JOIN used_machine ON production_cycle.cycle_id = used_machine.cycle_id
             INNER JOIN machine ON used_machine.machine_id = machine.machine_id
-        WHERE  cycle_status = 'Incomplete' AND has_manual = 'Yes' ".$condition." AND machine.machine_type = 'Manual' AND JobNo != 'NULL'   AND used_machine.status = 'Incomplete' "; 
+        WHERE  (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes' ".$condition." AND machine.machine_type = 'Manual' AND JobNo != 'NULL'   AND used_machine.status = 'Incomplete' "; 
        
     }
 
@@ -90,9 +87,6 @@
         $InsertQuery=$Controller->QueryData("INSERT INTO machineproduction (Ctnid2,UserId2,MachineName,PrBranch,ProductQty1,WorkStartTime,WorkEndTime,PrDate,MachineOperatorName,LaborNumber,PrStatus,Waste,cycle_id) 
         VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",
         [ $CTNID,$_SESSION['EId'], $MachineName,'Manual' ,$ProducedQTY,$StartTime,$EndTime,$Date,$OperatorName,$NoOflabor,'New',$Waste,$CycleId]);
-            
-
-
 
         if($InsertQuery)
         {
