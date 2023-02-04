@@ -822,14 +822,23 @@
     let Tax = Number(InputValues['Tax']) || 0;
     var Length , Height ; 
     let Values = {}; 
+    
+    // if(NoFlip) Height = UserHeight;
+    // else Height = UserWidth + UserHeight;
 
-    if(NoFlip) Height = UserHeight;
-    else Height = UserWidth + UserHeight;
 
+    if(NoFlip) {
+      PolymerHeight = Number(document.getElementById('NoFlipHeight').value);
+    }
+    else {
+      PolymerHeight = UserWidth + UserHeight;; 
+    }
+
+    Height = UserWidth + UserHeight;
     Length = (UserWidth + UserLength) * 2  + 50 ; 
-
+    // NoFlipHeight
     // To Find POLYMER : Polymer size in mm 2 
-    let PolymerSize = (Length * Height) / 100 ;
+    let PolymerSize = (Length * PolymerHeight) / 100 ;
     let TotalPolymerSize = PolymerSize * ColorNumber ; 
     let PolymerPrice = TotalPolymerSize * Unit; 
     let PaperWeight = {}; 
@@ -894,8 +903,8 @@
     if( smile == '0') {
       document.getElementById('PolymerPrice').setAttribute('readonly' , 'readonly');
       document.getElementById('PolymerPrice').value = 0;
-      PolymerPrice = 0 ; 
-    }  
+      PolymerPrice = 0; 
+    }
 
     TotalPrice  =   Precision(UnitPriceRate)  * BoxQuantity ; 
     TotalPrice =    Precision(TotalPrice , 0 ); 
@@ -977,22 +986,22 @@
   function ShowNoFlip(NoFlip){
 
       // Top Flip = (L+W) *2 +5cm, H= W/2 +H   // Without flip = (L+W) *2 +5cm, H= H  // Full Flip = = (L+W) *2 +5cm, H= W +H
-      let UserLength =  Number(document.getElementById('PaperLength').value) || 0;
-      let UserWidth =   Number(document.getElementById('PaperWidth').value ) || 0;   
-      let UserHeight =  Number(document.getElementById('PaperHeight').value) || 0; 
+      let UserLength1 =  Number(document.getElementById('PaperLength').value) || 0;
+      let UserWidth1 =   Number(document.getElementById('PaperWidth').value ) || 0;   
+      let UserHeight1 =  Number(document.getElementById('PaperHeight').value) || 0; 
 
-      var Length , Height ;   
-      if(NoFlip == 'TF') Height = (UserWidth / 2 ) + UserHeight; 
-      else if(NoFlip == 'WF') Height = UserHeight; 
-      else if(NoFlip == 'FF') Height = UserWidth + UserHeight; 
+      var Length1 , Height1 ;   
+      if(NoFlip == 'TF') Height1 = (UserWidth1 / 2 ) + UserHeight1; 
+      else if(NoFlip == 'WF') Height1 = UserHeight1; 
+      else if(NoFlip == 'FF') Height1 = UserWidth1 + UserHeight1; 
 
       document.getElementById('NoFilpArea').style.display = '';
-      document.getElementById('NoFlipLength').value  =  (UserLength + UserWidth ) * 2  + 50
-      document.getElementById('NoFlipHeight').value  =  Height
+      document.getElementById('NoFlipLength').value  =  (UserLength1 + UserWidth1 ) * 2  + 50
+      document.getElementById('NoFlipHeight').value  =  Height1
 
-      console.log( InputValues['PaperHeight']) ; 
-      InputValues['PaperHeight'] = Height   // Number(document.getElementById('PaperHeight').value  ); 
-      console.log( InputValues['PaperHeight']) ; 
+      // console.log( InputValues['PaperHeight']) ; 
+      // InputValues['PaperHeight'] = Height   // Number(document.getElementById('PaperHeight').value  ); 
+      // console.log( InputValues['PaperHeight']) ; 
       console.log( InputValues) ; 
       CalculateUnitPrice(InputValues , true );  
 

@@ -5,26 +5,22 @@
     $RowCount =  $Controller->QueryData("SELECT * FROM employeet WHERE EUserName = ?" , [$_SESSION['user']] );
     $r1 = $RowCount->fetch_row(); 
     if ($r1[0]>5 && $r1[14]!='Marketing' && $r1[0]!=92 && $r1[0]!=63  && $r1[0]==20 && $r1[0]==34)  header("Location:index.php"); // MUST REDIRECT TO CUSTOMER DASHBOARD INSTEAD OF INDEX 
- 
 
     // CustId is Sout 
     if(isset($_POST['CTNId']) && !empty($_POST['CTNId'])){
       $CTNId=$_POST['CTNId'];
     }
+
     if(isset($_GET['CTNId']) && !empty($_GET['CTNId'])){
       $CTNId=$_GET['CTNId'];
     } else die('Carton ID is has not set correctly'); 
 
     if(isset($_GET['Page']) && !empty($_GET['Page'])){
       $Page = $_GET['Page'] ; 
-
     } else die('Page Parameter is not set Correctly'); 
-
-    
 
     $CTN  =  $Controller->QueryData("SELECT * From carton WHERE CTNId = ?  " , [ $CTNId ] );
     $CTN = $CTN->fetch_assoc(); 
-
  
     // FOR TAKING LAST JOB-NO 
     $Customer =  $Controller->QueryData("SELECT CustId, CustName,  CustContactPerson, CustMobile, CustEmail,  CustAddress, CustWebsite, CustCatagory 
@@ -32,13 +28,12 @@
     $Customer = $Customer->fetch_assoc(); 
     $CustId =  $CTN['CustId1'] ;  
 
-
     # THIS BLOCK OF CODE IS FOR RETRIVING LAST JOB NO 
     $q =  $Controller->QueryData("SELECT CTNId, CTNType, CustId1, JobNo FROM carton 
     INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 where JobNo!='NULL' ORDER BY carton.`CTNId` DESC" , [] );
     $LastJobNo = $q->fetch_row(); 
 
- # THIS BLOCK OF CODE IS FOR RETRIVING PAPER PRICE AND NAMES FOR PLYs TO SHOW  
+    # THIS BLOCK OF CODE IS FOR RETRIVING PAPER PRICE AND NAMES FOR PLYs TO SHOW  
     $PP =  $Controller->QueryData("SELECT DISTINCT Name,Price FROM paperprice" , [] );
     $PaperPrice = []; 
     while($PaperPriceDB = $PP->fetch_assoc()){
@@ -47,18 +42,12 @@
       echo '<input type = "hidden" name= "PaperName"   id="'.$PaperPriceDB['Name'] . '"   value = "'.$PaperPriceDB['Price']  .'" > ';
     } // LOOP 
 
-
-     // this block is used to find the user grade limit 
-     $GradeLimitData = 0 ; 
-     $GradeLimit = $Controller->QueryData("SELECT grade_limit FROM set_grade WHERE employeet_id = ?" , [$_SESSION['EId']]  );
-     $GradeLimitDatabase = $GradeLimit->fetch_assoc();
-     if(empty($GradeLimitDatabase))   $GradeLimitData = 40  ;
-     else $GradeLimitData  =  $GradeLimitDatabase['grade_limit']; 
-
-
- 
-
-
+    // this block is used to find the user grade limit 
+    $GradeLimitData = 0 ; 
+    $GradeLimit = $Controller->QueryData("SELECT grade_limit FROM set_grade WHERE employeet_id = ?" , [$_SESSION['EId']]  );
+    $GradeLimitDatabase = $GradeLimit->fetch_assoc();
+    if(empty($GradeLimitDatabase))   $GradeLimitData = 40  ;
+    else $GradeLimitData  =  $GradeLimitDatabase['grade_limit']; 
 
  ?>
  <style>
@@ -202,7 +191,6 @@
                 Find Customer
             </a>
 
-
             <a href=" ../Archive/PolymerList.php" target= "_blank" title="Find Exist Polymer & Die"  class="btn btn-outline-primary  fw-bold cc ">
                 <svg width="25" height="25" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M496.105 512H15.895C7.118 512 0 504.884 0 496.105C0 487.326 7.118 480.21 15.895 480.21H480.21V31.79H31.79V398.825C31.79 407.604 24.672 414.72 15.895 414.72C7.118 414.72 0 407.605 0 398.826V15.895C0 7.116 7.118 0 15.895 0H496.105C504.882 0 512 7.116 512 15.895V496.105C512 504.884 504.884 512 496.105 512Z" fill="#B3404A"></path>
@@ -216,8 +204,6 @@
                     <path d="M426.08 441.975H85.922C77.145 441.975 70.027 434.859 70.027 426.08V85.9199C70.027 77.1409 77.145 70.0249 85.922 70.0249H426.08C434.857 70.0249 441.975 77.1409 441.975 85.9199C441.975 94.6989 434.857 101.815 426.08 101.815H101.817V410.184H410.185V154.829C410.185 146.05 417.303 138.934 426.08 138.934C434.857 138.934 441.975 146.05 441.975 154.829V426.08C441.975 434.859 434.857 441.975 426.08 441.975Z" fill="#B3404A"></path>
                     <path d="M242.307 366H164.963V147.818H242.946C264.892 147.818 283.784 152.186 299.622 160.922C315.46 169.587 327.641 182.051 336.163 198.315C344.757 214.58 349.054 234.04 349.054 256.696C349.054 279.423 344.757 298.955 336.163 315.29C327.641 331.625 315.389 344.161 299.409 352.896C283.5 361.632 264.466 366 242.307 366ZM211.092 326.476H240.389C254.026 326.476 265.496 324.061 274.8 319.232C284.175 314.331 291.206 306.767 295.893 296.54C300.652 286.241 303.031 272.96 303.031 256.696C303.031 240.574 300.652 227.399 295.893 217.172C291.206 206.945 284.21 199.416 274.906 194.587C265.602 189.757 254.132 187.342 240.496 187.342H211.092V326.476Z" fill="#B3404A"></path>
                 </svg>
-
-
             </a>
             
             <a  href="javascript:poptastic('../PaperStock/BalanceSheetPaper.php');"title="Find Paper In Stock "   class="btn btn-outline-primary  fw-bold"   >
@@ -226,7 +212,6 @@
                 </svg>
                 Check Stock
             </a>
-
 
             <a title="Find and paper weight"  onclick="" class="btn btn-outline-primary  fw-bold" data-bs-toggle="modal" data-bs-target="#staticBackdrop"  >
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-calculator" viewBox="0 0 16 16">
@@ -404,7 +389,6 @@
             <?php } ?>
           </div> 
         </div>
-       
       </div>
       <!-- FIRST ROW  -->
 
@@ -416,7 +400,6 @@
           <svg    style = "transform: rotate(-180deg);"  xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16">
           <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
         </svg> Size Details </strong>
-
         </div>
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12" >
             <label for="CartonUnit" class="form-label">Carton Type  <!-- AKA UNIT IN PREVIOUS FORM --> <span class="text-danger"> * </span></label>
@@ -438,7 +421,6 @@
         </div>
 
         <div  class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12" >
-
           <label for="PaperLength" class="form-label" > L <span class="text-danger"> * </span></label>
            <input class="form-control" id="PaperLength" placeholder="Lenght cm" name="PaperLength" type="text" value = "<?=$CTN['CTNLength']?>" onchange = "AddInputValues(this.name , this.value) "  required  />
         </div>
@@ -464,7 +446,6 @@
             <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
           </svg> Paper Details </strong>
         </div>
-
          
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
             <label for="CartonType" class="form-label">Carton Type <span class="text-danger"> * </span></label>
@@ -605,12 +586,20 @@
 
           <div class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
 
-                <label   for="NoFlip"> Manual </label>
+                <label    class="form-label" for="NoFlip"> Manual </label>
                 <select class="form-select" name="NoFlip" id="NoFlip" required onchange = "ShowNoFlip( this.value)" >
+                  
                   <option value="" disabled>Select Flip</option>
+                  <option selected value="<?=$CTN['NoFlip']?>">
+                    <?php 
+                      if($CTN['NoFlip'] == 'FF') echo 'Full Flip'; 
+                      else if($CTN['NoFlip'] == 'TF') echo 'Top Flip'; 
+                      else if($CTN['NoFlip'] == 'WF') echo 'Witout Flip'; 
+                    ?>
+                  </option>
+                  <option value="FF">Full Flip </option>
                   <option value="TF">Top Flip</option>
                   <option value="WF">Witout Flip</option>
-                  <option value="FF">Full Flip </option>
                 </select>
           </div>
 
@@ -661,7 +650,6 @@
                 <label for="FinalTotal" class="form-label">Total Amount   <span id = "FTCurrencyLabel"></span>  <span class="text-danger"> * </span></label>
                 <input class="form-control" id="FinalTotal" readonly  name="FinalTotal" type="text"  style="font-weight:bold;" value = "<?=$CTN['FinalTotal']?>"   /> 
           </div>
-          
 
           <div class="col-xxl-1 col-xl-1 col-lg-3 col-md-4 col-sm-12 col-xs-12">
                 <label for="Tax " class="form-label">Tax <span class="text-danger"> % </span></label>
@@ -673,9 +661,6 @@
                   <option value="4">4 % </option>
                 </select>
           </div>
-
-               
-      
 
           <div class="col-xxl-1 col-xl-1 col-lg-4 col-md-4 col-sm-12 col-xs-12">
               <label for="d" class="form-label"> </label>
@@ -730,9 +715,6 @@
 
           </div>
         </div>
-
-
-        
     
         </div>
 
@@ -763,10 +745,6 @@
   </div><!-- CARD-BODY -->
 </div><!-- CARD -->
 </form>
- 
-
-
-
 
  <script>
 
@@ -779,7 +757,6 @@
   let Unit = document.getElementById("PolimerPrice").value-0; 
   let DatabasePaperGSM  = document.getElementById("PaperGSM").value-0 
   var GradeLimit = <?=$GradeLimitData?> ; 
-
 
   function Precision(number , decimal=2) {
     return Number.parseFloat(number).toFixed(decimal);
@@ -810,8 +787,6 @@
     CalculateUnitPrice(InputValues);
   }
 
-
-
   function ChangePrice( name ,  value ) {
     Paper[name].Price = Precision(value);  
     CalculateUnitPrice(InputValues);
@@ -832,7 +807,6 @@
   }
 
   function AddInputValues( name , value , NoFlip = false   ){
-   
 
     if(name == 'PaperGrade') {
       if(value < 1 || value > 100 ) {
@@ -857,7 +831,6 @@
     }
     
     value = Precision(value)
-  
     InputValues[name] = value; 
     CalculateUnitPrice(InputValues , NoFlip );  
   }
@@ -907,19 +880,12 @@
         else if(CT_Value == 7 )   FlutOptions =  '<option value="BCB">BCB</option>'; 
         else FlutOptions = '<option value="C">C</option><option value="B">B</option><option value="E">E</option><option value="BC">BC</option><option value="CE">CE</option><option value="BCB">BCB</option>'; 
 
-      // console.log(CT_Value);
-
-
-
         document.getElementById('FlutType').innerHTML = document.getElementById('FlutType').innerHTML + FlutOptions
         removeDuplicateOptions(document.getElementById('FlutType'));
-
         CalculateUnitPrice(InputValues); 
         document.getElementById('CTNPaper').value = CTNPaper ; 
 
   } // END OF SLOWPLY 
-
- 
 
   function CalculateUnitPrice(InputValues , NoFlip = false){
 
@@ -934,12 +900,24 @@
     let ExchangeRate = Number(InputValues['ExchangeRate']) || 0;
     let Values = {}; 
 
-    if(NoFlip) Height = UserHeight;
-    else Height = UserWidth + UserHeight;
+    // if(NoFlip) Height = UserHeight;
+    // else Height = UserWidth + UserHeight;
+
+    if(NoFlip) {
+      PolymerHeight = Number(document.getElementById('NoFlipHeight').value);
+      console.log('IF:::> ' + PolymerHeight + ' - ' + ColorNumber ); 
+
+    }
+    else {
+      PolymerHeight = UserWidth + UserHeight;
+      console.log('ELSE:::> ' + PolymerHeight + ' - ' + ColorNumber); 
+    }
+
+    Height = UserWidth + UserHeight;
     Length = (UserWidth + UserLength) * 2  + 50 ; 
  
      // To Find POLYMER : Polymer size in mm 2 
-    let PolymerSize = (Length * Height) / 100 ;
+    let PolymerSize = (Length * PolymerHeight) / 100 ;
     let TotalPolymerSize = PolymerSize * ColorNumber ; 
     let PolymerPrice = TotalPolymerSize * Unit; 
     let PaperWeight = {} ; 
@@ -983,10 +961,8 @@
     let TotalPrice = 0 ;
     let FinalPrice = 0 ;  
 
-
     // UNIT IS THE SUM OF all paper price + grade 
     let UnitPrice = PaperTotalPrice +  PaperGrade;
-    
     
     // change the price from USD to AFN 
     PolymerPrice = PolymerPrice * ExchangeRate ; 
@@ -999,7 +975,6 @@
       document.getElementById('PolymerPrice').value = 0;
       PolymerPrice = 0 ; 
     }  
-
 
     TotalPrice  = Precision(UnitPriceRate)  * BoxQuantity ; 
     TotalPrice = Precision(TotalPrice , 0 ); 
@@ -1032,7 +1007,6 @@
     tp = Precision(tp , 0 ) 
     tp = tp.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
     document.getElementById('TotalPrice').value  = tp;
-
 
     let cq = document.getElementById('CartonQTY').value; 
     cq = cq.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
@@ -1087,23 +1061,21 @@
     // Without flip = (L+W) *2 +5cm, H= H
     // Full Flip = = (L+W) *2 +5cm, H= W +H
 
-    let UserLength =  Number(document.getElementById('PaperLength').value) || 0;
-    let UserWidth =   Number(document.getElementById('PaperWidth').value) || 0;   
-    let UserHeight =  Number(document.getElementById('PaperHeight').value) || 0; 
+    let UserLength1 =  Number(document.getElementById('PaperLength').value) || 0;
+    let UserWidth1 =   Number(document.getElementById('PaperWidth').value) || 0;   
+    let UserHeight1 =  Number(document.getElementById('PaperHeight').value) || 0; 
 
-
-    var Length , Height ;   
-    if(NoFlip == 'TF')   Height = (UserWidth / 2 ) + UserHeight; 
-    else if(NoFlip == 'WF') Height = UserHeight; 
-    else if(NoFlip == 'FF') Height = UserWidth + UserHeight; 
+    var Length1 , Height1 ;   
+    if(NoFlip == 'TF')   Height1 = (UserWidth1 / 2 ) + UserHeight1; 
+    else if(NoFlip == 'WF') Height1 = UserHeight1; 
+    else if(NoFlip == 'FF') Height1 = UserWidth1 + UserHeight1; 
 
     document.getElementById('NoFilpArea').style.display = '';
-    document.getElementById('NoFlipLength').value  =    (UserWidth + UserLength) * 2  + 50 ; 
-    document.getElementById('NoFlipHeight').value  =  Height
+    document.getElementById('NoFlipLength').value  =    (UserWidth1 + UserLength1) * 2  + 50 ; 
+    document.getElementById('NoFlipHeight').value  =  Height1
 
-    InputValues['PaperHeight'] = Height   // Number(document.getElementById('PaperHeight').value  ); 
+    // InputValues['PaperHeight'] = Height   // Number(document.getElementById('PaperHeight').value  ); 
     CalculateUnitPrice(InputValues , true );  
-
   } // SHOW NO FLIP 
 
   // THIS BLOCK IS USED TO CALCULATE THE SHEET AND BOX JUST REMOVING THE HEIGHT FROM FORMULLA 
@@ -1151,10 +1123,6 @@
     }
 
   }
-   
-   
-
-  
 
   function CalculatePaperWeight(L , W , H , PaperWeight , CTNQTY ){
     
@@ -1254,20 +1222,12 @@
     document.getElementById('DieckleInput').value = Dieckle ; 
   }// END OF calculate paper weight 
 
-
-
-
-
 function ChangeDieckle(value) {
  let W =  document.getElementById('PaperWidth').value-0;
  let H =  document.getElementById('PaperHeight').value-0;
  document.getElementById('DieckleInput').value = ( W+H ) * value ; 
 
 }
- 
-
-
-
 
   function removeDuplicateOptions(s, comparitor) {
       if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
@@ -1285,7 +1245,7 @@ function ChangeDieckle(value) {
       }
       return true;
     }
-    let SelectID = ['CartonUnit' , 'CtnCurrency1' , 'Tax' , 'NoColor1' , 'FlutType' ,    'CartonType']
+    let SelectID = ['CartonUnit' , 'CtnCurrency1' , 'Tax' , 'NoColor1' , 'FlutType' ,    'CartonType' , 'NoFlip']
  
 
     // removeDuplicateOptions( document.getElementById('CartonUnit'));
@@ -1293,10 +1253,6 @@ function ChangeDieckle(value) {
     for (let index = 0; index <  SelectID.length; index++) {
       removeDuplicateOptions(document.getElementById(SelectID[index]));
     }
-
-
-    
-     
 
     function collectionContains(collection, searchText) {
         for (var i = 0; i < collection.length; i++) {
@@ -1332,65 +1288,35 @@ function ChangeDieckle(value) {
         AddInputValues('ExchangeRate' , ex ); 
     }
 
-
-
-
-
-
-
-
-
  </script>
+  <?php 
+    $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
+      'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
+      'PaperHeight' => $CTN['CTNHeight'] ,  'NoColor' => $CTN['polymer_info'] ,  
+      'DiePrice' => $CTN['CTNDiePrice'] ,  'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD']]; 
+      $CTNType = $CTN['CTNType'];  
+    //  , 'Currency' => $CTN['CtnCurrency']  
+      $Exct = "<script>" ; 
+      $Exct .= "ShowPly($CTNType);"; 
+        foreach ($CallAgain as $key => $value) {
+          $Exct .= "AddInputValues('$key' ,  $value); "; 
+        }
 
-
-
-<?php 
- $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
-  'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
-  'PaperHeight' => $CTN['CTNHeight'] ,  'NoColor' => $CTN['CTNColor'] ,  
-  'DiePrice' => $CTN['CTNDiePrice'] ,  'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD']]; 
-  $CTNType = $CTN['CTNType'];  
- //  , 'Currency' => $CTN['CtnCurrency']  
-  $Exct = "<script>" ; 
-  $Exct .= "ShowPly($CTNType);"; 
-    foreach ($CallAgain as $key => $value) {
-      $Exct .= "AddInputValues('$key' ,  $value); "; 
-    }
-
-    $Exct .= "console.log(InputValues);  ";
-    $Exct .= "console.log(Paper);  "; 
-
-    // $Exct .= "ChangeCurrencyType('". $CTN['CtnCurrency'] ."');"; 
-    
-  $Exct .= "</script>" ;
-  echo $Exct; 
-
+      $Exct .= "ShowNoFlip(`{$CTN['NoFlip']}`); console.log(InputValues);  "; //; 
+      $Exct .= "console.log(Paper);  "; 
+      // $Exct .= "ChangeCurrencyType('". $CTN['CtnCurrency'] ."');"; 
+        
+      $Exct .= "</script>" ;
+      echo $Exct; 
  ?>
-
-
 <script>
-
-
-function CheckCancelCommentLength(){
-  let CancelComment = document.getElementById('CancelComment');
-  document.getElementById('comment_length').innerHTML = CancelComment.value.length;
-  if(CancelComment.value.length >= 120 ) {
-    CancelComment.setAttribute('maxlength', 120); 
+  function CheckCancelCommentLength(){
+    let CancelComment = document.getElementById('CancelComment');
+    document.getElementById('comment_length').innerHTML = CancelComment.value.length;
+    if(CancelComment.value.length >= 120 ) {
+      CancelComment.setAttribute('maxlength', 120); 
+    }
   }
-}
-CheckCancelCommentLength(); 
- 
-
-
-
-
-
-
-
-
+  CheckCancelCommentLength(); 
 </script>
-  
- 
-
 <?php require_once '../App/partials/Footer.inc'; ?> 
- 

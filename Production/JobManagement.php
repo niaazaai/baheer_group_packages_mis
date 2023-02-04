@@ -455,7 +455,6 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                         <label for="Wast">Wast (cm)</label>
                     </div>
                 </td>
-
                 
                 <td>
                     <div class="form-floating ">

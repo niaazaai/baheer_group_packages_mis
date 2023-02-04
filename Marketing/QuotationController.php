@@ -84,7 +84,7 @@
                 FinalTotal, CSlotted, CDieCut, CPasting, CStitching, flexop, offesetp,
                 CFluteType, JobType , Note, CtnCurrency, GrdPrice, MarketingNote, Ctnp1, Ctnp2, 
                 Ctnp3, Ctnp4, Ctnp5, Ctnp6, Ctnp7, PaperP1, PaperP2, PaperP3, PaperP4,
-                PaperP5, PaperP6, PaperP7, PexchangeUSD , Tax , polymer_info ,  die_info 
+                PaperP5, PaperP6, PaperP7, PexchangeUSD , Tax , polymer_info ,  die_info , NoFlip
             )
             VALUES (
                 ? , ? , ? , ? , ? , ? , ? , 
@@ -93,7 +93,7 @@
                 ? , ? , ? , ? , ? , ? , ? , 
                 ? , ? , ? , ? , ? , ? , ? , ? , 
                 ? , ? , ? , ? , ? , ? , ? , ? , ? , 
-                ? , ? , ? , ? , ?, ? , ?  
+                ? , ? , ? , ? , ?, ? , ? , ?
             );    
             "; 
             
@@ -105,7 +105,7 @@
                 $request['Flute'] ,  $request['jobType'] ,  $request['Note1'] ,  $request['CtnCurrency1'] ,  $request['PaperGrade'] ,  $request['Notemarket'] ,  $request['PaperName_1'] ,  $request['PaperName_2'] , 
                 $request['PaperName_3'] ,  $request['PaperName_4'] ,  $request['PaperName_5'] ,  $request['PaperName_6'] ,  $request['PaperName_7'] ,  $request['PaperLayerPrice_1'] ,  $request['PaperLayerPrice_2'] ,  $request['PaperLayerPrice_2'] ,  $request['PaperLayerPrice_4'] , 
                 $request['PaperLayerPrice_5'] ,  $request['PaperLayerPrice_6'] ,  $request['PaperLayerPrice_7'] ,  
-                $request['ExchangeRate'] , $request['Tax'] ,   $request['NoColor'] , $request['DieExist']
+                $request['ExchangeRate'] , $request['Tax'] ,   $request['NoColor'] , $request['DieExist'] ,  $request['NoFlip']
             ]); 
         
 
@@ -249,7 +249,7 @@
                     FinalTotal = ?, CSlotted = ?, CDieCut = ?, CPasting = ?, CStitching = ?, flexop = ?, offesetp = ?, 
                     CFluteType = ?, JobType = ? , Note = ?, CtnCurrency = ?, GrdPrice = ?, MarketingNote = ?, Ctnp1 = ?, Ctnp2 = ?, 
                     Ctnp3 = ?, Ctnp4 = ?, Ctnp5 = ?, Ctnp6 = ?, Ctnp7 = ?, PaperP1 = ?, PaperP2 = ?, PaperP3 = ?, PaperP4 = ?,  PaperP5 = ? , 
-                    PaperP6 = ?, PaperP7 = ?, PexchangeUSD = ? , CancelComment = ? , Canceldate  = ? , Tax = ? , polymer_info = ?,  die_info = ?
+                    PaperP6 = ?, PaperP7 = ?, PexchangeUSD = ? , CancelComment = ? , Canceldate  = ? , Tax = ? , polymer_info = ?,  die_info = ? , NoFlip = ?
                     WHERE CTNId = ?   
             "; 
            
@@ -267,7 +267,7 @@
                 $request['PaperName_3'] ,  $request['PaperName_4'] ,  $request['PaperName_5'] ,  $request['PaperName_6'] ,  $request['PaperName_7'] ,  
                 $request['PaperLayerPrice_1'] ,  $request['PaperLayerPrice_2'] ,  $request['PaperLayerPrice_3'] ,  $request['PaperLayerPrice_4'] ,  $request['PaperLayerPrice_5'] ,
                 $request['PaperLayerPrice_6'] ,  $request['PaperLayerPrice_7'] ,  $request['ExchangeRate'], 
-                 $request['CancelComment'] ,  $request['Canceldate'] ,  $request['Tax'] ,    $request['NoColor'] , $request['DieExist'] , $request['CTNId']
+                 $request['CancelComment'] ,  $request['Canceldate'] ,  $request['Tax'] ,    $request['NoColor'] , $request['DieExist'] , $request['NoFlip'] , $request['CTNId']
             ]); 
 
             
