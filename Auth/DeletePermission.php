@@ -1,6 +1,6 @@
 <?php
 ob_start();
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 require_once $ROOT_DIR. 'App/Controller.php'; 
 
 if(isset($_POST['role_id']) && !empty($_POST['role_id']) && isset($_POST['permission_id']) && !empty($_POST['permission_id'])  ) {

@@ -29,6 +29,7 @@
         <table class="table " id="JobTable">
             <thead>
                 <tr class="table-info">
+                    <th>#</th>
                     <th title="Job No">Job No</th>
                     <th>Product Name</th>
                     <th>Employees</th>
@@ -38,12 +39,14 @@
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Type</th>
+                    <th>Payment</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if($rentouts->num_rows > 0 ){  ?>
+                <?php $counter = 1 ; if($rentouts->num_rows > 0 ){  ?>
                     <?php while ($rent = $rentouts->fetch_assoc()) { ?>
                         <tr>
+                            <td><?=$counter++; ?></td>
                             <td><?= $rent['JobNo'] ?></td>
                             <td><?= $rent['ProductName'] ?></td>
                             <td>
@@ -82,6 +85,7 @@
                             <td><?= $rent['start_time'] ?></td>
                             <td><?= $rent['end_time'] ?></td>
                             <td><?= $rent['rent_type'] ?></td>
+                            <td><?= $rent['rentout_payment'] ?></td>
                         </tr>
                     <?php } // END OF NUMROWS FIRST LOOP  ?>
                 <?php } // END OF NUMROWS FIRST LOOP  ?>

@@ -1,5 +1,5 @@
 <?php
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 require_once $ROOT_DIR. 'App/Controller.php'; 
 
 if(isset($_POST['role_id']) && !empty($_POST['role_id']) && isset($_POST['permission_id']) && !empty($_POST['permission_id'])  ) {
@@ -24,6 +24,6 @@ else
     die('<div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
             <strong>!</strong> Something Went Wrong
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>'); 
+    </div>'); 
 }
 ?>

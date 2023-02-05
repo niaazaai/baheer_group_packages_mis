@@ -1,12 +1,8 @@
  
 <?php 
-
-
 ob_start();
 require_once '../App/partials/Header.inc'; 
 require_once '../App/partials/Menu/MarketingMenu.inc'; 
-
-
 
 if(isset($_GET['role_id']) && !empty($_GET['role_id'])) {
 

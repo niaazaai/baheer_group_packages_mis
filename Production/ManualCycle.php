@@ -1,11 +1,12 @@
 <?php ob_start(); require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';   ?>
 <?php
     $production_cycle  = $Controller->QueryData("SELECT 
-    production_cycle.*, carton.JobNo,carton.CTNId,  carton.ProductName  , 
+    production_cycle.*, carton.JobNo,carton.CTNId,  carton.ProductName  , CTNLength,CTNWidth,CTNHeight,DesignImage,
     CONCAT( FORMAT(carton.CTNLength / 10 ,1 ) ,' x ',FORMAT(carton.CTNWidth / 10 , 1 ),' x ',FORMAT(carton.CTNHeight/ 10,1)) AS Size 
     , CTNUnit ,CTNType,  CTNQTY , CTNColor , ProductQTY 
     FROM production_cycle
     INNER JOIN carton ON production_cycle.CTNId = carton.CTNId
+    LEFT JOIN designinfo ON carton.CTNId = designinfo.CaId
     WHERE (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes'",[]);
 
         // SELECT ALL MACHINES FOR USER TO SELECT FOR EACH JOB CYCLE  
@@ -55,9 +56,8 @@
             </svg>
             Manual Section Job List
         </h4>
-
         <div>
-               <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary me-2  " style="margin-top:4px;" title="Click to Read the User Guide ">
+            <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary me-2  " style="margin-top:4px;" title="Click to Read the User Guide ">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
@@ -87,22 +87,20 @@
       </div>
     </div>                
  </div>
-   
-
 
 <div class="card m-3 shadow ">
     <div class="card-body">
         <table class="table " id="JobTable">
-      
             <thead>
                 <tr class="table-info">
+                    <th>#</th>
                     <th title="Job No">Job No</th>
                     <th>Product Name</th>
-                    <th>Size(cm)</th>    
-                    <th>Type</th>
-                    <th>Order QTY</th>
-                    <th>Produced QTY</th>
+                    <th>Size(cm)</th>   
+                    <th>Total W & L</th> 
                     <th>Color</th>
+                    <th>Type</th>
+                    <th>Plan Qty</th>
                     <th>Assigned</th>
                     <th>OPS</th>
 
@@ -110,18 +108,25 @@
                 </tr>
             </thead>
             <tbody>
-             <?php   if($production_cycle->num_rows > 0 ){ $TotalOrderQTY = 0 ;  $TotalProducedQTY = 0 ; ?>
+             <?php  $counter = 1 ;  if($production_cycle->num_rows > 0 ){   ?>
                 <?php while ($cycle = $production_cycle->fetch_assoc()) { ?>
 
                     <tr>
-                        <!-- <td><?=$cycle['cycle_id'];?></td> -->
+                        <td><?=$counter++;?></td>
                         <td><?= $cycle['JobNo'] ?></td>
                         <td><?= $cycle['ProductName'] ?></td>
                         <td><?= '(' . $cycle['Size'].') <span class = "badge bg-info" >'. $cycle['CTNType'] . 'Ply </span>'  ?></td>
+                        <td>
+                            <?php 
+                                $total_width = $cycle['CTNWidth'] + $cycle['CTNHeight'] ; 
+                                $total_length = ($cycle['CTNLength'] + $cycle['CTNWidth']) * 2 +3 ; 
+                                echo $total_width . ' & ' . $total_length; 
+                            ?>
+                        </td>
+                        <td><?=$cycle['CTNColor'];?></td>
                         <td><?= $cycle['CTNUnit'];  ?></td>
-                        <td><?php echo $cycle['CTNQTY']; $TotalOrderQTY += $cycle['CTNQTY'];?></td>
-                        <td><?php echo $cycle['ProductQTY']; $TotalProducedQTY += $cycle['ProductQTY'];?></td>
-                        <td><?= $cycle['CTNColor'] ?></td>
+                        <td><?= $cycle['cycle_plan_qty']; ?></td>
+
                         <td>
                             <div class="accordion accordion-flush " style = "max-width:200px;"  id="accordionFlushExample">
                                 <div class="accordion-item" >
@@ -205,25 +210,24 @@
                             <a href = "CreateRent.php?cycle_id=<?=$cycle['cycle_id'];?>&CTNId=<?=$cycle['CTNId'];?>" class= "btn btn-dark btn-sm m-0"> 
                                 Rent
                             </a>
+                            <a class = "btn btn-outline-dark btn-sm" style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                href="../Design/ShowDesignImage.php?Url=<?= $cycle['DesignImage']?>&ProductName=<?= $cycle['ProductName']?>" >  View Image
+                            </a>
                         </td>
                     </tr>
 
                 <?php } // END OF NUMROWS FIRST LOOP  ?>
 
-                <tr>
+                <!-- <tr>
                     <td colspan = 4 class = "fw-bold text-center " > Totals </td>
-                    <td><?=$TotalOrderQTY?></td>
-                    <td><?=$TotalProducedQTY?></td>
                     <td colspan=3></td>
-                </tr>
+                </tr> -->
              <?php } // END OF NUMROWS FIRST LOOP  ?>
 
             </tbody>
         </table>
     </div>
 </div>
-
- 
 
 <!-- Modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

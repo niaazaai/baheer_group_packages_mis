@@ -15,15 +15,20 @@
         carton.ProductName,
         CONCAT( FORMAT(carton.CTNLength / 10 ,1 ) ,' x ',FORMAT(carton.CTNWidth / 10 , 1 ),' x ',FORMAT(carton.CTNHeight/ 10,1)) AS Size , 
         carton.CTNUnit,
-        carton.CTNQTY, 
+        carton.CTNLength,
+        carton.CTNWidth,
+        carton.CTNHeight,
         carton.CTNType, 
-        carton.CTNColor , 
-        carton.ProductQTY, 
+        carton.CTNColor, 
+        production_cycle.cycle_plan_qty,
+        designinfo.DesignImage,
+        
         machine.machine_name , used_machine.status
     FROM carton
         INNER JOIN production_cycle ON production_cycle.CTNId = carton.CTNId
         INNER JOIN used_machine ON production_cycle.cycle_id = used_machine.cycle_id
         INNER JOIN machine ON used_machine.machine_id = machine.machine_id
+        LEFT JOIN designinfo ON carton.CTNId = designinfo.CaId
     WHERE  (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes' AND machine.machine_type = 'Manual' AND JobNo != 'NULL'  AND used_machine.status = 'Incomplete' "; 
   
         
@@ -43,11 +48,13 @@
             carton.CTNType, 
             carton.CTNColor , 
             carton.ProductQTY, 
+            designinfo.DesignImage,
             machine.machine_name,  used_machine.status
         FROM carton
             INNER JOIN production_cycle ON production_cycle.CTNId = carton.CTNId
             INNER JOIN used_machine ON production_cycle.cycle_id = used_machine.cycle_id
             INNER JOIN machine ON used_machine.machine_id = machine.machine_id
+            LEFT JOIN designinfo ON carton.CTNId = designinfo.CaId
         WHERE  (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes' ".$condition." AND machine.machine_type = 'Manual' AND JobNo != 'NULL'   AND used_machine.status = 'Incomplete' "; 
        
     }
@@ -231,6 +238,7 @@
                         </svg>
                         Print
                     </button>
+            
                 </form>
             </div>
             <?php } }?>                     
@@ -248,16 +256,16 @@
                     <th title="Job No">Job No</th>
                     <th>Product Name</th>
                     <th>Size(cm)</th>    
-                    <th>Type</th>
-                    <th>Order QTY</th>
-                    <th>Produced QTY</th>
+                    <th>Total W & L</th> 
                     <th>Color</th>
+                    <th>Type</th>
+                    <th>Plan Qty</th>
                     <th>Machines</th>
                     <th>OPS</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if($production_cycle->num_rows > 0 ){  $counter = 1; $TotalOrderQTY = 0 ;  $TotalProducedQTY = 0 ;  ?>
+                <?php  $counter = 1 ; if($production_cycle->num_rows > 0 ){    ?>
                     <?php while ($cycle = $production_cycle->fetch_assoc()) { ?>
 
                         <tr>
@@ -265,31 +273,33 @@
                             <td><?= $cycle['JobNo'] ?></td>
                             <td><?= $cycle['ProductName'] ?></td>
                             <td><?= '(' . $cycle['Size'].') <span class = "badge bg-info" >'. $cycle['CTNType'] . 'Ply </span>'  ?></td>
-                            <td><?= $cycle['CTNUnit'] ?></td>
-                            <td><?php echo $cycle['CTNQTY']; $TotalOrderQTY += $cycle['CTNQTY'];?></td>
-                            <td><?php echo $cycle['ProductQTY']; $TotalProducedQTY += $cycle['ProductQTY'];?></td>
-                            <td><?= $cycle['CTNColor'] ?></td>
+                            <td>
+                                <?php 
+                                    $total_width = $cycle['CTNWidth'] + $cycle['CTNHeight'] ; 
+                                    $total_length = ($cycle['CTNLength'] + $cycle['CTNWidth']) * 2 +3 ; 
+                                    echo $total_width . ' & ' . $total_length; 
+                                ?>
+                            </td>
+                            <td><?=$cycle['CTNColor'];?></td>
+                            <td><?= $cycle['CTNUnit'];  ?></td>
+                            <td><?= $cycle['cycle_plan_qty']; ?></td>
                             <td> <?=$cycle['machine_name']?></td>
                             <td> 
                                 <a type="button" class= "btn btn-outline-success m-0 btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick = "AddCycleId(<?=$cycle['cycle_id'];?>,'<?=$cycle['machine_name']?>',<?=$cycle['CTNId']?> , <?=$cycle['machine_id'];?>)" > 
-                                <svg width="25px" height="25px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect width="48" height="48" fill="white" fill-opacity="0.01"></rect>
-                                    <path d="M14 24L15.25 25.25M44 14L24 34L22.75 32.75" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M4 24L14 34L34 14" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                                Finish
+                                    <svg width="20px" height="20px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect width="48" height="48" fill="white" fill-opacity="0.01"></rect>
+                                        <path d="M14 24L15.25 25.25M44 14L24 34L22.75 32.75" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M4 24L14 34L34 14" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    Finish
+                                </a>
+                                <a class = "btn btn-outline-dark btn-sm" style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                    href="../Design/ShowDesignImage.php?Url=<?= $cycle['DesignImage']?>&ProductName=<?= $cycle['ProductName']?>" >  View Image
                                 </a>
                             </td>
                         </tr>
 
                     <?php } // END OF NUMROWS FIRST LOOP  ?>
-
-                    <tr>
-                        <td colspan = 5 class = "fw-bold text-center " > Totals </td>
-                        <td><?=$TotalOrderQTY?></td>
-                        <td><?=$TotalProducedQTY?></td>
-                        <td colspan = 3></td>
-                    </tr>
                 <?php } // END OF NUMROWS FIRST LOOP  ?>
 
             </tbody>

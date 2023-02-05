@@ -34,6 +34,9 @@ if(
         if($key == 'machine_id' || $key == 'employee_id') continue; 
         $_POST[$key] = $Controller->CleanInput($_POST[$key]); 
     }
+
+    $payment = 0; 
+    if(isset($_POST['rentout_payment']) && !empty($_POST['rentout_payment']))  $payment = $_POST['rentout_payment']; 
     
     $machine_id = ''; 
     $employee_id = ''; 
@@ -54,15 +57,13 @@ if(
         if(++$i !== $numItems) $employee_id .= ','; 
     }
 
-    
-    // var_dump($_POST['employee_id']);
-    // die(); 
-
-
     $rent_outs = $Controller->QueryData(
-        "INSERT INTO carton_rentout ( employee_id,CTNId, cycle_id, machine_id, rentout_amount,rent_date,start_time,end_time,rent_reason,rent_type) 
-        VALUES ( ?,?,?,?,?,?,?,?,?,?)", 
-    [ $employee_id , $_POST['CTNId'],$_POST['cycle_id'],$machine_id,$_POST['rentout_amount'],$_POST['rent_date'],$_POST['start_time'],$_POST['end_time'],$_POST['rent_reason'],$_POST['rent_type']]);
+        "INSERT INTO carton_rentout ( employee_id,CTNId, cycle_id, machine_id, rentout_amount,rent_date,start_time,end_time,rent_reason,rent_type,rentout_payment) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)", 
+    [ 
+        $employee_id , $_POST['CTNId'],$_POST['cycle_id'],$machine_id,$_POST['rentout_amount'],
+        $_POST['rent_date'],$_POST['start_time'],$_POST['end_time'],$_POST['rent_reason'],$_POST['rent_type'],$payment 
+    ]);
 
     header('Location:Rent.php?msg=No CTNId and Cycle ID &class=danger'); 
     
@@ -73,16 +74,13 @@ if(
 <div class="card m-3 shadow">
     <div class="card-body d-flex justify-content-between">
         <h4 class = "p-0 m-0" >
-            Renout Cartons From
+            Rentout Cartons From
         </h4>
     </div>
 </div>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.27.1/slimselect.min.css" rel="stylesheet"></link>
-
-
 
 <div class="card m-3 shadow">
     <div class="card-body">
@@ -91,12 +89,10 @@ if(
             <input type="hidden" name="cycle_id" value = "<?=$cycle_id?>" >
 
             <div class="row">
-                 
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 my-1">
                    <label for="">Rent out to who </label>
                    <select name="employee_id[]" id="multiple" multiple ></select>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 my-1">
                     <label for="machine_id">Select Machines </label>
                     <select  id="machine_id" name = "machine_id[]" aria-label="Machines" multiple  >
@@ -108,7 +104,6 @@ if(
                         <?php } // END OF IF   ?>
                     </select>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 my-1">
                     <label for="rent_type">Rent Type </label>
                     <select  id="rent_type" name = "rent_type" aria-label="Rent Type" >
@@ -118,55 +113,52 @@ if(
                         <option value="روز رسمی و اضافه کاری">روز رسمی و اضافه کاری</option>
                     </select>
                 </div>
-
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 my-1">
                     <div class="form-floating">
                         <input type="text" class="form-control" id="rentout_amount" name="rentout_amount" >
                         <label for="">Carton Amount</label>
                     </div>
                 </div>
-               
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 my-1">
                     <div class="form-floating">
                         <input type="date" class="form-control" id="rent_date" name="rent_date" >
                         <label for=""> Date</label>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 my-1">
                     <div class="form-floating">
-                        <input type="time" class="form-control" id="start_time" name="start_time" >
+                        <input type="time" class="form-control" id="start_time" name="start_time"  >
                         <label for="">Start Time</label>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12 my-1">
                     <div class="form-floating">
-                        <input type="time" class="form-control" id="end_time" name="end_time" >
+                        <input type="time" class="form-control" id="end_time" name="end_time"  >
                         <label for="">End Time</label>
                     </div>
                 </div>
-
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-1">
+            </div>
+            <div class="row">
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 my-1">
                     <div class="form-floating">
                         <textarea class="form-control" name = "rent_reason" placeholder="Leave a comment here" id="rent_reason"></textarea>
                         <label for="rent_reason">Rent Reason</label>
                     </div>
-
                 </div>
-
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 my-1">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="rentout_payment" name="rentout_payment" >
+                        <label for="">Payment</label>
+                    </div>
+                </div>
             </div>
-
             <div class = "mt-2 text-end">
                 <button type="submit" class="btn btn-primary" >Save changes</button>
             </div>
-
         </form>
     </div>
 </div>
-
-
-
-
+ 
 <script>
 
     new SlimSelect({
@@ -212,4 +204,4 @@ if(
     }); 
 
 </script>
-   
+<?php  require_once '../App/partials/Footer.inc'; ?>

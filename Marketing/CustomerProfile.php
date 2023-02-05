@@ -1,6 +1,17 @@
 <?php    
+ob_start();
+
+
+
+
 require_once '../App/partials/Header.inc';  
 require_once '../App/partials/Menu/MarketingMenu.inc';  
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/CUSTOMER_PROFILE';
+  
+if(!in_array( $Gate['VIEW_CUSTOMER_PROFILE'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+
 
 if (filter_has_var(INPUT_GET, 'id') && !empty($_GET['id']) ) {
 
@@ -140,6 +151,9 @@ else die("ID Not Found, This incident will be reported! ");
      
     <!-- RIGHT BUTTONS PAGE CARD  -->
     <div>
+
+   
+    <?php  if(in_array( $Gate['CUSTOMER_PROFILE_ADD_CUSTOMER'] , $_SESSION['ACCESS_LIST']  )) { ?> 
       <a href=" CustomerRegistrationForm.php" class = "btn btn-outline-primary  my-1"  title = "New Customer" >  
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
           <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -147,9 +161,10 @@ else die("ID Not Found, This incident will be reported! ");
         </svg> 
         Add Cust 
       </a>
+    <?php } ?> 
 
+    <?php  if(in_array( $Gate['CUSTOMER_PROFILE_FOLLOW_UP'] , $_SESSION['ACCESS_LIST']  )) { ?> 
       <a href="<?php if($Customer['CusStatus']=='Pending' || $Customer['CusStatus']=='Prospect'){echo "CustomerFollowUpForm.php?id=". $Customer['CustId'] ."&Address=PendingCustomerList&Type=Individual";} 
-
       elseif($Customer['CusStatus']=='InActive'){     echo "CustomerFollowUpForm.php?id=". $Customer['CustId'] ."&Address=PendingCustomerList&Type=General";} ?>" class = "btn btn-outline-primary  my-1 
       <?php if($Customer['CusStatus']=='Active') echo"disabled"; ?>"  title = "Follow UP " >  
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
@@ -159,7 +174,9 @@ else die("ID Not Found, This incident will be reported! ");
         </svg>
         Follow  
       </a>
+    <?php } ?> 
 
+    <?php  if(in_array( $Gate['CUSTOMER_PROFILE_NEW_QUOTATION'] , $_SESSION['ACCESS_LIST']  )) { ?> 
       <a class="   btn btn-outline-primary  my-1 "     href="Quotation.php?CustId=<?=$Customer['CustId']?>"  title = "New Quotation">
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-clipboard2-plus" viewBox="0 0 16 16">
           <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"/>
@@ -168,6 +185,8 @@ else die("ID Not Found, This incident will be reported! ");
         </svg>
         New Quot
       </a>
+    <?php } ?> 
+
 
       <a href="Manual/CustomerRegistrationForm_Manual.php"   class = "text-primary my-1 ms-1" title = "Click to Read the User Guide " >
 			<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
@@ -230,23 +249,26 @@ else die("ID Not Found, This incident will be reported! ");
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
       <ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+        
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active " id="Products-tab" data-bs-toggle="tab" data-bs-target="#Products" type="button" role="tab" aria-controls="Products" aria-selected="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
+              <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
+            </svg> 
+                Products  </button>
+          </li>
+          
 
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active " id="Products-tab" data-bs-toggle="tab" data-bs-target="#Products" type="button" role="tab" aria-controls="Products" aria-selected="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box" viewBox="0 0 16 16">
-            <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5 8 5.961 14.154 3.5 8.186 1.113zM15 4.239l-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923l6.5 2.6zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464L7.443.184z"/>
-          </svg> 
-               Products  </button>
-        </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="Polymer-tab" data-bs-toggle="tab" data-bs-target="#Polymer" type="button" role="tab" aria-controls="Polymer" aria-selected="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cash-stack" viewBox="0 0 16 16">
             <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
             <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z"/>
           </svg>
-
           Polymer</button>
         </li>
+
+
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="Die-tab" data-bs-toggle="tab" data-bs-target="#Die" type="button" role="tab" aria-controls="Die" aria-selected="false">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-aspect-ratio" viewBox="0 0 16 16">
@@ -295,7 +317,7 @@ else die("ID Not Found, This incident will be reported! ");
             <input type="text" class="form-control" id = "Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'ProductTable' )">
           </div>
 
-
+          <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_PRODUCT'] , $_SESSION['ACCESS_LIST']  )) { ?> 
             <table class="table  " id = "ProductTable"  >
               <thead>
                 <tr>
@@ -420,61 +442,51 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                               echo "<span class='badge fw-bold   ".  $color.  "'>  $Status $DaysPassed   </span>"; 
                             ?>  
                         </td>
-                        <!-- STATUS  COLUMN  -->      
+                        <!-- STATUS  COLUMN   var_dump($_SESSION['ACCESS_LIST']);  -->      
                        
                         <td>
-                            <!-- PROFILE  -->
-                            <a  href="QuotationEdit.php?Page=CustomerProfile&CTNId=<?=$rows['CTNId'] ?>" title = "click to Reorder" > 
-                              <svg width="25" height="25" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_203_7)">
-                                <path d="M3.5 2C3.36739 2 3.24021 2.05268 3.14645 2.14645C3.05268 2.24021 3 2.36739 3 2.5V14.5C3 14.6326 3.05268 14.7598 3.14645 14.8536C3.24021 14.9473 3.36739 15 3.5 15H12.5C12.6326 15 12.7598 14.9473 12.8536 14.8536C12.9473 14.7598 13 14.6326 13 14.5V2.5C13 2.36739 12.9473 2.24021 12.8536 2.14645C12.7598 2.05268 12.6326 2 12.5 2H12C11.8674 2 11.7402 1.94732 11.6464 1.85355C11.5527 1.75979 11.5 1.63261 11.5 1.5C11.5 1.36739 11.5527 1.24021 11.6464 1.14645C11.7402 1.05268 11.8674 1 12 1H12.5C12.8978 1 13.2794 1.15804 13.5607 1.43934C13.842 1.72064 14 2.10218 14 2.5V14.5C14 14.8978 13.842 15.2794 13.5607 15.5607C13.2794 15.842 12.8978 16 12.5 16H3.5C3.10218 16 2.72064 15.842 2.43934 15.5607C2.15804 15.2794 2 14.8978 2 14.5V2.5C2 2.10218 2.15804 1.72064 2.43934 1.43934C2.72064 1.15804 3.10218 1 3.5 1H4C4.13261 1 4.25979 1.05268 4.35355 1.14645C4.44732 1.24021 4.5 1.36739 4.5 1.5C4.5 1.63261 4.44732 1.75979 4.35355 1.85355C4.25979 1.94732 4.13261 2 4 2H3.5Z" fill="#0d6efd"/>
-                                <path d="M10 0.5C10 0.367392 9.94732 0.240215 9.85355 0.146447C9.75979 0.0526784 9.63261 0 9.5 0L6.5 0C6.36739 0 6.24021 0.0526784 6.14645 0.146447C6.05268 0.240215 6 0.367392 6 0.5C6 0.632608 5.94732 0.759785 5.85355 0.853553C5.75979 0.947322 5.63261 1 5.5 1C5.36739 1 5.24021 1.05268 5.14645 1.14645C5.05268 1.24021 5 1.36739 5 1.5V2C5 2.13261 5.05268 2.25979 5.14645 2.35355C5.24021 2.44732 5.36739 2.5 5.5 2.5H10.5C10.6326 2.5 10.7598 2.44732 10.8536 2.35355C10.9473 2.25979 11 2.13261 11 2V1.5C11 1.36739 10.9473 1.24021 10.8536 1.14645C10.7598 1.05268 10.6326 1 10.5 1C10.3674 1 10.2402 0.947322 10.1464 0.853553C10.0527 0.759785 10 0.632608 10 0.5V0.5Z" fill="#0d6efd"/>
-                                <path d="M6.18141 7.76818L8.02641 5.19868C8.06218 5.13816 8.1131 5.08801 8.17416 5.05316C8.23522 5.01832 8.3043 5 8.3746 5C8.4449 5 8.51399 5.01832 8.57504 5.05316C8.6361 5.08801 8.68702 5.13816 8.72279 5.19868L10.5689 7.76818C10.6049 7.82943 10.6241 7.89913 10.6245 7.97019C10.6249 8.04125 10.6065 8.11114 10.5711 8.17278C10.5357 8.23442 10.4847 8.28561 10.4232 8.32114C10.3616 8.35668 10.2918 8.3753 10.2207 8.37512H9.50016C9.50016 9.21887 9.50016 11.7501 5.00016 12.3126C7.53141 10.9064 7.25016 8.37512 7.25016 8.37512H6.5296C6.2146 8.37512 6.02448 8.03424 6.18085 7.76818H6.18141Z" fill="#0d6efd"/>
-                                </g>
-                                <defs>
-                                <clipPath id="clip0_203_7">
-                                <rect width="16" height="16" fill="white"/>
-                                </clipPath>
-                                </defs>
-                              </svg>
-                            </a>
+                            <?php   if(!in_array( $Gate['CUSTOMER_PROFILE_REORDER'] , $_SESSION['ACCESS_LIST']  )) { ?>  
+                                <!-- PROFILE  -->
+                                <a  href="QuotationEdit.php?Page=CustomerProfile&CTNId=<?=$rows['CTNId'] ?>" title = "click to Reorder" > 
+                                  <svg width="25" height="25" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_203_7)">
+                                      <path d="M3.5 2C3.36739 2 3.24021 2.05268 3.14645 2.14645C3.05268 2.24021 3 2.36739 3 2.5V14.5C3 14.6326 3.05268 14.7598 3.14645 14.8536C3.24021 14.9473 3.36739 15 3.5 15H12.5C12.6326 15 12.7598 14.9473 12.8536 14.8536C12.9473 14.7598 13 14.6326 13 14.5V2.5C13 2.36739 12.9473 2.24021 12.8536 2.14645C12.7598 2.05268 12.6326 2 12.5 2H12C11.8674 2 11.7402 1.94732 11.6464 1.85355C11.5527 1.75979 11.5 1.63261 11.5 1.5C11.5 1.36739 11.5527 1.24021 11.6464 1.14645C11.7402 1.05268 11.8674 1 12 1H12.5C12.8978 1 13.2794 1.15804 13.5607 1.43934C13.842 1.72064 14 2.10218 14 2.5V14.5C14 14.8978 13.842 15.2794 13.5607 15.5607C13.2794 15.842 12.8978 16 12.5 16H3.5C3.10218 16 2.72064 15.842 2.43934 15.5607C2.15804 15.2794 2 14.8978 2 14.5V2.5C2 2.10218 2.15804 1.72064 2.43934 1.43934C2.72064 1.15804 3.10218 1 3.5 1H4C4.13261 1 4.25979 1.05268 4.35355 1.14645C4.44732 1.24021 4.5 1.36739 4.5 1.5C4.5 1.63261 4.44732 1.75979 4.35355 1.85355C4.25979 1.94732 4.13261 2 4 2H3.5Z" fill="#0d6efd"/>
+                                      <path d="M10 0.5C10 0.367392 9.94732 0.240215 9.85355 0.146447C9.75979 0.0526784 9.63261 0 9.5 0L6.5 0C6.36739 0 6.24021 0.0526784 6.14645 0.146447C6.05268 0.240215 6 0.367392 6 0.5C6 0.632608 5.94732 0.759785 5.85355 0.853553C5.75979 0.947322 5.63261 1 5.5 1C5.36739 1 5.24021 1.05268 5.14645 1.14645C5.05268 1.24021 5 1.36739 5 1.5V2C5 2.13261 5.05268 2.25979 5.14645 2.35355C5.24021 2.44732 5.36739 2.5 5.5 2.5H10.5C10.6326 2.5 10.7598 2.44732 10.8536 2.35355C10.9473 2.25979 11 2.13261 11 2V1.5C11 1.36739 10.9473 1.24021 10.8536 1.14645C10.7598 1.05268 10.6326 1 10.5 1C10.3674 1 10.2402 0.947322 10.1464 0.853553C10.0527 0.759785 10 0.632608 10 0.5V0.5Z" fill="#0d6efd"/>
+                                      <path d="M6.18141 7.76818L8.02641 5.19868C8.06218 5.13816 8.1131 5.08801 8.17416 5.05316C8.23522 5.01832 8.3043 5 8.3746 5C8.4449 5 8.51399 5.01832 8.57504 5.05316C8.6361 5.08801 8.68702 5.13816 8.72279 5.19868L10.5689 7.76818C10.6049 7.82943 10.6241 7.89913 10.6245 7.97019C10.6249 8.04125 10.6065 8.11114 10.5711 8.17278C10.5357 8.23442 10.4847 8.28561 10.4232 8.32114C10.3616 8.35668 10.2918 8.3753 10.2207 8.37512H9.50016C9.50016 9.21887 9.50016 11.7501 5.00016 12.3126C7.53141 10.9064 7.25016 8.37512 7.25016 8.37512H6.5296C6.2146 8.37512 6.02448 8.03424 6.18085 7.76818H6.18141Z" fill="#0d6efd"/>
+                                    </g>
+                                    <defs>
+                                      <clipPath id="clip0_203_7">
+                                        <rect width="16" height="16" fill="white"/>
+                                      </clipPath>
+                                    </defs>
+                                  </svg>
+                                </a>
+                            <?php } ?>
 
-                            <a href="CustomerOrderHistory.php?id=<?=$Customer['CustId'] ?>&ProductName=<?=$rows['ProductName'];?>" title = "View History" > 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
-                                  <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
-                                  <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
-                                  <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
-                                </svg>
-                            </a>
+                            <?php  if(!in_array( $Gate['CUSTOMER_PROFILE_ORDER_HISTORY'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                                <a href="CustomerOrderHistory.php?id=<?=$Customer['CustId'] ?>&ProductName=<?=$rows['ProductName'];?>" title = "View History" > 
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                                    <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                                    <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                                    <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                                  </svg>
+                                </a>
+                            <?php } ?>
                         </td>
-
-
                       </tr>
                     <?php endwhile;  # while loop
                 } # END OF IF 
                 ?>
             </tbody>
           </table>
+          <?php } // END OF PERMISSION IF BLOCK 
+            else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access this tab </h5>'; }  
+          ?>
+
           </div><!-- END OF CARD-BODY  -->
         </div><!--  END of card  -->
         </div><!--  END Products-tab  -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+       
         <div class="tab-pane" id="Polymer" role="tabpanel" aria-labelledby="Polymer-tab">
           <div class="card my-3">
             <div class="card-body table-responsive ">
@@ -488,6 +500,8 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                 <input type="text" class="form-control" id = "Polymer_Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'PolymerTable' )">
               </div>
 
+              <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_POLYMER'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                
               <table class="table " id = "PolymerTable" >
                 <thead>
                   <tr>
@@ -501,13 +515,10 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                       <th> Design Code</th>
                       <th> Sample Code</th>
                       <th>Status</th>
-
                   </tr>
                 </thead>
                 <tbody>
                 <?php
-
-
 
                   $PolymerQuery="SELECT ppcustomer.CustId,cpolymer.PColor,cpolymer.PSize,cpolymer.PMade,cpolymer.POwner, 
                   cpolymer.DesignCode , cpolymer.CPid, cpolymer.ProductName AS PolymerProductName,cpolymer.CartSample , cpolymer.PStatus
@@ -548,6 +559,12 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                   ?>
               </tbody>
             </table>
+
+              <?php } // END OF PERMISSION IF BLOCK 
+                else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access this tab </h5>'; }  
+              ?>
+          
+
             </div><!-- END OF CARD-BODY  -->
           </div><!--  END of card  -->
         </div><!--  END Polymer-tab  -->
@@ -556,10 +573,7 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
 
 
 
-
-
-
-
+      
 
 
 
@@ -578,115 +592,85 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                   </svg>
                 </i>
                 <input type="text" class="form-control" id = "Die_Search_Input" placeholder="Search Anything " onkeyup="search( this.id , 'DieTable' )">
-              </div>
-
-            <table class="table" id = "DieTable" >
-              <thead>
-                <tr>
-                    <th> # </th>
-                    <th> Die Code</th>
-
-                    <th> Product Name </th>
-                    <th> Size <span style = "font-size:10px">     (L x W x H) mm  </span>  </th>
-                    <th> App </th>
-                    <th>Die Type</th>
-                    <th> Made By </th>
-                    <th> Owner </th>
-                    <th> Sketch</th>
-                    <th>Sample Code </th>
-                    <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-              <?php
- 
-             
-
-              $ProductRows = $Controller->QueryData(" SELECT ppcustomer.CustId, cdie.CDProductName , cdie.CDSize , cdie.CDMade , cdie.CDOwner ,
-              cdie.CDDesignCode , cdie.CDSampleNo , cdie.CDieId , cdie.CDDesignCode ,  cdie.App , cdie.DieType , cdie.Scatch ,cdie.CDStatus
-              FROM cdie INNER JOIN ppcustomer ON ppcustomer.CustId=cdie.CDCompany  WHERE ppcustomer.CustId= ?  ORDER BY CDieId DESC " , [$ID]);
-
-     
-
-
-                if ($ProductRows->num_rows > 0) {   $counter = 1;  
-                   
-                  foreach ($ProductRows as $key => $value) : ?>  
-                      <tr id= 'die_tab_tr_<?= $value['CDieId']; ?>'>
-                        <td><?=$counter++; ?></td>
-                        <td><?= $value['CDieId']; ?></td>
-                        <td> <?= $value['CDProductName']; ?></td>
-                        <td>   <?= $value['CDSize']  ?></td>
-                        <td>   <?= $value['App']  ?> </td>
-                        <td>   <?= $value['DieType']  ?> </td>
-                        <td><?= $value['CDMade']; ?></td>
-                        <td><?= $value['CDOwner']; ?></td>
-                        <!-- <td class = "<?php if(!isset($value['CDDesignCode'])) echo "bg-danger text-white"  ?>" ><?php if(isset($value['CDDesignCode'])) echo $value['CDDesignCode']; else echo 'No Design' ?></td> -->
-                        <!-- ../Assets/ArchiveSketch/$value['Scatch'] -->
-                        
-                        <td   >  
-                          <?php 
-
-                          if(isset($value['Scatch']) && !empty($value['Scatch']) ) {
-
-                              echo '
-                              <a href="ShowSketchImage.php?Url=ArchiveSketch/'. $value['Scatch']  .'&ProductName='. $value['CDProductName']  .' "> <svg width="25" height="25" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M60 37V1C60 0.4 59.6 0 59 0H1C0.4 0 0 0.4 0 1V48C0 48.6 0.4 49 1 49H11V47H2V2H58V36H48C47.4 36 47 36.4 47 37V47H25V49H48C48.3 49 48.5 48.9 48.7 48.7L59.7 37.7C59.8 37.6 59.8 37.5 59.9 37.4V37.3C60 37.2 60 37.1 60 37ZM49 38H56.6L52.8 41.8L49 45.6V38Z" fill="black"/>
-                                  <path d="M18.9 9.7C18.8 9.3 18.4 9 18 9C17.6 9 17.2 9.3 17.1 9.7L14.2 18.4C14.1 18.6 14 18.8 14 19V52V59C14 59.6 14.4 60 15 60H21C21.6 60 22 59.6 22 59V52V19C22 18.8 21.9 18.5 21.8 18.4L18.9 9.7ZM16 20H17V51H16V20ZM19 20H20V51H19V20ZM18 13.2L19.6 18H16.4L18 13.2ZM20 58H16V53H17H19H20V58Z" fill="black"/>
-                                  <path d="M35 6C30 6 26 10 26 15V17H28V15C28 11.1 31.1 8 35 8C38.9 8 42 11.1 42 15V17H44V15C44 10 40 6 35 6Z" fill="black"/>
-                                  <path d="M54 16V14H52V16C52 19.9 48.9 23 45 23C41.1 23 38 19.9 38 16V14H36V16C36 21 40 25 45 25C50 25 54 21 54 16Z" fill="black"/>
-                                  <path d="M25 33V43C25 43.6 25.4 44 26 44H36C36.6 44 37 43.6 37 43V33C37 32.4 36.6 32 36 32H26C25.4 32 25 32.4 25 33ZM27 34H35V42H27V34Z" fill="black"/>
-                                  <path d="M39 35V37H41C41.6 37 42 36.6 42 36V28C42 27.4 41.6 27 41 27H33C32.4 27 32 27.4 32 28V30H34V29H40V35H39Z" fill="black"/> <path d="M8 5H6V7H8V5Z" fill="black"/> <path d="M12 5H10V7H12V5Z" fill="black"/> <path d="M16 5H14V7H16V5Z" fill="black"/> <path d="M12 9H10V11H12V9Z" fill="black"/> <path d="M8 9H6V11H8V9Z" fill="black"/> <path d="M8 13H6V15H8V13Z" fill="black"/> <path d="M8 17H6V19H8V17Z" fill="black"/> <path d="M8 21H6V23H8V21Z" fill="black"/> <path d="M8 25H6V27H8V25Z" fill="black"/> <path d="M8 29H6V31H8V29Z" fill="black"/> <path d="M8 33H6V35H8V33Z" fill="black"/> <path d="M8 37H6V39H8V37Z" fill="black"/> <path d="M8 41H6V43H8V41Z" fill="black"/>
-                                  </svg> 
-                              </a>';
-                            }
-                            else {
-                              echo '  <svg  style = "color:red" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
-                                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                </svg>';
-                            }     
-                          
-                          ?>
-
-                          
-                          
-                          
-                          
-                         </td>
-                        
-                        <td class = "<?php if(!isset($value['CDSampleNo'])) echo "bg-danger text-white"  ?>" > <?php if(isset($value['CDSampleNo'])) echo $value['CDSampleNo']; else echo 'No Sample' ?>  </td>
-                        <td class = "" > <span class = "badge <?= ($value['CDStatus'] == 'Damage') ? 'bg-danger': 'bg-success' ; ?> " > <?=$value['CDStatus']  ?> </span> </td>
-                       
-                        
+              </div>          
+                <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_DIE'] , $_SESSION['ACCESS_LIST']  )) { ?>  
+                  <table class="table" id = "DieTable" >
+                    <thead>
+                      <tr>
+                          <th> # </th>
+                          <th> Die Code</th>
+                          <th> Product Name </th>
+                          <th> Size <span style = "font-size:10px">     (L x W x H) mm  </span>  </th>
+                          <th> App </th>
+                          <th>Die Type</th>
+                          <th> Made By </th>
+                          <th> Owner </th>
+                          <th> Sketch</th>
+                          <th>Sample Code </th>
+                          <th>Status</th>
                       </tr>
-                    <?php endforeach;  # while loop
-                } # END OF IF 
-                ?>
-            </tbody>
-          </table>
+                    </thead>
+                    <tbody>
+                    <?php
+
+                    $ProductRows = $Controller->QueryData(" SELECT ppcustomer.CustId, cdie.CDProductName , cdie.CDSize , cdie.CDMade , cdie.CDOwner ,
+                    cdie.CDDesignCode , cdie.CDSampleNo , cdie.CDieId , cdie.CDDesignCode ,  cdie.App , cdie.DieType , cdie.Scatch ,cdie.CDStatus
+                    FROM cdie INNER JOIN ppcustomer ON ppcustomer.CustId=cdie.CDCompany  WHERE ppcustomer.CustId= ?  ORDER BY CDieId DESC " , [$ID]);
+
+                      if ($ProductRows->num_rows > 0) {   $counter = 1;  
+                        foreach ($ProductRows as $key => $value) : ?>  
+                            <tr id= 'die_tab_tr_<?= $value['CDieId']; ?>'>
+                              <td><?=$counter++; ?></td>
+                              <td><?= $value['CDieId']; ?></td>
+                              <td> <?= $value['CDProductName']; ?></td>
+                              <td>   <?= $value['CDSize']  ?></td>
+                              <td>   <?= $value['App']  ?> </td>
+                              <td>   <?= $value['DieType']  ?> </td>
+                              <td><?= $value['CDMade']; ?></td>
+                              <td><?= $value['CDOwner']; ?></td>
+                              <!-- <td class = "<?php if(!isset($value['CDDesignCode'])) echo "bg-danger text-white"  ?>" ><?php if(isset($value['CDDesignCode'])) echo $value['CDDesignCode']; else echo 'No Design' ?></td> -->
+                              <!-- ../Assets/ArchiveSketch/$value['Scatch'] -->
+                              
+                              <td   >  
+                                <?php 
+
+                                if(isset($value['Scatch']) && !empty($value['Scatch']) ) {
+
+                                    echo '
+                                    <a href="ShowSketchImage.php?Url=ArchiveSketch/'. $value['Scatch']  .'&ProductName='. $value['CDProductName']  .' "> <svg width="25" height="25" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M60 37V1C60 0.4 59.6 0 59 0H1C0.4 0 0 0.4 0 1V48C0 48.6 0.4 49 1 49H11V47H2V2H58V36H48C47.4 36 47 36.4 47 37V47H25V49H48C48.3 49 48.5 48.9 48.7 48.7L59.7 37.7C59.8 37.6 59.8 37.5 59.9 37.4V37.3C60 37.2 60 37.1 60 37ZM49 38H56.6L52.8 41.8L49 45.6V38Z" fill="black"/>
+                                        <path d="M18.9 9.7C18.8 9.3 18.4 9 18 9C17.6 9 17.2 9.3 17.1 9.7L14.2 18.4C14.1 18.6 14 18.8 14 19V52V59C14 59.6 14.4 60 15 60H21C21.6 60 22 59.6 22 59V52V19C22 18.8 21.9 18.5 21.8 18.4L18.9 9.7ZM16 20H17V51H16V20ZM19 20H20V51H19V20ZM18 13.2L19.6 18H16.4L18 13.2ZM20 58H16V53H17H19H20V58Z" fill="black"/>
+                                        <path d="M35 6C30 6 26 10 26 15V17H28V15C28 11.1 31.1 8 35 8C38.9 8 42 11.1 42 15V17H44V15C44 10 40 6 35 6Z" fill="black"/>
+                                        <path d="M54 16V14H52V16C52 19.9 48.9 23 45 23C41.1 23 38 19.9 38 16V14H36V16C36 21 40 25 45 25C50 25 54 21 54 16Z" fill="black"/>
+                                        <path d="M25 33V43C25 43.6 25.4 44 26 44H36C36.6 44 37 43.6 37 43V33C37 32.4 36.6 32 36 32H26C25.4 32 25 32.4 25 33ZM27 34H35V42H27V34Z" fill="black"/>
+                                        <path d="M39 35V37H41C41.6 37 42 36.6 42 36V28C42 27.4 41.6 27 41 27H33C32.4 27 32 27.4 32 28V30H34V29H40V35H39Z" fill="black"/> <path d="M8 5H6V7H8V5Z" fill="black"/> <path d="M12 5H10V7H12V5Z" fill="black"/> <path d="M16 5H14V7H16V5Z" fill="black"/> <path d="M12 9H10V11H12V9Z" fill="black"/> <path d="M8 9H6V11H8V9Z" fill="black"/> <path d="M8 13H6V15H8V13Z" fill="black"/> <path d="M8 17H6V19H8V17Z" fill="black"/> <path d="M8 21H6V23H8V21Z" fill="black"/> <path d="M8 25H6V27H8V25Z" fill="black"/> <path d="M8 29H6V31H8V29Z" fill="black"/> <path d="M8 33H6V35H8V33Z" fill="black"/> <path d="M8 37H6V39H8V37Z" fill="black"/> <path d="M8 41H6V43H8V41Z" fill="black"/>
+                                        </svg> 
+                                    </a>';
+                                  }
+                                  else {
+                                    echo '  <svg  style = "color:red" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                                        <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                      </svg>';
+                                  }     
+                                
+                                ?>
+                              </td>
+                              
+                              <td class = "<?php if(!isset($value['CDSampleNo'])) echo "bg-danger text-white"  ?>" > <?php if(isset($value['CDSampleNo'])) echo $value['CDSampleNo']; else echo 'No Sample' ?>  </td>
+                              <td class = "" > <span class = "badge <?= ($value['CDStatus'] == 'Damage') ? 'bg-danger': 'bg-success' ; ?> " > <?=$value['CDStatus']  ?> </span> </td>
+                            </tr>
+                          <?php endforeach;  # while loop
+                      } # END OF IF 
+                      ?>
+                  </tbody>
+                </table>
+                <?php } // END OF PERMISSION IF BLOCK 
+                    else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access this tab </h5>'; }  
+                  ?> 
           </div><!-- END OF CARD-BODY  -->
         </div><!--  END of card  -->
         </div><!--  END Die-tab  -->
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <div class="tab-pane" id="Order" role="tabpanel" aria-labelledby="Order-tab">
             <div class="card my-3">
@@ -701,9 +685,7 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                 <input type="text" class="form-control" id = "Order_Search_Input"  placeholder="Search Anything "  onkeyup="search( this.id , 'OrderTable' )">
               </div>
 
-
-
-              
+              <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_ALL_ORDER'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                 <table class="table " id = "OrderTable" >
                   <thead>
                     <tr>
@@ -785,26 +767,13 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                     ?>
                 </tbody>
               </table>
+              <?php } // END OF PERMISSION IF BLOCK 
+                else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access this tab </h5>'; }  
+              ?>
               </div><!-- END OF CARD-BODY  -->
             </div><!--  END of card  -->
         </div>
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
         <div class="tab-pane" id="Summery" role="tabpanel" aria-labelledby="Summery-tab"> 
           <div class="card my-3">
                 <div class="card-body table-responsive ">
@@ -817,9 +786,7 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                   </i>
                   <input type="text" class="form-control" id = "Summery_Search_Input"  placeholder="Search Anything "  onkeyup="search( this.id , 'SummeryTable' )">
                 </div>
-
-
-
+                <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_ALL_SUMMERY'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                   <table class="table "  id = "SummeryTable"  >
                     <thead>
                       <tr>
@@ -885,20 +852,20 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                       ?>
                   </tbody>
                 </table>
+                <?php } // END OF PERMISSION IF BLOCK 
+                else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access this tab </h5>'; }  
+              ?>
                 </div><!-- END OF CARD-BODY  -->
               </div><!--  END of card  -->
         </div>
-
-
-
-
-
-                                  
+        
+        
         <div class="tab-pane  <?php echo (isset($_GET['tab'])) ? 'active': ''  ?>" id="About" role="tabpanel" aria-labelledby="About-tab">
             <div class="card my-3">
               <div class="card-body  ">
                 <div class="d-flex justify-content-between">
                  <h3 class = ""><?=$Customer['CustName'];?><span class = "fs-6" > ( <?=$Customer['CusSpecification'];?> )</span>  </h3> 
+                 <?php  if(in_array( $Gate['CUSTOMER_PROFILE_EDIT_CUSTOMER'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                   <a class="btn btn-outline-primary  my-1"     href="CustomerEditForm.php?id=<?= $ID ?> " >  
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
@@ -906,12 +873,10 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                       </svg>
                       Edit 
                   </a>
+                  <?php } ?> 
                 </div>
-
-
                 <hr>
-
-
+                <?php  if(in_array( $Gate['CUSTOMER_PROFILE_VIEW_ABOUT'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                 <table class =" table table-borderless " >
     
                       <tr>  <th colspan = 2 class = "fw-bold h3"  >
@@ -950,11 +915,11 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                       <tr><td class = "text-end pe-3 fw-bold " style = "font-size:18px; border-right:3px solid black; width:20%;" >Status  </td>        <td class = "fw-bold ps-4" >  <?=$Customer['CusStatus'];?> </td> </tr>
                       <tr><td class = "text-end pe-3 fw-bold " style = "font-size:18px; border-right:3px solid black; width:20%;" >Point of Contact</td>    <td class = "fw-bold ps-4" >  <?=$Customer['CusReference'];?> </td> </tr>
                       <tr><td class = "text-end pe-3 fw-bold " style = "font-size:18px; border-right:3px solid black; width:20%;" >Follow up responsible  </td>    <td class = "fw-bold ps-4" >  <?=$Customer['Ename'];?> </td> </tr>
- 
-
- 
 
                 </table>
+                <?php } // END OF PERMISSION IF BLOCK 
+                else { echo '<h5 class = "text-center mt-2 "> You are not authorized to access thi1s tab </h5>'; }  
+              ?>
         </div><!-- END OF About-tab  -->
       </div><!-- END OF TAB CONTENT  -->
 
