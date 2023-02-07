@@ -1,22 +1,21 @@
  <!-- Starting area of back-end logic-->
-<?php require_once '../App/partials/Header.inc';  ?>
-<?php require_once '../App/partials/Menu/MarketingMenu.inc'; ?>  
-  
 <?php 
-
-// SELECT CustId1 , CTNId , CustName , ProductName ,  JobType , CTNStatus FROM `carton` INNER JOIN ppcustomer on ppcustomer.CustId = carton.CustId1  
-// WHERE  (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL'  ;
-
-
-      $SQL="SELECT `ProId`, `CtnId1`, CustId,`ProDate`, CTNId,`ProSubmitDate`, `ProSubmitBy`, `CompId`,  `ProQty` ,`ProOutQty`, `ProBrach`, `ProComment`, `PrCtnType`, ppcustomer.CustName, carton.`CTNQTY`, 
-      carton.ProductQTY, carton.ProductName, carton.CTNColor, carton.CTNOrderDate,CTNType, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, carton.CTNUnit, 
-      carton.JobNo FROM `cartonproduction` INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1
-      where ProStatus='Accept' and ProQty-ProOutQty > 0 OR (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL' 
-      order by ProSubmitDate desc";
-      $Data=$Controller->QueryData($SQL,[]); 
-
+  ob_start(); 
+  require_once '../App/partials/Header.inc';   
+  require_once '../App/partials/Menu/MarketingMenu.inc'; 
+  $Gate = require_once  $ROOT_DIR . '/Auth/Gates/INTERNAL_JOB';
 
  
+  if(!in_array( $Gate['VIEW_INTERNAL_JOB'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+  }
+
+  $SQL="SELECT `ProId`, `CtnId1`, CustId,`ProDate`, CTNId,`ProSubmitDate`, `ProSubmitBy`, `CompId`,  `ProQty` ,`ProOutQty`, `ProBrach`, `ProComment`, `PrCtnType`, ppcustomer.CustName, carton.`CTNQTY`, 
+  carton.ProductQTY, carton.ProductName, carton.CTNColor, carton.CTNOrderDate,CTNType, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, carton.CTNUnit, 
+  carton.JobNo FROM `cartonproduction` INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1
+  where ProStatus='Accept' and ProQty-ProOutQty > 0 OR (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL' 
+  order by ProSubmitDate desc";
+  $Data=$Controller->QueryData($SQL,[]); 
 ?>
 
 <div class="card m-3 shadow">
@@ -39,7 +38,8 @@
           </svg>
 
         
-          BG Finished Goods <span style= "color:#FA8b09;"> </span>
+          
+         Finished Goods <span style= "color:#FA8b09;"> </span>
         </h3>
         <div  class = "my-1"> <!--Button trigger modal div-->
            
@@ -128,7 +128,10 @@
                                           Sale
                                       </button>  
                                   -->
-                                  <button class="btn btn-outline-primary fw-bold border-2" type="button" onclick = "PutQTYToModal('<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>','<?=$Rows['ProOutQty']?>')" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Sale</button>
+                                  <?php  if(in_array( $Gate['VIEW_SALE_BUTTON_IJ'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                                      <button class="btn btn-outline-primary fw-bold border-2" type="button" onclick = "PutQTYToModal('<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>','<?=$Rows['ProOutQty']?>')" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Sale</button>
+                                  <?php } ?> 
+                                
                                 </td>
                             </tr>
 
@@ -169,12 +172,14 @@
                                         <td><?=$CTN_Sale['SalePrice']?></td>
                                         <td><?=$CTN_Sale['SaleTotalPrice']?></td>
                                         <td>
+                                            <?php  if(in_array( $Gate['VIEW_PRINT_BUTTON_IJ'] , $_SESSION['ACCESS_LIST']  )) { ?>
                                             <a href="InternalJobPrint.php?id=<?=$CTN_Sale['SaleId']?>">
                                               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
                                                 <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
                                                 <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
                                               </svg>
                                             </a>
+                                            <?php } ?> 
                                         </td>
                                         <td> </td>
                                         <td> </td> 

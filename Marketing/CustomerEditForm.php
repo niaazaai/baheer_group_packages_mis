@@ -1,18 +1,15 @@
-<!-- 
-	1-This is Customer registertion file.
-	2-File Name is : CustomerEdit.php
-	3-we have used Bootstrap 5, Javascript.
-	4-The Validation part of the form is done by javascript (Client side validation). 
-	5-The Purpose of this file is to Edit the customer details in to a database.
-	6-We have also used back-end validation that is (server side validation) using php.
-	7-last but not least you can find next parts of the documentaion in between the code when you travel inside code.
- -->
-
- <?php require_once '../App/partials/Header.inc'; ?>
-<?php require_once '../App/partials/Menu/MarketingMenu.inc'; ?>  
-
-
 <?php 
+
+	ob_start(); 
+	require_once '../App/partials/Header.inc'; 
+  	require_once '../App/partials/Menu/MarketingMenu.inc';  
+	
+	$Gate = require_once  $ROOT_DIR . '/Auth/Gates/CUSTOMER_PROFILE';
+	if(!in_array( $Gate['VIEW_CUSTOMER_EDIT_FORM'] , $_SESSION['ACCESS_LIST']  )) {
+		header("Location:index.php?msg=You are not authorized to access this page!" );
+	}
+
+	  
 if (filter_has_var(INPUT_GET, 'message') ) {
 	$message = $_GET['message'];
 	$message =  explode(',' ,$message); 

@@ -1,0 +1,6 @@
+<?php
+return [
+    'VIEW_JOB_LIST' => '129',
+    'VIEW_JOB_CARD_BUTTON' => '130',
+    'VIEW_EDIT_BUTTON' => '131',
+];

@@ -1,9 +1,6 @@
 <?php    
 ob_start();
 
-
-
-
 require_once '../App/partials/Header.inc';  
 require_once '../App/partials/Menu/MarketingMenu.inc';  
 $Gate = require_once  $ROOT_DIR . '/Auth/Gates/CUSTOMER_PROFILE';

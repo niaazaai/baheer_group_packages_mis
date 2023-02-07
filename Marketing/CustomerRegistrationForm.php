@@ -1,8 +1,15 @@
-<?php  	
+<?php  
+	ob_start(); 	
 	require_once '../App/partials/Header.inc';
 	require_once '../App/partials/Menu/MarketingMenu.inc';
+
+	$Gate = require_once  $ROOT_DIR . '/Auth/Gates/CUSTOMER_PROFILE';
+	if(!in_array( $Gate['VIEW_CUSTOMER_REGISTER_FORM'] , $_SESSION['ACCESS_LIST']  )) {
+		header("Location:index.php?msg=You are not authorized to access this page!" );
+	}
 ?>
-  <div class="m-3">
+
+<div class="m-3">
 <?php 
 	if (filter_has_var(INPUT_GET, 'message') ) {
 		$message = $_GET['message'];
@@ -25,43 +32,24 @@
 
 ?>
 
-
-
-<div class="card  shadow">
-    <div class="card-body d-flex justify-content-between  align-middle   ">
-       
-        <h3  class = "m-0 p-0  " > 
-            <a class= "btn btn-outline-primary   me-3" href="CustomerList.php">
-				<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-						<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
-				</svg>
-			</a>    
-            
-        </h3>
-        <div  class = "my-1"> <!--Button trigger modal div-->
-            <a href="Manual/CustomerRegistrationForm_Manual.php"   class = "text-primary" title = "Click to Read the User Guide " >
-			    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
-				<path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-				<path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-				<path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-			    </svg>
-			</a>
-	    </div><!-- Button trigger modal div end -->
-
-    </div>
-</div> 
- 
- 
-
-
 <div class="card mt-4 mb-5 shadow ">
-	<div class="card-header" style = "border-bottom:1px solid gray;" >
-	<h3 class= "d-flex  align-items-center">
+	<div class="card-header" style = "border-bottom:1px solid gray; d-flex  align-items-center justify-content-between "  >
+		<div>
+			<h3>
+				<a class= "btn btn-outline-primary   me-3" href="CustomerList.php">
+					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+						<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+					</svg>
+				</a>  
 				<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-				<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-				<path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-				</svg>Register New Customer
-			</h3>	</div>
+					<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+					<path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+				</svg>
+				Register New Customer
+			</h3>	
+		</div>
+	</div>
+
 	<div class="card-body">
 		<form action="CustomerController.php" method="POST" onsubmit="return validateform()">
 		<!-- <form action="" method="POST" >  --> 

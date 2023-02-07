@@ -1,21 +1,24 @@
  <!-- Starting area of back-end logic-->
- <?php require_once '../App/partials/Header.inc';   ?>
- <?php require_once '../App/partials/Menu/MarketingMenu.inc'; ?>  
+ <?php 
+    ob_start();
  
+    require_once '../App/partials/Header.inc';    
+    require_once '../App/partials/Menu/MarketingMenu.inc'; 
+    require_once '../Assets/Zebra/Zebra_Pagination.php';
+    
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/QUOTATION_LIST';
+    if(!in_array( $Gate['VIEW_QUOTATION_LIST'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
 
+    $pagination = new Zebra_Pagination();
+    $RECORD_PER_PAGE = 15;
+    $DEFAULT_COLUMNS = 'CTNStatus, CTNId,CustId, CTNOrderDate,ppcustomer.CustName,ProductName,CTNQTY,CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size  ,CTNPrice, CtnCurrency,employeet.Ename , DesignStatus  '; 
+    $DEFAULT_TABLE_HEADING = '<th>#</th><th>Quot No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Order-Qty</th><th>Size(LxWxH) cm</th><th>Unit-Price</th><th>Quotated-By</th>'; 
+    $COLUMNS = ''; 
+    $TABLE_HEADING = ''; 
 
-<?php 
-require_once '../Assets/Zebra/Zebra_Pagination.php';
-$pagination = new Zebra_Pagination();
-$RECORD_PER_PAGE = 15;
-
-  $DEFAULT_COLUMNS = 'CTNStatus, CTNId,CustId, CTNOrderDate,ppcustomer.CustName,ProductName,CTNQTY,CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size  ,CTNPrice, CtnCurrency,employeet.Ename , DesignStatus  '; 
-  $DEFAULT_TABLE_HEADING = '<th>#</th><th>Quot No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Order-Qty</th><th>Size(LxWxH) cm</th><th>Unit-Price</th><th>Quotated-By</th>'; 
-  $COLUMNS = ''; 
-  $TABLE_HEADING = ''; 
-
-    if (filter_has_var(INPUT_POST, 'SetColumns') )
-    {
+    if (filter_has_var(INPUT_POST, 'SetColumns') ) {
         foreach ($_POST as $key => $POST)
         {
             if ($POST === '200')
@@ -138,11 +141,11 @@ $RECORD_PER_PAGE = 15;
 <style>
 
 .highlight-tr {
-          background-color:#ffff66;
-          opacity:0.8;
-          color:black;
-          font-weight:bold;
-        }
+    background-color:#ffff66;
+    opacity:0.8;
+    color:black;
+    font-weight:bold;
+}
 
 
 </style>
@@ -166,6 +169,8 @@ $RECORD_PER_PAGE = 15;
             Individual Quotation <span style= "color:#FA8b09;" > <?php if(isset($_POST['TaskList']))  echo " - ( " . $_POST['TaskList'] . " )"?> </span>
         </h3>
         <div  class = "my-1"> <!--Button trigger modal div-->
+
+        <?php  if(in_array($Gate['VIEW_SETUP_BTN_QUOTATION_LIST'],$_SESSION['ACCESS_LIST'])) { ?> 
             <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
                     <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
@@ -173,6 +178,8 @@ $RECORD_PER_PAGE = 15;
                 </svg>
                 Setup
             </button>
+        <?php } ?> 
+
 	    </div><!-- Button trigger modal div end -->
 
     </div>
@@ -303,9 +310,11 @@ $RECORD_PER_PAGE = 15;
                 </tbody>
             </table>
         </div>
-			<div class="d-md-flex justify-content-md-end">
-				<input class="btn btn-outline-primary  me-md-2  btn-sm" onclick="submitMe(this)" name="ViewButton" value="View">
-			</div>
+            <?php  if(in_array($Gate['SHOW_VIEW_BTN_QUOTATION_LIST'],$_SESSION['ACCESS_LIST'])) { ?>
+                <div class="d-md-flex justify-content-md-end">
+                    <input class="btn btn-outline-primary  me-md-2  btn-sm" onclick="submitMe(this)" name="ViewButton" value="View">
+                </div>
+            <?php } ?>
 		</form>
     </div><!-- End of table div -->
 </div> <!-- End tag of card div -->

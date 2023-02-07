@@ -1,0 +1,5 @@
+<?php
+return [
+    'VIEW_PRODUCT_LIST' => '121',
+    'VIEW_SETUP_BTN_PRODUCT_LIST' => '122',
+];

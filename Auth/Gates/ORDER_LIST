@@ -1,0 +1,6 @@
+<?php
+return [
+    'VIEW_ORDER_LIST' => '126',
+    'VIEW_SETUP_BTN_ORDER_LIST' => '127',
+    'SHOW_VIEW_BTN_ORDER_LIST' => '128',
+];

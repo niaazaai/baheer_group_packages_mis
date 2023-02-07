@@ -1,0 +1,6 @@
+<?php
+return [
+    'VIEW_INTERNAL_JOB' => '136',
+    'VIEW_SALE_BUTTON_IJ' => '137',
+    'VIEW_PRINT_BUTTON_IJ' => '138'
+];

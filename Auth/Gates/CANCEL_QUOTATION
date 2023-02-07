@@ -1,0 +1,7 @@
+<?php
+return [
+    'VIEW_CANCEL_QUOTATION' => '132',
+    'VIEW_SETUP_BUTTON' => '133',
+    'VIEW_EDIT_BUTTON' => '134',
+    'VIEW_JOB_CARD_BUTTON' => '135',
+];

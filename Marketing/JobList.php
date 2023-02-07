@@ -1,14 +1,18 @@
  <!-- Starting area of back-end logic-->
  <?php 
+    ob_start();
+    require_once '../App/partials/Header.inc';   
+    require_once '../App/partials/Menu/MarketingMenu.inc';  
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/JOB_LIST';
+      
+    if(!in_array( $Gate['VIEW_JOB_LIST'] , $_SESSION['ACCESS_LIST']  )) {
+      header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+
+    require_once '../Assets/Zebra/Zebra_Pagination.php';
+    require '../Assets/Carbon/autoload.php';
+    use Carbon\Carbon;
  
-      require_once '../App/partials/Header.inc';   
-      require_once '../App/partials/Menu/MarketingMenu.inc';  
-      require_once '../Assets/Zebra/Zebra_Pagination.php';
-      require '../Assets/Carbon/autoload.php';
-      use Carbon\Carbon;
-
-
-
     $pagination = new Zebra_Pagination();
     $RECORD_PER_PAGE = 15;
 
@@ -16,9 +20,7 @@
     $DEFAULT_TABLE_HEADING = '<th>#</th><th>Q-No</th><th>Job No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Size(LxWxH) (cm)</th>   <th>Order Qty</th><th>Unit Price</th><th>Status</th> <th>R Days</th> <th>OPS</th>'; 
     $COLUMNS = ''; 
     $TABLE_HEADING = ''; 
-
  
-       
   if(isset($_POST["CustId"]) && !empty($_POST["CustId"]) ){
       $CustId=$_POST['CustId'];
       $Query="SELECT DISTINCT $DEFAULT_COLUMNS FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE JobNo != 'NULL'  AND CTNStatus != 'Completed' AND CTNStatus != 'Cancel' AND 
@@ -27,18 +29,14 @@
       CTNStatus != 'Pospond'  AND  CTNStatus != 'InActive'  
       order by CTNOrderDate ASC";
       $DataRows  = $Controller->QueryData($Query, [$CustId]);
-       
   } 
   else if (isset($_POST["Search_input"]) && !empty($_POST["Search_input"])) {
-
       $JobNo=$_POST['Search_input'];
       $Query="SELECT DISTINCT $DEFAULT_COLUMNS
       FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE 
       JobNo != 'NULL'   AND carton.JobNo = ?  
       order by CTNOrderDate ASC";
       $DataRows  = $Controller->QueryData($Query, [$JobNo]);
-
-
   }  else {
 
         $Query="SELECT DISTINCT $DEFAULT_COLUMNS
@@ -81,15 +79,6 @@
 
     </div>
 </div> 
-
-
-
-
-
- 
- 
-
-
 <!-- Start of second Top Head Card which has dropdown and search functioanlity-->
 <div class="card m-3 shadow"> <!-- start of the card div -->
    <div class="card-body "><!-- start of the card-body div -->
@@ -115,17 +104,12 @@
                     <label for="Search_input" class="fw-bold"> Search Order Here</label>
                     <input type="text" class= "form-control  " name = "Search_input"  autocomplete="off" id = "Search_input" placeholder = "Anything Here"  onkeyup="search( this.id , 'OrderTable' )" >  
                   </form>
-                
-                
                 </div> <!-- Ending tag of div search -->
 	        </div><!-- End Tag of div row -->
         </form>
     </div> <!-- End of the card-body div -->
 </div><!-- End of the card div -->
 <!-- End of second Top Head Card which has dropdown and search functioanlity-->
-
-
- 
 
 <!-- Start body of table Card -->
 <div class="card m-3 shadow"> <!-- Start tag of card div -->
@@ -138,60 +122,58 @@
             <tbody>
                 <?php  $counter = 1; 
 
-if ($DataRows->num_rows > 0) {
-    foreach ($DataRows as $RowsKey => $Rows) {
-        $OrderDate = strtotime($Rows['CTNOrderDate']);
-        $CurrentDate = time();
-        $TimeLeft = $CurrentDate - $OrderDate ;
-        $DaysLeft = round((($TimeLeft/24)/60)/60);
+                if ($DataRows->num_rows > 0) {
+                    foreach ($DataRows as $RowsKey => $Rows) {
+                        $OrderDate = strtotime($Rows['CTNOrderDate']);
+                        $CurrentDate = time();
+                        $TimeLeft = $CurrentDate - $OrderDate ;
+                        $DaysLeft = round((($TimeLeft/24)/60)/60);
 
 
-        echo "<tr>";
-        ?> 
-                        <td><?=$counter?></td>
-                        <td><?= $Rows['CTNId']  ?> </td>
-                        <td><?= $Rows['JobNo']  ?> </td>
-                        <td><?= $Rows['CTNOrderDate']  ?> </td>
-                        <td><?= $Rows['CustName']  ?> </td>
-                        <td><?= $Rows['ProductName']  ?> </td>
-                        <td><?= $Rows['Size']  ?> </td>
-                        <td><?= number_format($Rows['CTNQTY'])?> </td>
-                        <td class = "text-end"  ><?php
-                               if($Rows['CtnCurrency']=='AFN')
-                               {
-                                   echo  number_format( $Rows['CTNPrice'] , 2 ) .  " <span class='badge bg-warning'  >".   $Rows['CtnCurrency'] ." </span>"; 
-                               } 
-                               elseif($Rows['CtnCurrency']=='USD')
-                               {
-                                   echo  number_format( $Rows['CTNPrice'] , 3 ) .  " <span class='badge bg-warning' >".   $Rows['CtnCurrency'] ." </span>"; 
-                               }
-                               ?> 
-                        </td>
-                        <td><?= $Rows['CTNStatus']  ?> </td>
-                        <td>
+                        echo "<tr>";
+                        ?> 
+                                        <td><?=$counter?></td>
+                                        <td><?= $Rows['CTNId']  ?> </td>
+                                        <td><?= $Rows['JobNo']  ?> </td>
+                                        <td><?= $Rows['CTNOrderDate']  ?> </td>
+                                        <td><?= $Rows['CustName']  ?> </td>
+                                        <td><?= $Rows['ProductName']  ?> </td>
+                                        <td><?= $Rows['Size']  ?> </td>
+                                        <td><?= number_format($Rows['CTNQTY'])?> </td>
+                                        <td class = "text-end"  ><?php
+                                              if($Rows['CtnCurrency']=='AFN')
+                                              {
+                                                  echo  number_format( $Rows['CTNPrice'] , 2 ) .  " <span class='badge bg-warning'  >".   $Rows['CtnCurrency'] ." </span>"; 
+                                              } 
+                                              elseif($Rows['CtnCurrency']=='USD')
+                                              {
+                                                  echo  number_format( $Rows['CTNPrice'] , 3 ) .  " <span class='badge bg-warning' >".   $Rows['CtnCurrency'] ." </span>"; 
+                                              }
+                                              ?> 
+                                        </td>
+                                        <td><?= $Rows['CTNStatus']  ?> </td>
+                                        <td>
 
 
-                          
-                          <?php
+                                          
+                                          <?php
 
-         $class = "#0dcaf0";
-        $offset_flexo = '';
-        if ($Rows['offesetp'] == 'Yes' && $DaysLeft >= 15) {
-            $class = '#dc3545';
-        } elseif ($Rows['flexop'] == 'Yes' && $DaysLeft >= 10) {
-            $class = '#6610f2';
-        }
+                        $class = "#0dcaf0";
+                        $offset_flexo = '';
+                        if ($Rows['offesetp'] == 'Yes' && $DaysLeft >= 15) {
+                            $class = '#dc3545';
+                        } elseif ($Rows['flexop'] == 'Yes' && $DaysLeft >= 10) {
+                            $class = '#6610f2';
+                        }
 
-        $a =  Carbon::createFromTimeStamp(strtotime($Rows['CTNOrderDate']))->diffForHumans();
-        echo "<span class = ' badge' style = 'background-color: " . $class .  "'>" . $a . "    </span>" ;
-        ?>
-                        
-
-
+                        $a =  Carbon::createFromTimeStamp(strtotime($Rows['CTNOrderDate']))->diffForHumans();
+                        echo "<span class = ' badge' style = 'background-color: " . $class .  "'>" . $a . "    </span>" ;
+                        ?>
 
                         </td>
 
                         <td>  
+                          <?php  if(in_array( $Gate['VIEW_JOB_CARD_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                             <a class="text-primary Py-1 my-1 " href="../Finance/JobCard.php?CTNId=<?=$Rows['CTNId'];?>&ListType=JobList" title="View Job Card">  
                                 <svg width="25" height="25" viewBox="0 0 25 25" fill="#20c997" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1.68878 18.5713L6.42858 23.3111V18.5713H1.68878Z" fill="#20c997"></path>
@@ -201,29 +183,25 @@ if ($DataRows->num_rows > 0) {
                                     <path d="M0 0V17.1633H7.14286C7.52041 17.1633 7.83674 17.4796 7.83674 17.8571V25H25V0H0ZM6.68367 10.801C6.68367 11.8163 5.66327 12.6429 4.40816 12.6429C3.15306 12.6429 2.13265 11.8163 2.13265 10.801V10.7041C2.13265 10.4133 2.42347 10.1786 2.78061 10.1786C3.13776 10.1786 3.42857 10.4133 3.42857 10.7041V10.801C3.42857 11.2347 3.86735 11.5918 4.40306 11.5918C4.93878 11.5918 5.37755 11.2347 5.37755 10.801V6.88776C5.37755 6.59694 5.66837 6.36224 6.02551 6.36224C6.38265 6.36224 6.67347 6.59694 6.67347 6.88776V10.801H6.68367ZM9.9949 12.6429C8.7602 12.6429 7.7602 11.2347 7.7602 9.5C7.7602 7.76531 8.7602 6.35714 9.9949 6.35714C11.2296 6.35714 12.2296 7.76531 12.2296 9.5C12.2296 11.2347 11.2296 12.6429 9.9949 12.6429ZM17.6378 10.8112C17.6378 11.8214 16.6224 12.6429 15.3724 12.6429H13.6786C13.3214 12.6429 13.0306 12.4082 13.0306 12.1173V9.5051C13.0306 9.5051 13.0306 9.5051 13.0306 9.5C13.0306 9.5 13.0306 9.5 13.0306 9.4949V6.88776C13.0306 6.59694 13.3214 6.36224 13.6786 6.36224H15.3724C16.6224 6.36224 17.6378 7.18367 17.6378 8.19388C17.6378 8.70408 17.3776 9.16837 16.9541 9.5051C17.3776 9.83674 17.6378 10.301 17.6378 10.8112ZM20.6071 12.6429C19.9847 12.6429 19.3827 12.4337 18.9592 12.0663C18.7143 11.8571 18.7245 11.5204 18.9847 11.3214C19.2449 11.1224 19.6582 11.1327 19.9031 11.3418C20.0867 11.5 20.3367 11.5867 20.6071 11.5867C21.1378 11.5867 21.5714 11.2347 21.5714 10.8061C21.5714 10.3776 21.1378 10.0255 20.6071 10.0255C19.3571 10.0255 18.3418 9.20408 18.3418 8.18878C18.3418 7.17857 19.3571 6.35204 20.6071 6.35204C21.2296 6.35204 21.8316 6.56122 22.2551 6.92857C22.5 7.13776 22.4898 7.47449 22.2296 7.67347C21.9694 7.87245 21.5561 7.86225 21.3112 7.65306C21.1276 7.4949 20.8776 7.40816 20.6071 7.40816C20.0765 7.40816 19.6429 7.7602 19.6429 8.18878C19.6429 8.61735 20.0765 8.96939 20.6071 8.96939C21.8571 8.96939 22.8724 9.79082 22.8724 10.8061C22.8724 11.8214 21.852 12.6429 20.6071 12.6429Z" fill="#20c997"></path>
                                 </svg>
                             </a>
-                   
+                          <?php } ?> 
+                          <?php  if(in_array( $Gate['VIEW_EDIT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                               <a class="text-primary Py-1 my-1 " href="QuotationEdit.php?Page=JobList&CTNId=<?=$Rows['CTNId'];?>  " title="Edit Quotation">  
                                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                   </svg>
                               </a>
-                        
-                            
+                          <?php } ?> 
                         </td>
-                            <?php  $counter++;
+                     <?php  $counter++;
                             echo "</tr>";
                 }  # end of   loop
             } // end of num rows if blokc 
             else echo "<tr><td colspan = '11' class = 'fw-bold text-danger text-center' >No Records Found Yet</td></tr>";
-            
-                        
                 ?>
             </tbody>
-			
             </table>
-
-
+          <?php  $pagination->render(); ?>
 	 
     </div><!-- End of table div -->
 </div> <!-- End tag of card div -->

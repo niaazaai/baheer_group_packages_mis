@@ -1,7 +1,7 @@
  
 <?php 
 session_start();
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 // $ROOT_DIR = '/var/www/html/BGIS/';
 require_once $ROOT_DIR. 'App/Controller.php'; 
  

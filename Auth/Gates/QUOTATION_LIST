@@ -1,0 +1,7 @@
+<?php
+return [
+    'VIEW_QUOTATION_LIST' => '123',
+    'VIEW_SETUP_BTN_QUOTATION_LIST' => '124',
+    'SHOW_VIEW_BTN_QUOTATION_LIST' => '125',
+
+];
