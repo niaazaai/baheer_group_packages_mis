@@ -1,4 +1,13 @@
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; require '../Assets/Carbon/autoload.php'; ?>
+<?php 
+ob_start(); 
+require_once '../App/partials/Header.inc'; 
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/DESIGN_DEPT';
+if(!in_array( $Gate['VIEW_DOWNLOAD_FILE_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized access reports page!" );
+}
+
+require_once '../App/partials/Menu/MarketingMenu.inc'; 
+require '../Assets/Carbon/autoload.php'; ?>
 <?php
 if(isset($_REQUEST['ListType']))
 {
@@ -84,8 +93,8 @@ else
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12   ">
                     <select class = "form-select fw-bold" name="ListType" id="ListType" style = "border:3px solid black; " onchange = "this.form.submit();" > 
                         <option value="<?=$ListType;?>"> <?=$ListType;?> </option>
-                        <option value="Download Files">Download Files</option>
-                        <option value="Upload Files">Upload Files</option>
+                         <?php  if(in_array( $Gate['VIEW_DOWNLAOD_FILE_OPTION'] , $_SESSION['ACCESS_LIST']  )) { ?><option value="Download Files">Download Files</option>  <?php } ?> 
+                        <?php  if(in_array( $Gate['VIEW_UPLOAD_FILE_OPTION'] , $_SESSION['ACCESS_LIST']  )) { ?><option value="Upload Files">Upload Files</option>  <?php } ?> 
                     </select>
                 </div>  
             </div>
@@ -142,7 +151,7 @@ else
                                         }
                                         elseif($ListType=='Upload Files') {?>
                                                 <a href="OriginalFileUpload.php?CTNId=<?=$Rows['CTNId']?>&ProductName=<?=$Rows['ProductName']?>&DesignCode=<?=$Rows['DesignCode1']?>&ListType=<?=$ListType?>" 
-                                                class="btn btn-outline-primary fw-bold btn-sm">
+                                                    class="btn btn-outline-primary fw-bold btn-sm">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
                                                     <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
                                                     <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>

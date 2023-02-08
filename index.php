@@ -313,6 +313,8 @@ $darkhighlight: #fde74c;
 </nav>
 
 
+
+
 </div>
 
 
@@ -320,6 +322,8 @@ $darkhighlight: #fde74c;
 
 
 <div class = "container-fluid m-0 p-0 mt-4" style = "text-align:center;" >
+
+
   <div class="row m-0 p-0" >
     <div class="col-xxl-3 col-lg-3">
     <svg width="100" height="100" viewBox="0 0 258 259" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -388,6 +392,7 @@ $darkhighlight: #fde74c;
 
 
   <div class="container mt-3">
+ 
     <div class="row ">
 
       <div class="col-xxl-3 col-xl-3 col-md-4 col-sm-6 col-xs-12 d-flex justify-content-center  "  >

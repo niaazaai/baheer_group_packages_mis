@@ -1,4 +1,15 @@
-<?php  require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
+<?php  require_once '../App/partials/Header.inc'; 
+
+ob_start();
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+  
+// if(!in_array( $Gate['VIEW_CUSTOMER_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+//   header("Location:index.php?msg=You are not authorized to access this page!" );
+// }
+
+ 
+
+require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
 
 <?php 
     $C5P = $Controller->QueryData("SELECT SUM(`ProductQty1`) as C5P_Production  FROM `machineproduction` WHERE MachineName = 'Carrogation Plant' 
@@ -107,9 +118,11 @@
 
 <div class = "m-3">
     <div class="row ">
+    <?php  if(in_array( $Gate['VIEW_PD_TASKLIST'] , $_SESSION['ACCESS_LIST']  )) { ?> 
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="TaskList.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #0d6efd;">
+
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div>
                             <h2 class = "p-0 m-0" style= "color:#0d6efd" ><?= sprintf('%02d', $TASK_LIST);?></h2>
@@ -138,10 +151,13 @@
                                     V27c0,0.553,0.447,1,1,1s1-0.447,1-1V12.176C55.5,5.462,50.038,0,43.324,0z"/>
                             </svg>
                         </div>
+
                     </div>
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
+    <?php } ?> 
+
 
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="AllJobs.php" style = "text-decoration:none;">

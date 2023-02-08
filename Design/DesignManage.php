@@ -1,7 +1,16 @@
 
 <?php
 ob_start(); 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+require_once '../App/partials/Header.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/DESIGN_DEPT';
+if(!in_array( $Gate['VIEW_MANAGE_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access job center of design department!" );
+}
+
+
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 
 if(isset($_GET['CTNId'])) 
 {
@@ -554,31 +563,35 @@ if(isset($_POST['Update']))
         </h5>
     <div>
    
-    <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1'])) {?>
+        
+        <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1'])) {?>
+            <?php  if(in_array( $Gate['VIEW_DESIGN_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
             <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-            href="ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
-                
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
-            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
-            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-            </svg> Design
-
-            </a>
-    <?php } else  echo '<span class = "text-danger mx-2 fw-bold ">No Design</span>';
-        if(isset($Rows['DieCode']) && !empty($Rows['DieCode'])) {?>
-
-            <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image" href="ShowDesignImage.php?Url=<?=$Rows['Scatch']?>&ProductName=<?=$Rows['ProductName']?>">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                    href="ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
+                        
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                     <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
                     <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
-                </svg> Sketch
-            </a>
-    <?php } else   echo '<span class = "text-danger fw-bold  " >No Scatch</span>'; ?>
+                    </svg> Design
+                </a>
+            <?php } ?> 
+
+        <?php } else  echo '<span class = "text-danger mx-2 fw-bold ">No Design</span>';
+            if(isset($Rows['DieCode']) && !empty($Rows['DieCode'])) {?>
+                <?php  if(in_array( $Gate['VIEW_SKETCH_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                    <a class="btn btn-outline-primary  "  style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image" href="ShowDesignImage.php?Url=<?=$Rows['Scatch']?>&ProductName=<?=$Rows['ProductName']?>">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                            <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"/>
+                            <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                        </svg> Sketch
+                    </a>
+                <?php } ?>
+        <?php } else   echo '<span class = "text-danger fw-bold  " >No Scatch</span>'; ?>
 
     </div>
   </div>
 </div>
-        
+
 <div class="card m-3 shadow">
     <div class="card-body">
         <div class="stepper-wrapper">
@@ -819,18 +832,12 @@ if(isset($_POST['Update']))
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 fw-bold">
                     <label for="DesignBy">Assign To</label>
                     <select name="DesignBy" id="DesignBy" class="form-select" <?php if($show['DesignStatus'] == 'Design Exist'){echo 'disabled';}?> required>
-
                         <option value="<?php if(isset($show['DesignerName1'])) echo $show['DesignerName1']; ?>" selected >   <?php if(isset($show['DesignerName1'])) echo $show['DesignerName1']; ?> </option>
                         <?php 
                             $EmpQuery=$Controller->QueryData("SELECT `EmpName` FROM `employees` WHERE EmpUnit='Design' and EmpJobStatus ='Active'",[]);
-                            while($Row=$EmpQuery->fetch_assoc())
-                            {
-                        ?>
+                            while($Row=$EmpQuery->fetch_assoc())  { ?>
                                 <option value="<?=$Row['EmpName']?>"><?php echo $Row['EmpName'];?></option>
-                        <?php 
-                            } 
-                        ?>
-
+                        <?php } ?>
                     </select>
                 </div>
     
@@ -885,8 +892,15 @@ if(isset($_POST['Update']))
                             }  
                             else
                             {?>
+
+                            <?php  if(in_array( $Gate['SAVE_FOR_DESIGN_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
                                 <button <?php if($Rows['DesignStatus'] == 'Design Exist'){echo 'readonly';}?>  type="submit"  id="SaveButton"  name="SaveforDesign" class="btn btn-outline-primary fw-bold" style = "max-width:180px;">Save for Design</button>
+                            <?php } ?>
+                                                    
+                            <?php  if(in_array( $Gate['VIEW_SAVE_SUBMIT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
                                 <button type="submit"  id="SendToDesign"  name="Save&Submit" class="btn btn-outline-primary fw-bold" style = "max-width:180px;">Save & Submit</button>
+                            <?php } ?>       
+                            
                             <?php  
                             } 
                         }  

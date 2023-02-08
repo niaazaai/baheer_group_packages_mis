@@ -1,7 +1,14 @@
 
 <?php
-ob_start(); 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+    ob_start(); 
+    require_once '../App/partials/Header.inc'; 
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRESS_DEPT';
+    if(!in_array( $Gate['VIEW_MANAGE_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+    
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 
 if(isset($_GET['CTNId']))
 {

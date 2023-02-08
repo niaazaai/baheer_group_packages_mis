@@ -1,10 +1,17 @@
 
 <?php 
-
+ob_start(); 
 require_once '../App/partials/Header.inc'; 
 require_once '../App/partials/Menu/MarketingMenu.inc';
 require '../Assets/Carbon/autoload.php'; 
 use Carbon\Carbon;
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/DESIGN_DEPT';
+if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access job center of design department!" );
+}
+
+
 
 if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
 {
@@ -83,18 +90,20 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
           </a>
         </div>
 
-        <div class = "me-2  " >
-          <a  href="Film.php" class="btn btn-outline-dark  ">
-              Films <span class="badge  bg-danger"><?=$number_of_films;?></span> 
-          </a>  
-        </div>
-
-          
+        <?php  if(in_array( $Gate['VIEW_JC_FILM_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
+          <div class = "me-2  " >
+            <a  href="Film.php" class="btn btn-outline-dark  ">
+                Films <span class="badge  bg-danger"><?=$number_of_films;?></span> 
+            </a>  
+          </div>
+        <?php } ?> 
+   
+       
         <form action=""  method = "post" class = "m-0 p-0 "  >
             <select class = "form-select" name="ListType" id="ListType"  onchange = "this.form.submit();" > 
               <option value="<?=$ListType;?>"><?=$ListType;?></option>
-              <option value="NewJob">New Job</option>
-              <option value="JobUnderProcess">Job Under Process</option>
+                 <?php  if(in_array( $Gate['VIEW_JC_NEW_JOB'] , $_SESSION['ACCESS_LIST']  )) { ?> <option value="NewJob">New Job</option><?php } ?> 
+                 <?php  if(in_array( $Gate['VIEW_JC_UNDER_PROCESS'] , $_SESSION['ACCESS_LIST']  )) { ?> <option value="JobUnderProcess">Job Under Process</option><?php } ?> 
             </select>
         </form>
       </div>
@@ -251,11 +260,14 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
                       }
                 ?>
                       <td> 
+
+                      <?php  if(in_array( $Gate['VIEW_JC_NEW_MANAGE_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
                         <a  href="DesignManage.php?CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>" class="btn btn-outline-primary btn-sm ">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-fill" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.004-.001.274-.11a.75.75 0 0 1 .558 0l.274.11.004.001 6.971 2.789Zm-1.374.527L8 5.962 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339Z"></path>
-                            </svg> Manage
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M15.528 2.973a.75.75 0 0 1 .472.696v8.662a.75.75 0 0 1-.472.696l-7.25 2.9a.75.75 0 0 1-.557 0l-7.25-2.9A.75.75 0 0 1 0 12.331V3.669a.75.75 0 0 1 .471-.696L7.443.184l.004-.001.274-.11a.75.75 0 0 1 .558 0l.274.11.004.001 6.971 2.789Zm-1.374.527L8 5.962 1.846 3.5 1 3.839v.4l6.5 2.6v7.922l.5.2.5-.2V6.84l6.5-2.6v-.4l-.846-.339Z"></path>
+                          </svg> Manage
                         </a> 
+                      <?php } ?> 
                       </td>
                 </tr>
           <?php

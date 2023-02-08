@@ -1,9 +1,19 @@
 <?php 
-
+    ob_start(); 
     require_once '../App/partials/Header.inc'; 
+    
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/DESIGN_DEPT';
+    if(!in_array( $Gate['VIEW_FILM_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized this page!" );
+    }
+
+
     require_once '../App/partials/Menu/MarketingMenu.inc';
     require '../Assets/Carbon/autoload.php'; 
     use Carbon\Carbon;
+
+    
+
  
     $DataRows=$Controller->QueryData('SELECT   `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
     ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, 
@@ -92,37 +102,40 @@
                     ?>  
                   </td>
                   <td>
-                    <?php  if($Rows['film_status'] == 'Assigned'){ ?>
-                        <form action="ProcessFilm.php" method="post">
-                            <input type="hidden" name="DesignId" value = "<?=$Rows['DesignId']?>">
-                            <button class="btn btn-warning btn-sm " type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
-                                    <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
-                                    <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-                                </svg>
-                                Proccess
+                    <?php  if(in_array( $Gate['VIEW_FILM_OPS_BUTTONS'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                        <?php  if($Rows['film_status'] == 'Assigned'){ ?>
+                            <form action="ProcessFilm.php" method="post">
+                                <input type="hidden" name="DesignId" value = "<?=$Rows['DesignId']?>">
+                                <button class="btn btn-warning btn-sm " type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer-fill" viewBox="0 0 16 16">
+                                        <path d="M5 1a2 2 0 0 0-2 2v1h10V3a2 2 0 0 0-2-2H5zm6 8H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1z"/>
+                                        <path d="M0 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-1v-2a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2H2a2 2 0 0 1-2-2V7zm2.5 1a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
+                                    </svg>
+                                    Proccess
+                                </button> 
+                            </form>
+                        <?php  } else if($Rows['film_status'] == 'Proccess'){ ?>
+                            <form action="ManageFilmStatus.php" method="post">
+                                <input type="hidden" name="DesignId" value = "<?=$Rows['DesignId']?>">
+                                <input type="hidden" name="CTNId" value = "<?=$Rows['CTNId']?>">
+                                <button class="btn btn-outline-success btn-sm " type="submit">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+                                    </svg>
+                                    Mark as Complete
+                                </button>
+                            </form>
+                        <?php } else { ?>
+                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" 
+                                onclick = "assign_data_to_offcanvas(`<?= $Rows['DesignId']?>`); " >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
+                                </svg> Assign
                             </button> 
-                        </form>
-                    <?php  } else if($Rows['film_status'] == 'Proccess'){ ?>
-                        <form action="ManageFilmStatus.php" method="post">
-                            <input type="hidden" name="DesignId" value = "<?=$Rows['DesignId']?>">
-                            <input type="hidden" name="CTNId" value = "<?=$Rows['CTNId']?>">
-                            <button class="btn btn-outline-success btn-sm " type="submit">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-                                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-                                </svg>
-                                Mark as Complete
-                            </button>
-                        </form>
-                    <?php } else { ?>
-                        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" 
-                            onclick = "assign_data_to_offcanvas(`<?= $Rows['DesignId']?>`); " >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
-                                <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
-                            </svg> Assign
-                        </button> 
-                    <?php } ?>
+                        <?php } ?>
+                    <?php } ?> 
+
                   </td>
                 </tr>
                   <?php

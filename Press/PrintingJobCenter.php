@@ -1,5 +1,15 @@
 
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+<?php 
+
+ob_start(); 
+require_once '../App/partials/Header.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRESS_DEPT';
+if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 
 $ListType = '' ; 
 $SQL='';
@@ -28,15 +38,14 @@ if(isset($_REQUEST['ListType']) && !empty(trim($_REQUEST['ListType'])))
 
 else
 {
-
-    $ListType = "NewJobPKG"; 
-    $SQL="SELECT CTNId,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , 'x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, CTNOrderDate , CTNStatus, CTNQTY,CTNUnit,
-    ProductName,ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note,  `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,designinfo.DesignImage,designinfo.DesignCode1
-    FROM `carton` 
-    INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
-    INNER JOIN designinfo on designinfo.CaId=carton.CTNId 
-    WHERE CTNStatus='Printing' AND JobNoPP is NULL OR JobNoPP='NULL'  order by CTNOrderDate DESC";
-    $DataRows=$Controller->QueryData($SQL,[]);
+  $ListType = "NewJobPKG"; 
+  $SQL="SELECT CTNId,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , 'x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, CTNOrderDate , CTNStatus, CTNQTY,CTNUnit,
+  ProductName,ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note,  `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,designinfo.DesignImage,designinfo.DesignCode1
+  FROM `carton` 
+  INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+  INNER JOIN designinfo on designinfo.CaId=carton.CTNId 
+  WHERE CTNStatus='Printing' AND JobNoPP is NULL OR JobNoPP='NULL'  order by CTNOrderDate DESC";
+  $DataRows=$Controller->QueryData($SQL,[]);
 }
 
 ?>  
@@ -94,8 +103,8 @@ else
                 <option value="<?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  :  ( (isset($ListType )) ? $ListType  : '')   ;  ?>">
                    <?=(isset($_REQUEST['ListType'])) ? $_REQUEST['ListType']  : ((isset($ListType )) ? $ListType : ''  ) ;  ?>
                 </option>
-                <option value="NewJobPKG">New Job PKG</option>
-                <option value="NewJobPP">New Job PP</option>
+                <?php  if(in_array( $Gate['VIEW_JC_PKG_OPTION'] , $_SESSION['ACCESS_LIST']  )) { ?> <option value="NewJobPKG">New Job PKG</option><?php } ?> 
+                <?php  if(in_array( $Gate['VIEW_JC_PP_OPTION'] , $_SESSION['ACCESS_LIST']  )) { ?> <option value="NewJobPP">New Job PP</option><?php } ?> 
               </select>
           </form>
     </div>
@@ -157,17 +166,12 @@ else
                 <td><?=$Rows['JobNo'];?></td>
                 <?php $COUNddTER = $Rows['JobNo']; ?>
                 <?php   
-                      if($ListType=='NewJobPKG')
-                      {?>                                   
+                      if($ListType=='NewJobPKG')  {?>                                   
                           <td><input type="text" name="JobNoPP" id = "PP__<?php echo $COUNTER++?>"  onfocusout = "PutValueToAnchor( this.value , <?= trim($Rows['JobNo']);?>); "  class="form-control" ></td>
                       <?php      
-                      }
-                      elseif($ListType=='NewJobPP') {?>
+                      } elseif($ListType=='NewJobPP') {?>
                           <td><?=$Rows['JobNoPP']?></td>
-                      <?php
-                      }
-                 
-                ?>
+                      <?php }   ?>
               
                 <td><?=$Rows['CTNOrderDate']?></td>
                 <td><?=$Rows['CustName']?></td>
@@ -218,6 +222,7 @@ else
                               $ListType=$_REQUEST['ListType'];
                               if($ListType=='NewJobPKG')
                               {?>      
+                                <?php  if(in_array( $Gate['VIEW_JC_NJPKG_PROCESS_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
                                   <a id = "Anchor_<?=trim($Rows['JobNo'])?>"  class="btn btn-outline-primary btn-sm m-1 border-3 fw-bold" title = "Process" >
                                         <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" >
                                           <path d="M23.2569 18.25C23.2081 18.0768 23.0939 17.9293 22.9385 17.8386C22.783 17.7479 22.5984 17.7211 22.4236 17.7639L20.6944 18.2291C21.6407 16.8343 22.2144 15.2207 22.3611 13.5416C22.5029 11.9707 22.2733 10.3885 21.6906 8.92275C21.1079 7.45702 20.1886 6.14892 19.0069 5.10414C18.8703 4.99116 18.6957 4.9347 18.5188 4.94632C18.3419 4.95794 18.1762 5.03676 18.0556 5.16664C17.9342 5.30485 17.8726 5.48557 17.8843 5.66915C17.896 5.85273 17.9801 6.02415 18.1181 6.14581C19.1363 7.04458 19.9284 8.1706 20.4303 9.4326C20.9323 10.6946 21.1298 12.0571 21.0069 13.4097C20.888 14.8344 20.4102 16.2057 19.6181 17.3958L19.4444 15.6528C19.4575 15.5502 19.4476 15.446 19.4152 15.3477C19.3829 15.2495 19.329 15.1597 19.2576 15.085C19.1861 15.0102 19.0989 14.9524 19.0022 14.9156C18.9055 14.8789 18.8019 14.8643 18.6988 14.8727C18.5957 14.8812 18.4959 14.9125 18.4065 14.9645C18.3171 15.0165 18.2404 15.0878 18.1821 15.1732C18.1238 15.2586 18.0853 15.356 18.0694 15.4582C18.0535 15.5603 18.0606 15.6648 18.0903 15.7639L18.4375 20.2361L22.7778 19.0833C22.9497 19.033 23.0956 18.9182 23.1848 18.7629C23.2741 18.6077 23.3 18.4239 23.2569 18.25V18.25Z" fill="black"></path>
@@ -226,11 +231,16 @@ else
                                           <path d="M15.2778 9.02783H9.72222C9.53804 9.02783 9.3614 9.101 9.23117 9.23123C9.10094 9.36146 9.02777 9.5381 9.02777 9.72228V15.2778C9.02777 15.462 9.10094 15.6386 9.23117 15.7689C9.3614 15.8991 9.53804 15.9723 9.72222 15.9723H15.2778C15.4619 15.9723 15.6386 15.8991 15.7688 15.7689C15.8991 15.6386 15.9722 15.462 15.9722 15.2778V9.72228C15.9722 9.5381 15.8991 9.36146 15.7688 9.23123C15.6386 9.101 15.4619 9.02783 15.2778 9.02783ZM14.5833 14.5834H10.4167V10.4167H14.5833V14.5834Z" fill="black"></path>
                                         </svg>
                                   </a>
+                                <?php } ?> 
+
                               <?php 
                               }   
-                              elseif($ListType=='NewJobPP')  {?>      
-                                  <a href="PrintingManage.php?CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>" class="btn btn-outline-success btn-sm m-1 border-3 fw-bold"> Manage  </a>
-                              <?php
+                              elseif($ListType=='NewJobPP')  {?>  
+                                      <?php  if(in_array( $Gate['VIEW_JC_NJPP_MANAGE_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                                        <a href="PrintingManage.php?CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>" class="btn btn-outline-success btn-sm m-1 border-3 fw-bold"> Manage  </a>
+                                      </a>
+                                      <?php } ?> 
+                           <?php
                               }
                              
                             } 

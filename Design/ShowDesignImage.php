@@ -13,14 +13,18 @@
  
  
 <?php 
-if ( filter_has_var(INPUT_GET, 'Url') && filter_has_var(INPUT_GET, 'ProductName')  ) 
-{
+    session_start(); 
+    $Gate = require_once    '../Auth/Gates/DESIGN_DEPT';
+    if(!in_array( $Gate['VIEW_DESIGN_IMAGE_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized view design image" );
+    }
+
+if ( filter_has_var(INPUT_GET, 'Url') && filter_has_var(INPUT_GET, 'ProductName')){
     $URL = $_GET['Url'];  
     $ProductName = $_GET['ProductName']; 
 }
 else 
 {
-
 ?> 
 
     <div class="alert alert-danger m-3 d-flex align-items-center" role="alert">

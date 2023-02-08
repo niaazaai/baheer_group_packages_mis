@@ -1,0 +1,9 @@
+<?php
+return [
+    'VIEW_JOB_CENTER' => '188', 
+    'VIEW_JC_PKG_OPTION' => '189',
+    'VIEW_JC_PP_OPTION' => '190',  
+    'VIEW_JC_NJPP_MANAGE_BUTTON' => '200', 
+    'VIEW_JC_NJPKG_PROCESS_BUTTON' => '201', 
+    'VIEW_MANAGE_PAGE' => '202' 
+]; 
