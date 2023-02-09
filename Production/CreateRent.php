@@ -1,6 +1,11 @@
 <?php 
-ob_start();
-require_once '../App/partials/Header.inc'; 
+  ob_start();
+  require_once '../App/partials/Header.inc'; 
+  $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+  if(!in_array( $Gate['VIEW_RENTOUT_FORM_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+      header("Location:index.php?msg=You are not authorized to access Rent Form!" );
+  }
+
 require_once '../App/partials/Menu/MarketingMenu.inc';
 
 if(isset($_GET['CTNId']) && !empty($_GET['CTNId']) && isset($_GET['cycle_id']) && !empty($_GET['cycle_id'])) {

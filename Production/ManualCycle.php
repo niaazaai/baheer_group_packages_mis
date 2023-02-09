@@ -1,4 +1,11 @@
-<?php ob_start(); require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';   ?>
+<?php ob_start(); require_once '../App/partials/Header.inc';
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+if(!in_array( $Gate['VIEW_MANUAL_JOB_LIST_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:index.php?msg=You are not authorized to access Manual Page!" );
+}
+
+require_once '../App/partials/Menu/MarketingMenu.inc';   ?>
 <?php
     $production_cycle  = $Controller->QueryData("SELECT 
     production_cycle.*, carton.JobNo,carton.CTNId,  carton.ProductName  , CTNLength,CTNWidth,CTNHeight,DesignImage,

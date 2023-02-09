@@ -1,5 +1,5 @@
 <?php
-$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
+$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
 require_once $ROOT_DIR. 'App/Controller.php'; 
 // require_once 'Controller.php';
 

@@ -1,5 +1,13 @@
-<?php 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+<?php  ob_start();
+require_once '../App/partials/Header.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/ARCHIEVE_DEPT';
+if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) 
+{
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 require '../Assets/Carbon/autoload.php';
 use Carbon\Carbon;
  
@@ -120,12 +128,24 @@ else
 
             <form action="" method = "post"  >
                 <select class = "form-select" name="ListType" id="ListType" style = "border:3px solid green; " onchange = "this.form.submit();" >  
-                    <option value="<?=$ListType;?>"><?=$ListType;?></option>
-                    <option value="P/DRequestList">P/D Request List</option>
-                    <option value="P/DProduction">P/D In Production</option>
+                 
+                <option value="<?=$ListType;?>"><?=$ListType;?></option>
+                <?php  if(in_array( $Gate['VIEW_NEW_JOB_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
                     <option value="NewJob">New Jobs</option>
+                <?php } ?>
+                
+                <?php  if(in_array( $Gate['VIEW_PD_REQUEST_LIST_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
+                    <option value="P/DRequestList">P/D Request List</option>
+                <?php } ?>
+                <?php  if(in_array( $Gate['VIEW_PD_IN_PRODUCTION_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
+                    <option value="P/DProduction">P/D In Production</option>
+                <?php } ?>
+                <?php  if(in_array( $Gate['VIEW_JOB_UNDERPROCESS_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
                     <option value="JobUnderProcess">Job Under Process</option>
+                <?php } ?>
+                <?php  if(in_array( $Gate['VIEW_COMPLETED_JOBS_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
                     <option value="CompletedJobs">Completed Jobs</option>
+                <?php } ?>
                 </select>
             </form>
         </div>

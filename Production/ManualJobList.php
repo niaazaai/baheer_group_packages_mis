@@ -1,6 +1,11 @@
-<?php ob_start(); require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';   ?>
-<?php
+<?php ob_start(); require_once '../App/partials/Header.inc'; 
 
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+    if(!in_array( $Gate['VIEW_ASSIGNED_JOB_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access Assigned Job List Page!" );
+    }
+
+    require_once '../App/partials/Menu/MarketingMenu.inc';    
 
     // SELECT ALL MACHINES FOR USER TO SELECT FOR EACH JOB CYCLE  
     $machine_db_list = $Controller->QueryData('SELECT * FROM machine WHERE machine_type=? ',['Manual']);

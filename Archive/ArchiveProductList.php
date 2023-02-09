@@ -1,4 +1,11 @@
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
+<?php ob_start(); 
+require_once '../App/partials/Header.inc'; 
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
+
+if(!in_array( $Gate['VIEW_ARCHIVE_PRODUCT_LIST'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
 <?php 
         $ListType="ArchiveProductList";
         $SQL="SELECT DISTINCT CTNId,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size , carton.CustId1,  

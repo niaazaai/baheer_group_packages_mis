@@ -129,19 +129,19 @@ if(isset($_POST['SavePolymer']))
 
     $InsertInCpolymer=$Controller->QueryData("INSERT INTO cpolymer (CPNumber,CompId,ProductName,PColor,Psize,PMade, CartSample, POwner, MakeDate , `Type` , DesignCode, PStatus, PLocation)
     VALUES (?,?,?,?,?,?,?,?,?,'Polymer',?,?,?) ",[$PolymerNo,$CustId,$ProductName,$Color,$PolymerSize,$Mad,$SampleNo,$PropertyOf,$Date,$DesignCode,$Status,$Location]);
-    
-
-  
-    $FIRE=$Controller->QueryData("SELECT CPid FROM cpolymer WHERE CompId = ? ORDER BY CPid desc",[$CustId])->fetch_assoc();
+    $SELECTPolymerId=$Controller->QueryData("SELECT CPid FROM cpolymer WHERE CompId = ? order by CPid desc",[$CustId]);
+    $FIRE=$SELECTPolymerId->fetch_assoc();
     $PolymerId=$FIRE['CPid'];
-
-    if($InsertInCpolymer) {
+    if($InsertInCpolymer)
+    {
         $UPDATECARTON=$Controller->QueryData("UPDATE carton SET PolyId = ? WHERE CTNId = ?",[$PolymerId,$CTNId]);
         header("Location:$PageAddress.php?MSG=New Polymer Created...!&State=1&CustId=".$CustId."&CTNId=".$CTNId."&ListType=".$ListType);
     }
-    else {
+    else
+    {
         header("Location:$PageAddress.php?MSG=New Polymer Not Created...!&State=0&CustId=".$CustId."&CTNId=".$CTNId."&ListType=".$ListType);
     }
+
 
 }
 

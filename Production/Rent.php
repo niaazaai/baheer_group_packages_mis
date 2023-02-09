@@ -1,11 +1,15 @@
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';  
+<?php 
+    ob_start();
+    require_once '../App/partials/Header.inc'; 
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+    if(!in_array( $Gate['VIEW_RENTED_CARTON_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+    require_once '../App/partials/Menu/MarketingMenu.inc';  
 
     $rentouts  = $Controller->QueryData("SELECT *  FROM carton_rentout  
     INNER JOIN carton ON carton_rentout.CTNId = carton.CTNId" , []);
-
-    
 ?>
-
 
 <div class="card m-3">
     <div class="card-body d-flex justify-content-between">
@@ -22,7 +26,6 @@
 
     </div>
 </div>
-
 
 <div class="card m-3 shadow ">
     <div class="card-body">
@@ -94,8 +97,6 @@
     </div>
 </div>
 
- 
-
 <!-- Modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog model-xl ">
@@ -126,9 +127,6 @@
   </div>
 </div>
 
-
-
-
 <script>
 
 function search(InputId ,tableId ) {
@@ -151,8 +149,6 @@ function search(InputId ,tableId ) {
       }
     }
 }
- 
-
 
     function AddCycleId(cycle_id  ){
         document.getElementById('CYCLE_ID_').value = cycle_id; 
@@ -168,7 +164,6 @@ function search(InputId ,tableId ) {
         total[name] = value; 
         CalculatePlates(); 
     }
-
     
     function CalculatePlates(){
     
@@ -182,12 +177,6 @@ function search(InputId ,tableId ) {
 
         document.getElementById('TotalPacks').value =  TotalPacks; 
         document.getElementById('Total').value =  FinalTotal; 
-
-
-
     }
 </script>
-
-    
-
 <?php  require_once '../App/partials/Footer.inc'; ?>

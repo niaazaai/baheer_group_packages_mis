@@ -1,9 +1,15 @@
  <?php 
+    
+    ob_start();
     require_once '../App/partials/Header.inc'; 
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+    if(!in_array( $Gate['VIEW_PENDED_JOBS_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+
     require_once '../App/partials/Menu/MarketingMenu.inc';
     require '../Assets/Carbon/autoload.php';
     use Carbon\Carbon;
-    
 
     $Query="SELECT carton.CTNId,ppcustomer.CustName, JobNo,CTNOrderDate,CTNStatus,ProductQTY,JobType,CTNFinishDate,CTNQTY,
     carton.Ctnp1,carton.Ctnp2,carton.Ctnp3,carton.Ctnp4,carton.Ctnp5,carton.Ctnp6,carton.Ctnp7  ,carton.CTNType, 
@@ -18,11 +24,6 @@
     $DataRows=$Controller->QueryData($Query,[]);
     
 ?>
-
-
-
-
-
 
 <div class=" m-3">
     <div class="card " >
@@ -176,10 +177,5 @@
         document.getElementById('Search_input').value = input; 
         search('Search_input' ,'JobTable');  
     }
-
 </script>
 <?php  require_once '../App/partials/Footer.inc'; ?>
-
-
-
-

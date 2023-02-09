@@ -1,5 +1,13 @@
 <?php 
-    require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+    ob_start();
+    require_once '../App/partials/Header.inc'; 
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+    if(!in_array( $Gate['VIEW_ALL_JOBS_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+      header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+
+    
+    require_once '../App/partials/Menu/MarketingMenu.inc';
 
     $Query="SELECT carton.CTNId,ppcustomer.CustName, JobNo,CTNOrderDate,CTNStatus,ProductQTY,JobType,CTNFinishDate,CTNQTY,
     CTNUnit,CTNColor, ProductName ,CTNStatus,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,ProductQTY,

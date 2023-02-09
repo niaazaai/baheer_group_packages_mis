@@ -1,5 +1,13 @@
-<?php 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+<?php  ob_start();
+require_once '../App/partials/Header.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
+if(!in_array( $Gate['VIEW_POLYMER_AND_DIE_CENTER'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+  }
+
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 require_once '../Assets/Zebra/Zebra_Pagination.php';
 $pagination = new Zebra_Pagination();
 $RECORD_PER_PAGE = 20;
@@ -141,8 +149,12 @@ else if( filter_has_var(INPUT_POST, 'FieldType')  || filter_has_var(INPUT_POST, 
                         
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" >
+                <?php  if(in_array( $Gate['VIEW_CREATE_DIE_BUTTON_PAD'] , $_SESSION['ACCESS_LIST']  )) {?>
                     <a href="CreateDie.php" class="btn btn-outline-primary ms-1" style="float:right;">Create Die</a> 
+                <?php } ?>
+                <?php  if(in_array( $Gate['VIEW_CREATE_POLYMER_BUTTON_PAD'] , $_SESSION['ACCESS_LIST']  )) {?>
                     <a href="CreatePolymer.php" class="btn btn-outline-primary" style="float:right;">Create Polymer</a> 
+                <?php } ?>
                 </div>
             </div>
         </form>

@@ -16,8 +16,8 @@
 <form action="" method="post">
     <input type="text" name="title"  placeholder = "title" id=""> <br>
     <input type="text" name="slug"  placeholder = "slug" id=""> <br>
-    <input type="text" name="description" class = "w-50" placeholder = "description" id=""> <br>
-    <input type="text" name="page"  placeholder = "page" id=""> <br>
+    <input type="text" name="description" class = "w-50" placeholder = "description" id="" value = "N/A"> <br>
+    <input type="text" name="page"  placeholder = "page" id=""   > <br>
     <button type="submit">Save</button>
 </form>
 

@@ -1,0 +1,14 @@
+<?php
+return [
+    'VIEW_JOB_CENTER' => '252' ,
+    'VIEW_NEW_JOB_OPTION_JC' => '253' , 
+    'VIEW_PD_REQUEST_LIST_OPTION_JC' => '254' , 
+    'VIEW_PD_IN_PRODUCTION_OPTION_JC' => '255' , 
+    'VIEW_JOB_UNDERPROCESS_OPTION_JC' => '256' , 
+    'VIEW_COMPLETED_JOBS_OPTION_JC' => '257' , 
+    'VIEW_JOB_PROCESSING_FORM_PAGE' => '258' , 
+    'VIEW_CREATE_POLYMER_BUTTON_JP' => '259' , 
+    'VIEW_CREATE_DIE_BUTTON_JP' => '260' , 
+    '' => '' , 
+    '' => '' , 
+]; 

@@ -1,19 +1,15 @@
-<?php  require_once '../App/partials/Header.inc'; 
-
+<?php 
 ob_start();
+require_once '../App/partials/Header.inc'; 
 $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
-  
-// if(!in_array( $Gate['VIEW_CUSTOMER_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
-//   header("Location:index.php?msg=You are not authorized to access this page!" );
-// }
-
- 
-
+if(!in_array( $Gate['VIEW_PRODUCTION_DASHBOARD'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:../index.php?msg=You are not authorized to access this page!" );
+}
 require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
 
 <?php 
     $C5P = $Controller->QueryData("SELECT SUM(`ProductQty1`) as C5P_Production  FROM `machineproduction` WHERE MachineName = 'Carrogation Plant' 
-    AND `PrDate` BETWEEN '2021-12-15' AND '2023-01-01'" , []); 
+    AND `PrDate` BETWEEN '2019-12-15' AND '2023-01-01'" , []); 
     $C5P_machine = $C5P->fetch_assoc(); 
 
     /*
@@ -116,6 +112,14 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
     </div>
 </div>
 
+<?php if(isset($_GET['msg']) && !empty($_GET['msg']))  {
+          echo' <div class="alert alert-danger alert-dismissible fade show m-3" role="alert">
+                  <strong>Attention: </strong>'. $_GET['msg'] .' 
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>'; 
+      }  
+?>
+
 <div class = "m-3">
     <div class="row ">
     <?php  if(in_array( $Gate['VIEW_PD_TASKLIST'] , $_SESSION['ACCESS_LIST']  )) { ?> 
@@ -158,7 +162,7 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
         </div> <!-- END OF COL-LG-2 --> 
     <?php } ?> 
 
-
+        <?php  if(in_array( $Gate['VIEW_PD_ALL_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?> 
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="AllJobs.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #332FD0;" >
@@ -179,25 +183,27 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
-
-        <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
-            <a href="NewJobs.php" style = "text-decoration:none;">
-                <div class="card shadow-lg" style="border:2px solid #00FFC6;" >
-                    <div class="card-body d-flex justify-content-between align-items-center" >
-                        <div>
-                            <h2 class = "p-0 m-0" style= "color:#00FFC6" ><?= sprintf('%02d', $NEW_JOBS);?></h2>
-                            <span style = "color:#00FFC6;"   >New Jobs</span>
-                        </div>
-                        <div>
-                            <svg width="50" height="50" viewBox="0 0 35 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M34.11 14.49L30.19 7.87L34.07 1.52C34.1621 1.36868 34.2124 1.1956 34.2157 1.01848C34.2189 0.841351 34.1751 0.666534 34.0886 0.511912C34.0022 0.35729 33.8762 0.228414 33.7236 0.138469C33.5709 0.0485231 33.3972 0.000737145 33.22 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585787C0.210714 0.96086 0 1.46957 0 2L0 14C0 14.5304 0.210714 15.0391 0.585786 15.4142C0.960859 15.7893 1.46957 16 2 16H33.25C33.4265 16 33.5999 15.9532 33.7524 15.8645C33.905 15.7758 34.0314 15.6483 34.1188 15.4949C34.2061 15.3415 34.2513 15.1678 34.2498 14.9913C34.2482 14.8148 34.2 14.6418 34.11 14.49V14.49ZM10.51 11.18H9.39L6.13 6.84V11.19H5V5H6.13L9.4 9.35V5H10.52L10.51 11.18ZM16.84 6H13.31V7.49H16.51V8.49H13.31V10.1H16.84V11.1H12.18V5H16.83L16.84 6ZM25.13 11.16H24L22.45 6.57L20.9 11.18H19.78L17.78 5H19L20.32 9.43L21.84 5H23.06L24.52 9.43L25.85 5H27.08L25.13 11.16Z" fill="#00FFC6"/>
-                            </svg>
+        <?php } ?> 
+        <?php  if(in_array( $Gate['VIEW_PD_NEW_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+            <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
+                <a href="NewJobs.php" style = "text-decoration:none;">
+                    <div class="card shadow-lg" style="border:2px solid #00FFC6;" >
+                        <div class="card-body d-flex justify-content-between align-items-center" >
+                            <div>
+                                <h2 class = "p-0 m-0" style= "color:#00FFC6" ><?= sprintf('%02d', $NEW_JOBS);?></h2>
+                                <span style = "color:#00FFC6;"   >New Jobs</span>
+                            </div>
+                            <div>
+                                <svg width="50" height="50" viewBox="0 0 35 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M34.11 14.49L30.19 7.87L34.07 1.52C34.1621 1.36868 34.2124 1.1956 34.2157 1.01848C34.2189 0.841351 34.1751 0.666534 34.0886 0.511912C34.0022 0.35729 33.8762 0.228414 33.7236 0.138469C33.5709 0.0485231 33.3972 0.000737145 33.22 0H2C1.46957 0 0.960859 0.210714 0.585786 0.585787C0.210714 0.96086 0 1.46957 0 2L0 14C0 14.5304 0.210714 15.0391 0.585786 15.4142C0.960859 15.7893 1.46957 16 2 16H33.25C33.4265 16 33.5999 15.9532 33.7524 15.8645C33.905 15.7758 34.0314 15.6483 34.1188 15.4949C34.2061 15.3415 34.2513 15.1678 34.2498 14.9913C34.2482 14.8148 34.2 14.6418 34.11 14.49V14.49ZM10.51 11.18H9.39L6.13 6.84V11.19H5V5H6.13L9.4 9.35V5H10.52L10.51 11.18ZM16.84 6H13.31V7.49H16.51V8.49H13.31V10.1H16.84V11.1H12.18V5H16.83L16.84 6ZM25.13 11.16H24L22.45 6.57L20.9 11.18H19.78L17.78 5H19L20.32 9.43L21.84 5H23.06L24.52 9.43L25.85 5H27.08L25.13 11.16Z" fill="#00FFC6"/>
+                                </svg>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
-        </div> <!-- END OF COL-LG-2 --> 
-
+                </a>
+            </div> <!-- END OF COL-LG-2 --> 
+        <?php } ?> 
+        <?php  if(in_array( $Gate['VIEW_PD_URGENT_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?> 
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="UrgentJobs.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #FB2576;" >
@@ -216,7 +222,8 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?> 
+        <?php  if(in_array( $Gate['VIEW_PD_PENDED_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="PendedJobs.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #FFCA03;" >
@@ -234,8 +241,9 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
+        <?php } ?> 
 
-        
+        <?php  if(in_array( $Gate['VIEW_PD_UNDERPROCESS_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="MachineOpreatorList.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #38E54D;" >
@@ -253,12 +261,14 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </a>
         </div> <!-- END OF COL-LG-2 --> 
+        <?php } ?>
 
     </div> <!-- END OF ROW -->
 
 
 
     <div class="row mt-4">
+        <?php  if(in_array( $Gate['VIEW_PD_FINISHED_JOBS'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="FinishList.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #AE00FB;" >
@@ -283,7 +293,9 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div> <!-- END OF CARD -->
             </a>
         </div> <!-- END OF COL-LG-2 --> 
+        <?php } ?>
 
+        <?php  if(in_array( $Gate['VIEW_PD_MATERIAL_REQUEST'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <div class="card shadow-lg" style="border:2px solid #FF9E9E;" >
                 <div class="card-body d-flex justify-content-between align-items-center" >
@@ -299,7 +311,9 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </div> <!-- END OF CARD -->
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?>
+        
+        <?php  if(in_array( $Gate['VIEW_PD_RM_MACHINE'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <div class="card shadow-lg" style="border:2px solid #206A5D;" title = "repair and maintainance machines"   >
                 <div class="card-body d-flex justify-content-between align-items-center" >
@@ -334,7 +348,8 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </div> <!-- END OF CARD -->
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?>
+        <?php  if(in_array( $Gate['VIEW_PD_PRODUCTION_STAFF'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="EmployeeList.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #F77E21;" >
@@ -368,7 +383,8 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div> <!-- END OF CARD -->
             </a>
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?>
+        <?php  if(in_array( $Gate['VIEW_PD_PRODUCTION_REPORT'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <div class="card shadow-lg" style="border:2px solid #04009A;" title = "Generate Reports"   >
                 <div class="card-body d-flex justify-content-between align-items-center" >
@@ -385,7 +401,8 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </div> <!-- END OF CARD -->
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?>
+        <?php  if(in_array( $Gate['VIEW_PD_RENTED_CARTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
             <a href="Rent.php" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #C69666;" title = "Generate Reports"   >
@@ -406,13 +423,15 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div> <!-- END OF CARD -->
             </a>
         </div> <!-- END OF COL-LG-2 --> 
-
+        <?php } ?>
     </div> <!-- END OF ROW -->
 </div><!-- END OF M-3  -->
 
 
 <div class = "m-3">
     <div class="row">
+    
+        <?php  if(in_array( $Gate['VIEW_PD_CHART_1'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-lg-6 col-sm-12 col-md-6 ">
             <div class="card shadow">
                 <div class="card-body">
@@ -420,6 +439,8 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </div>
         </div>
+        <?php } ?>
+        <?php  if(in_array( $Gate['VIEW_PD_CHART_2'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-lg-6 col-sm-12 col-md-6 ">
             <div class="card shadow">
                 <div class="card-body">
@@ -427,12 +448,12 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                 </div>
             </div>
         </div>
+        <?php } ?>
     </div>
 </div><!-- END OF M-3  -->
-    
 <script>
 
-    let c5p  = <?=$C5P_machine['C5P_Production'] ?> ; 
+    let c5p  = <?php if($C5P_machine['C5P_Production'] == NULL) echo 0 ; else $C5P_machine['C5P_Production'];   ?> ; 
     var xValues = ["Carrogation 5P", "Carrogation 3P", "Flexo 1", " Flexo 2", "Glue Folder 1" , "Glue Folder 2" , '4 Khat'];
     var yValues = [c5p, 8000300, 2500000, 7000000, 6000000 , 3400000, 7700000];
     const labels = xValues;

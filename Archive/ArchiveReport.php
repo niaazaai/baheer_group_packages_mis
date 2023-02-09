@@ -1,5 +1,11 @@
-<?php 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+<?php ob_start();
+require_once '../App/partials/Header.inc';
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
+  
+if(!in_array( $Gate['VIEW_REPORT_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+require_once '../App/partials/Menu/MarketingMenu.inc';
 require '../Assets/Carbon/autoload.php';
 use Carbon\Carbon;
  

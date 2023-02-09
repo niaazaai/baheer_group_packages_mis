@@ -1,0 +1,10 @@
+<?php
+return [
+    'VIEW_JOB_CENTER' => '245',
+    'VIEW_STOCKOUT_BUTTON' => '246', 
+    'VIEW_DETAILS_BUTTON' => '247' ,
+    'VIEW_FINISH_GOODS_PAGE' => '248' ,  
+    'VIEW_PRINTED_DETAILS_PAGE' => '249' ,
+    'VIEW_PRINT_BUTTON' => '250' ,
+    'VIEW_BG_CARTON_PAGE' => '251' ,
+]; 

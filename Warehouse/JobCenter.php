@@ -1,5 +1,13 @@
 <?php  ob_start();
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+require_once '../App/partials/Header.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
+if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 require '../Assets/Carbon/autoload.php';
 use Carbon\Carbon;
  
@@ -218,28 +226,35 @@ else
                                 ?>
                             </td>
                             <td>
-                                <span class= "m-1">
-                                <?php if($Rows['ProStatus']=='Pending')  {?>
-                                    <a href="FinishedGoodsReceiveForm.php?CTNId=<?=$Rows['CTNId']?>&ProId=<?=$Rows['ProId']?>" class="btn btn-outline-primary btn-sm  m-0 ">
-                                        Stock In
-                                    </a> 
-                                <?php }  elseif($Rows['financeApproval']=='FinanceApproved') {?>
-                                    <a href="FinishedGoodsStockOutForm.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>&FAQ=<?=$Rows['financeAllowquantity']?>" class="btn btn-outline-danger btn-sm m-0  ">
-                                        Stock out
-                                    </a>    
-                                <?php } elseif($Rows['ProStatus']=='Accept' ) {?>
-                                    <?php if($Rows['ManagerApproval'] !='ManagerApproved') {?>
-                                        <a href="WarehouseStateChanger.php?ProId=<?=$Rows['ProId']?>" class="btn btn-outline-success btn-sm  m-0"
-                                            onclick="return confirm(`Do you want to Approved this produced QTY Mr.Manager`);">
-                                            Approved
+                                <?php  if(in_array( $Gate['VIEW_STOCKOUT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) {?>
+                                    
+                                    <span class= "m-1">
+                                    <?php if($Rows['ProStatus']=='Pending')  {?>
+                                        <a href="FinishedGoodsReceiveForm.php?CTNId=<?=$Rows['CTNId']?>&ProId=<?=$Rows['ProId']?>" class="btn btn-outline-primary btn-sm  m-0 ">
+                                            Stock In
                                         </a> 
+                                    <?php }  elseif($Rows['financeApproval']=='FinanceApproved') {?>
+                                    
+                                            <a href="FinishedGoodsStockOutForm.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>&FAQ=<?=$Rows['financeAllowquantity']?>" class="btn btn-outline-danger btn-sm m-0  ">
+                                                Stock out
+                                            </a>  
+
+                                    <?php } elseif($Rows['ProStatus']=='Accept' ) {?>
+                                        <?php if($Rows['ManagerApproval'] !='ManagerApproved') {?>
+                                            <a href="WarehouseStateChanger.php?ProId=<?=$Rows['ProId']?>" class="btn btn-outline-success btn-sm  m-0"
+                                                onclick="return confirm(`Do you want to Approved this produced QTY Mr.Manager`);">
+                                                Approved
+                                            </a> 
+                                        <?php } ?> 
                                     <?php } ?> 
-                                <?php } ?> 
-                                </span>
-                                <a href="DetailPrintPage.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>" 
-                                class="btn btn-outline-primary btn-sm m-1">
-                                    Details
-                                </a>  
+                                    </span>
+                                <?php } ?>
+                                <?php  if(in_array( $Gate['VIEW_DETAILS_BUTTON'] , $_SESSION['ACCESS_LIST']  )) {?>
+                                    <a href="DetailPrintPage.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>" 
+                                    class="btn btn-outline-primary btn-sm m-1">
+                                        Details
+                                    </a>  
+                                <?php } ?>
                             </td>
                         </tr>
                   <?php

@@ -1,6 +1,13 @@
 <?php
 ob_start(); 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+require_once '../App/partials/Header.inc'; 
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
+  
+if(!in_array( $Gate['VIEW_JOB_PROCESSING_FORM_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+  header("Location:index.php?msg=You are not authorized to access this page!" );
+}
+
+require_once '../App/partials/Menu/MarketingMenu.inc';
 $ListType=$_GET['ListType'];
 if(isset($_GET['CTNId'] ))
 {
@@ -166,12 +173,17 @@ if(isset($_POST['Submit']))
                                 {  
                                     if($Rows['CPid']=='')
                                     {?>
-                                        <a class="btn btn-outline-primary " href="CreatePolymer.php?CustId=<?=$CustId?>&CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>">Create Polymer</a>
+                                        
+                                        <?php  if(in_array( $Gate['VIEW_CREATE_POLYMER_BUTTON_JP'] , $_SESSION['ACCESS_LIST']  )) {?>
+                                            <a class="btn btn-outline-primary " href="CreatePolymer.php?CustId=<?=$CustId?>&CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>">Create Polymer</a>
+                                        <?php } ?>
                                     <?php     
                                     }
                                     if($Rows['DieId']=='')
                                     {?>
-                                        <a class="btn btn-outline-primary " href="CreateDie.php?CustId=<?=$CustId?>&CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>">Create Die</a>
+                                        <?php  if(in_array( $Gate['VIEW_CREATE_DIE_BUTTON_JP'] , $_SESSION['ACCESS_LIST']  )) {?>
+                                            <a class="btn btn-outline-primary " href="CreateDie.php?CustId=<?=$CustId?>&CTNId=<?=$Rows['CTNId']?>&ListType=<?=$ListType?>">Create Die</a>
+                                        <?php } ?>
                                     <?php
                                     } 
                                 } 

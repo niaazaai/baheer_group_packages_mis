@@ -40,7 +40,7 @@
                     <rect width="468.076" height="468.076" fill="white"></rect>
                     </clipPath>
                     </defs>
-                </svg> Archive Department
+                </svg> Warehouse Department
           </h3>
           
         </div>

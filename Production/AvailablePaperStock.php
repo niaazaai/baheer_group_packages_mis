@@ -1,15 +1,19 @@
 <?php 
 
- ob_start();
-  require_once '../App/partials/Header.inc';    
-  require_once '../App/partials/Menu/MarketingMenu.inc';
+    ob_start(); 
+    require_once '../App/partials/Header.inc'; 
+    
+    $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
+    if(!in_array( $Gate['VIEW_AVAILABLE_PAPER_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access Available Paper Stock !" );
+    }
 
-  $DBRows = '';
-  $PaperCatagory = '';
-  $Ctnp = 'Ctnp1'; 
+    require_once '../App/partials/Menu/MarketingMenu.inc';
+    $DBRows = '';
+    $PaperCatagory = '';
+    $Ctnp = 'Ctnp1'; 
 
     if (filter_has_var(INPUT_GET, 'CTNId')  && !empty($_GET['CTNId'])  ) {
-        
         $CartonID = $Controller->CleanInput($_GET['CTNId']);
         $Product = '';
         $ProductRows = $Controller->QueryData('SELECT CTNId,CTNType,ProductName,Ctnp1,Ctnp2,Ctnp3,Ctnp4,Ctnp5,Ctnp6,Ctnp7 FROM carton WHERE CTNId=?' , [$CartonID]);
@@ -22,7 +26,6 @@
         if ($UP->num_rows > 0) {  
             $UsedPaper = $UP->fetch_assoc();
         }
-        
     } // END OF FILTER VAR 
     // else header('Location:ProductionJobManagement.php'); 
 
