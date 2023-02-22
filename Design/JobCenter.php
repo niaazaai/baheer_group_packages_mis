@@ -19,16 +19,16 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
     if($ListType=='NewJob')
     {
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
-        ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
-                                `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  FROM `carton` INNER JOIN ppcustomer 
+        ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,
+                                `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  , carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design"   order by CTNOrderDate DESC';
     }
     else if($ListType=='JobUnderProcess')
     {
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
-        ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
+        ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
-        designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
+        designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
         where CTNStatus="DesignProcess" order by CTNOrderDate DESC';
     } 
@@ -37,9 +37,9 @@ else
 {
     $ListType = 'NewJob'; 
     $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
-    ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,
+    ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,  CFluteType, 
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage,CURRENT_TIMESTAMP,
-    designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime FROM `carton` INNER JOIN ppcustomer 
+    designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime,carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
     ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" order by CTNOrderDate DESC';
 }
 $DataRows=$Controller->QueryData($SQL,[]);
@@ -135,6 +135,8 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
                   <!-- <th>Papers</th> -->
                   <th>Color</th>
                   <th>Offset</th>
+                  <th>Flute</th>
+                  <th>Flip</th>
                   <th title="Product Type">P.Type</th>
                   <!-- <th title="Order QTY">O.QTY</th> -->
                   <?php if(isset($_REQUEST['ListType']))  { 
@@ -197,6 +199,8 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
                   </td> -->
                   <td><?=$Rows['CTNColor']?></td>
                   <td><?=$Rows['offesetp']?></td>
+                  <td><?=$Rows['CFluteType']?></td>
+                  <td><?=$Rows['NoFlip']?></td>
                   <td><?=$Rows['CTNUnit']?></td>
                   <!-- <td><?=number_format($Rows['CTNQTY'])?></td> -->
                 <?php   

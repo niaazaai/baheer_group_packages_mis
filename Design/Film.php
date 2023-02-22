@@ -18,7 +18,7 @@
     $DataRows=$Controller->QueryData('SELECT   `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
     ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, 
     offesetp, designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage, film_status , film_deadline , film_assigned_to,film_start_date, 
-    designinfo.DesignCode1 , designinfo.CaId , designinfo.DesignerName1 ,designinfo.DesignStartTime ,designinfo.DesignId  FROM `carton` 
+    designinfo.DesignCode1 , designinfo.CaId , designinfo.DesignerName1 ,designinfo.DesignStartTime ,designinfo.DesignId , CFluteType  FROM `carton` 
     INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
     LEFT JOIN designinfo ON designinfo.CaId=carton.CTNId  
     WHERE CTNStatus="Film" order by CTNOrderDate DESC',[]);
@@ -62,6 +62,9 @@
                     <th>Size (LxWxH) cm</th>
                     <th>Color</th>
                     <th title="Product Type">Type</th>
+                    <th>Flute</th>
+                    <th>Design</th>
+                    <th>QTY</th>
                     <th>Status</th>
                     <th>Deadline</th>
                   <th>OPS</th>
@@ -82,6 +85,19 @@
                   <td><?=$Rows['Size']?></td>
                   <td><?=$Rows['CTNColor']?></td>
                   <td><?=$Rows['CTNUnit']?></td>
+                  <td><?=$Rows['CFluteType']?></td>
+                  
+                    <td class = " align-item-center " >        
+                        <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']) )  { ?>
+                        <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                            href="ShowDesignImage.php?Url=<?=$Rows['DesignImage']?>&ProductName=<?=$Rows['ProductName']?>" >
+                        <?php   echo '<span class = "text-success" >'. $Rows['DesignCode1'] . '</span>';  ?>  
+                        </a>
+                        <?php }  else {
+                            echo '<span class = "text-danger" >N/A</span>';
+                        } ?>
+                    </td>
+                    <td><?=$Rows['CTNQTY']?></td>
                   <td><?php 
                    if($Rows['film_status'] == 'Assigned'){ 
                     echo "<span class = 'badge' style = 'background-color:#20c997 '>" . $Rows['film_status'] .' To '. $Rows['film_assigned_to'] .  "</span>";

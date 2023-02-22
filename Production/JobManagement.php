@@ -252,7 +252,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     <table class="table table-bordered custom-font " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
-                <th scope="col" colspan=6 class ="py-1" >   Size Information  <span class = "bg-danger  text-white" style = "padding:2px; "> <?=$Product['CTNType'];?> Ply  </span></th>
+                <th scope="col" colspan=6 class ="py-1" >   Size Information  <span class = "bg-danger  text-white" style = "padding:2px; "> <?=$Product['CTNType'];?> Ply </span>   (mm) </th>
             </tr>
         </thead>
         <tbody>
@@ -1017,8 +1017,8 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
         document.getElementById('Reel').value = Precision(Reel + Wast ,2) ; 
 
         //  calculate creesing
-        let c1 = ((Width * 10) / 2 ) + 5 ;
-        Creesing.value =   c1 + ' x ' + Height * 10 + ' x ' + c1  ; 
+        let c1 = (Width / 2 ) ;
+        Creesing.value =   c1 + ' x ' + Height + ' x ' + c1  ; 
     }
 
     ReelWastUps();

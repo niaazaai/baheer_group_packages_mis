@@ -3,6 +3,8 @@
 
 //  $user_id = $Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = ? AND notification_type = ?" , [ 'Design' , 'NEW-JOB'])->fetch_assoc()['user_id'];
 // echo $user_id; 
+
+// var_dump( $_SESSION['ACCESS_LIST']); 
 ?>  
 
 

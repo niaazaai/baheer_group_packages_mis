@@ -9,6 +9,9 @@ return [
     'VIEW_JOB_PROCESSING_FORM_PAGE' => '258' , 
     'VIEW_CREATE_POLYMER_BUTTON_JP' => '259' , 
     'VIEW_CREATE_DIE_BUTTON_JP' => '260' , 
-    '' => '' , 
-    '' => '' , 
+    'VIEW_POLYMER_AND_DIE_CENTER' => '261' , 
+    'VIEW_CREATE_POLYMER_BUTTON_PAD' => '262' , 
+    'VIEW_CREATE_DIE_BUTTON_PAD' => '263' , 
+    'VIEW_ARCHIVE_PRODUCT_LIST' => '264' , 
+    'VIEW_REPORT_PAGE' => '265' , 
 ]; 

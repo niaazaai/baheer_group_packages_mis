@@ -271,10 +271,8 @@ if(isset($_POST['Save&Submit']))
                         $CartonComment = $Controller->QueryData("INSERT INTO cartoncomment (EmpId1,EmpComment,CartonId1, ComDepartment) VALUES ( ?, ?, ?, 'Design')" ,   [$_SESSION['EId'] , $Comment , $CTNId ] ); 
         
                         $productionreport12 = $Controller->QueryData("UPDATE productionreport SET DesignEnd=CURRENT_TIMESTAMP, DesignComment=? , PPStart=CURRENT_TIMESTAMP WHERE RepCartonId=?" ,   [ $Comment , $CTNId ] );
-                        if($productionreport12) 
-                        {
-                            header('Location:JobCenter.php?msg=Data Uploaded successfully&class=success&ListType='.$ListType);
-                        }
+                        if($productionreport12)   header('Location:JobCenter.php?msg=Data Uploaded successfully&class=success&ListType='.$ListType);
+                        
                     
                     }
                     else 
@@ -297,7 +295,7 @@ if(isset($_POST['Save&Submit']))
                 if($JobNo=='NULL')  $UpdateStatus = "UPDATE carton SET CTNStatus='DConfirm' where CTNId=?";
                 else $UpdateStatus = "UPDATE carton SET CTNStatus='Printing' where CTNId=?";
                 $UpdateStatus1=$Controller->QueryData($UpdateStatus ,  [$CTNId] ); 
-                $UpdateDesignInfo=$Controller->QueryData("UPDATE  designinfo SET DesignStatus = ?,CompleteTime=CURRENT_TIMESTAMP  WHERE CaId = ? " ,   [$DesignStatus , $FileName , $DesignCode , $CTNId] ); 
+                $UpdateDesignInfo=$Controller->QueryData("UPDATE designinfo SET DesignStatus = ?,CompleteTime=CURRENT_TIMESTAMP  WHERE CaId = ?" ,   [$DesignStatus , $FileName , $DesignCode , $CTNId] ); 
 
                 $CartonComment = $Controller->QueryData("INSERT INTO cartoncomment (EmpId1,EmpComment,CartonId1, ComDepartment) VALUES ( ?, ?, ?, 'Design')" ,   [$_SESSION['EId'] , $Comment , $CTNId ] ); 
 

@@ -1,8 +1,8 @@
 <?php
 ob_start(); 
 require_once '../App/partials/Header.inc'; 
-$Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
-  
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/ARCHIEVE_DEPT';
+
 if(!in_array( $Gate['VIEW_JOB_PROCESSING_FORM_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
   header("Location:index.php?msg=You are not authorized to access this page!" );
 }

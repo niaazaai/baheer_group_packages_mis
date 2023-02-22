@@ -2,10 +2,10 @@
 require_once '../App/partials/Header.inc'; 
 
 $Gate = require_once  $ROOT_DIR . '/Auth/Gates/ARCHIEVE_DEPT';
-if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) 
-{
-    header("Location:index.php?msg=You are not authorized to access this page!" );
-}
+
+
+// var_dump( $_SESSION['ACCESS_LIST']); 
+if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST'] )) header("Location:index.php?msg=You are not authorized to access this page!" );
 
 require_once '../App/partials/Menu/MarketingMenu.inc';
 require '../Assets/Carbon/autoload.php';
