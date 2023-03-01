@@ -442,7 +442,7 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                         <!-- STATUS  COLUMN   var_dump($_SESSION['ACCESS_LIST']);  -->      
                        
                         <td>
-                            <?php   if(!in_array( $Gate['CUSTOMER_PROFILE_REORDER'] , $_SESSION['ACCESS_LIST']  )) { ?>  
+                            <?php   if(in_array( $Gate['CUSTOMER_PROFILE_REORDER'] , $_SESSION['ACCESS_LIST']  )) { ?>  
                                 <!-- PROFILE  -->
                                 <a  href="QuotationEdit.php?Page=CustomerProfile&CTNId=<?=$rows['CTNId'] ?>" title = "click to Reorder" > 
                                   <svg width="25" height="25" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

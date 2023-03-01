@@ -14,7 +14,8 @@ if(isset($_GET['role_id']) && !empty($_GET['role_id'])) {
     $role_id = $Controller->CleanInput($_GET['role_id']); 
     $PermissionsList = $Controller->QueryData("SELECT  * FROM permission " , []);
    
-    $AssignedPermissions = $Controller->QueryData("SELECT role.title as role_name , permission.title as permission_name,  role_permission.permission_id as pid , role_permission.role_id as rid  , role.description as role_description    
+    $AssignedPermissions = $Controller->QueryData("SELECT role.title as role_name , permission.title as permission_name,  role_permission.permission_id as pid 
+    , role_permission.role_id as rid  , role.description as role_description    
     FROM role 
     INNER JOIN role_permission ON role.id=role_permission.role_id 
     INNER JOIN permission ON role_permission.permission_id =permission.id WHERE role_permission.role_id = ? " , [$role_id]);
@@ -60,6 +61,15 @@ else header('Location:ShowAccessList.php')
     </div>
 </div> 
 
+<div class="row">
+    <div class="col-lg-6 col-sm-12 col-md-12 ">
+
+    </div>
+    <div class="col-lg-6  col-sm-12 col-md-12">
+
+    </div>
+</div>
+
 <div class="row m-1 d-flex justify-content-center">
     <div class="col-lg-8 col-md-8 col-sm-12  ">
 
@@ -100,9 +110,9 @@ else header('Location:ShowAccessList.php')
                     </tbody>
                 </table>
             </div>
-            <!-- <div class="card-footer bg-transparent border-primary text-end">
-                <button class ="btn btn-sm btn-outline-primary">SET</button>  
-            </div> -->
+            <div class="card-footer bg-transparent border-primary text-end">
+                <button class ="btn btn-sm btn-outline-primary">Apply Permission </button>  
+            </div>
         </div>
 
     </div>

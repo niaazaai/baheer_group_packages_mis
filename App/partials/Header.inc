@@ -457,7 +457,7 @@ $USER_DEPARTMENT = 0 ;
       </div>
       <ul class="sub-menu">
         <li><a class="link_name" href="#">Gatepass</a></li>
-        <li><a href="#">Packages  </a></li>
+        <li><a href="../Gatepass/PkgGatePass.php">Packages  </a></li>
         <li><a href="#">Employee  </a></li>
         <li><a href="#">Printing Press   </a></li>
       </ul>

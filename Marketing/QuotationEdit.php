@@ -564,7 +564,7 @@
 
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" id="DieExist">
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
-              <select class="form-select" name="DieExist"   >
+              <select class="form-select" name="DieExist" id="DieExist"  onchange = "CheckDiePriceInput(this.value);   >
                 <option selected value="<?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?>">  <?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?> </option>
                 <option value="New Die">New Die</option>
                 <option value="Die Exist" >Die Exist</option>
@@ -797,11 +797,13 @@
     if(PaperTypeName == 'BB')  {
       document.getElementById('PaperLayerGSM_'+ name.slice(-1)).value = 250;
       document.getElementById('offesetp').checked = true;  
+      document.getElementById('flexop').checked = false;   
       ChangeGSM('PaperLayerPrice_'+ name.slice(-1),250); 
     }  
     else  {
       document.getElementById('PaperLayerGSM_'+ name.slice(-1)).value = 125 ; 
       document.getElementById('offesetp').checked = false;  
+      document.getElementById('flexop').checked = true;  
       ChangeGSM('PaperLayerPrice_'+ name.slice(-1),125); 
     }
   }
@@ -875,10 +877,10 @@
         }
 
         let FlutOptions = ''; 
-        if(CT_Value == 3 )  FlutOptions =  '<option value="C">C</option> <option value="B">B</option> <option value="E">E</option> '; 
-        else if(CT_Value == 5 )  FlutOptions =  '<option value="C">C</option> <option value="B">B</option> '; 
-        else if(CT_Value == 7 )   FlutOptions =  '<option value="BCB">BCB</option>'; 
-        else FlutOptions = '<option value="C">C</option><option value="B">B</option><option value="E">E</option><option value="BC">BC</option><option value="CE">CE</option><option value="BCB">BCB</option>'; 
+        if(CT_Value == 3 )  FlutOptions =  '<option value="None">None</option><option value="C">C</option> <option value="B">B</option> <option value="E">E</option> ';  
+        else if(CT_Value == 5 )  FlutOptions =  '<option value="None">None</option><option value="BC">BC</option> <option value="CE">CE</option> '; 
+        else if(CT_Value == 7 )   FlutOptions =  '<option value="None">None</option><option value="BCB">BCB</option>'; 
+        else FlutOptions = '<option value="None">None</option><option value="C">C</option><option value="B">B</option><option value="E">E</option><option value="BC">BC</option><option value="CE">CE</option><option value="BCB">BCB</option>'; 
 
         document.getElementById('FlutType').innerHTML = document.getElementById('FlutType').innerHTML + FlutOptions
         removeDuplicateOptions(document.getElementById('FlutType'));
@@ -900,8 +902,15 @@
     let ExchangeRate = Number(InputValues['ExchangeRate']) || 0;
     let Values = {}; 
 
-    // if(NoFlip) Height = UserHeight;
-    // else Height = UserWidth + UserHeight;
+    if(UserLength < UserWidth) {
+      alert('Width of product is larger then Length of Product!');
+      document.getElementById('PaperWidth').style.border = '2px solid red'; 
+      document.getElementById('PaperWidth').value = 0 ; 
+      InputValues['PaperWidth'] = 0 ; 
+    }
+    else {
+      document.getElementById('PaperWidth').style.border = '2px solid black'; 
+    }
 
     if(NoFlip) {
       PolymerHeight = Number(document.getElementById('NoFlipHeight').value);
@@ -1288,12 +1297,27 @@ function ChangeDieckle(value) {
         AddInputValues('ExchangeRate' , ex ); 
     }
 
+    
+    function CheckFlexoOffset(){
+      let flexo = document.getElementById('flexop'); 
+      let offset = document.getElementById('offesetp'); 
+
+      if(flexo.checked == true) {
+        offset.checked = false; 
+      }
+      else if (offset.checked == true) {
+        flexo.checked = false; 
+      }
+    } // end of function 
+
+
+
  </script>
   <?php 
     $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
       'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
       'PaperHeight' => $CTN['CTNHeight'] ,  'NoColor' => $CTN['polymer_info'] ,  
-      'DiePrice' => $CTN['CTNDiePrice'] ,  'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD']]; 
+      'DiePrice' => $CTN['CTNDiePrice'] ,  'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD']] , 'DieExist' => $CTN['die_info']; 
       $CTNType = $CTN['CTNType'];  
     //  , 'Currency' => $CTN['CtnCurrency']  
       $Exct = "<script>" ; 
@@ -1302,8 +1326,8 @@ function ChangeDieckle(value) {
           $Exct .= "AddInputValues('$key' ,  $value); "; 
         }
 
-      $Exct .= "ShowNoFlip(`{$CTN['NoFlip']}`); console.log(InputValues);  "; //; 
-      $Exct .= "console.log(Paper);  "; 
+      $Exct .= "ShowNoFlip(`{$CTN['NoFlip']}`); console.log(InputValues);  "; 
+      $Exct .= "CheckDiePriceInput(`{$CTN['die_info']}`)"; 
       // $Exct .= "ChangeCurrencyType('". $CTN['CtnCurrency'] ."');"; 
         
       $Exct .= "</script>" ;
@@ -1318,5 +1342,20 @@ function ChangeDieckle(value) {
     }
   }
   CheckCancelCommentLength(); 
+
+
+  function CheckDiePriceInput(value){
+    if(value == 'No Die' || value == 'Die Exist') {
+      document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
+      document.getElementById('DiePriceInput').value = 0 ; 
+      InputValues['DiePrice'] = 0
+    }//end of if block 
+    else {
+      document.getElementById('DiePriceInput').removeAttribute('disabled'); 
+    }
+  }// end of function 
+
+
+
 </script>
 <?php require_once '../App/partials/Footer.inc'; ?> 

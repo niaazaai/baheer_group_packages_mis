@@ -470,6 +470,7 @@
               <label for="Flute" class="form-label">Flute Type   <span class="text-danger"> * </span></label>
               <select name="Flute" id = "FlutType"  class="form-select" required>
                 <option value="">Flute Type</option>
+
               </select>
           </div>
    
@@ -481,13 +482,15 @@
           'CPasting' => 'PASTING' ,
           'CStitching' => 'STITCHING' ,
           'flexop' =>  'FLEXO P' , 
-          'offesetp' => 'OFFSET P'];  
-
-         foreach ($CheckBoxs as $key => $value):  ?>
+          'offesetp' => 'OFFSET P' ];  
+          $onclick = ''; 
+         foreach ($CheckBoxs as $key => $value): 
+              if($key == 'flexop' || $key == 'offesetp')  $onclick = "onclick = 'CheckFlexoOffset()'";   
+          ?>
             <div class="col-xxl-1 col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-3">
               <label for=" " class="form-label"> </label>
               <div class="form-check fw-bold" >
-                <input class="form-check-input" type="checkbox" id="<?=$key?>" name="<?=$key?>" value = "Yes"> 
+                <input class="form-check-input" type="checkbox"  <?=$onclick ?> id="<?=$key?>" name="<?=$key?>" value = "Yes"> 
                 <label class="form-check-label"   for="<?=$key?>"><?=$value?></label> 
               </div>
             </div>
@@ -547,7 +550,7 @@
               </select>
           </div>
 
-          <div class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12">
+          <div id = "PolymerPriceCol" class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <label for="PolymerPrice" class="form-label">Polymer Price  </label>
             <input class="form-control" id="PolymerPrice" name="PolymerPrice" type="text" required   />
           </div>
@@ -558,7 +561,7 @@
           </div>
 
        
-          <div class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+          <div id = "NoFlipCol" class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <label   for="NoFlip"> Manual </label>
                 <select class="form-select" name="NoFlip" id="NoFlip" required onchange = "ShowNoFlip( this.value)" >
                   <option value="" disabled>Select Flip</option>
@@ -742,7 +745,6 @@
     }  
     else  {
       document.getElementById('PaperLayerGSM_'+ name.slice(-1)).value = 125 ; 
-      // document.getElementById('offesetp').checked = false;  
       ChangeGSM('PaperLayerPrice_'+ name.slice(-1),125); 
     }
   }
@@ -769,6 +771,15 @@
       if(name == 'CartonQTY') {
         value = RemoveComma(value) ;
       }  
+    }
+
+    if(value == 'No Print' || value == 'Polymer Exist' || value  == 'Personal Polymer' || value == 'Free Polymer') {
+      document.getElementById('NoFlipCol').style.display = "none"; 
+      document.getElementById('PolymerPriceCol').style.display = "none"; 
+    }
+    else {
+      document.getElementById('NoFlipCol').style.display = ""; 
+      document.getElementById('PolymerPriceCol').style.display = ""; 
     }
 
     value = Precision(value)
@@ -812,10 +823,10 @@
         }
 
         let FlutOptions = ''; 
-        if(CT_Value == 3 )  FlutOptions =  ' <option value="C">C</option> <option value="B">B</option> <option value="E">E</option> ';  
-        else if(CT_Value == 5 )  FlutOptions =  '  <option value="BC">BC</option> <option value="CE">CE</option> '; 
-        else if(CT_Value == 7 )   FlutOptions =  '<option value="BCB">BCB</option>'; 
-        else FlutOptions = '<option value="C">C</option><option value="B">B</option><option value="E">E</option><option value="BC">BC</option><option value="CE">CE</option><option value="BCB">BCB</option>'; 
+        if(CT_Value == 3 )  FlutOptions =  '<option value="None">None</option><option value="C">C</option> <option value="B">B</option> <option value="E">E</option> ';  
+        else if(CT_Value == 5 )  FlutOptions =  '<option value="None">None</option><option value="BC">BC</option> <option value="CE">CE</option> '; 
+        else if(CT_Value == 7 )   FlutOptions =  '<option value="None">None</option><option value="BCB">BCB</option>'; 
+        else FlutOptions = '<option value="None">None</option><option value="C">C</option><option value="B">B</option><option value="E">E</option><option value="BC">BC</option><option value="CE">CE</option><option value="BCB">BCB</option>'; 
 
         document.getElementById('FlutType').innerHTML = FlutOptions ; 
         document.getElementById('CTNPaper').value = CTNPaper ; 
@@ -836,8 +847,16 @@
     var Length , Height ; 
     let Values = {}; 
     
-    // if(NoFlip) Height = UserHeight;
-    // else Height = UserWidth + UserHeight;
+    if(UserLength < UserWidth) {
+      alert('Width of product is larger then Length of Product!');
+      document.getElementById('PaperWidth').style.border = '2px solid red'; 
+      document.getElementById('PaperWidth').value = 0 ; 
+      InputValues['PaperWidth'] = 0 ; 
+    }
+    else {
+      document.getElementById('PaperWidth').style.border = '2px solid black'; 
+    }
+    
 
 
     if(NoFlip) {
@@ -1194,11 +1213,29 @@
   function CheckDiePriceInput(value){
     if(value == 'No Die' || value == 'Die Exist') {
       document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
+      document.getElementById('DiePriceInput').value = 0 ; 
+      InputValues['DiePrice'] = 0
     }//end of if block 
     else {
-      document.getElementById('DiePriceInput').removeAttribute('disabled')
+      document.getElementById('DiePriceInput').removeAttribute('disabled'); 
     }
   }// end of function 
+
+  function CheckFlexoOffset(){
+    let flexo = document.getElementById('flexop'); 
+    let offset = document.getElementById('offesetp'); 
+
+    if(flexo.checked == true) {
+      offset.checked = false; 
+    }
+    else if (offset.checked == true) {
+      flexo.checked = false; 
+    }
+  } // end of function 
+
+
+
+
 
 </script>
 <?php  require_once '../App/partials/Footer.inc'; ?>

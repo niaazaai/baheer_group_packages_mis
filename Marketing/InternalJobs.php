@@ -12,9 +12,18 @@
 
   $SQL="SELECT `ProId`, `CtnId1`, CustId,`ProDate`, CTNId,`ProSubmitDate`, `ProSubmitBy`, `CompId`,  `ProQty` ,`ProOutQty`, `ProBrach`, `ProComment`, `PrCtnType`, ppcustomer.CustName, carton.`CTNQTY`, 
   carton.ProductQTY, carton.ProductName, carton.CTNColor, carton.CTNOrderDate,CTNType, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, carton.CTNUnit, 
-  carton.JobNo FROM `cartonproduction` INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1
-  where ProStatus='Accept' and ProQty-ProOutQty > 0 OR (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL' 
+  carton.JobNo FROM `cartonproduction` 
+  INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1
+  where 
+  ProStatus='Accept' and ProQty-ProOutQty > 0 OR (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL' 
   order by ProSubmitDate desc";
+
+  $SQL = "SELECT  CustId,  CTNId, CustName,  CTNQTY,  ProductQTY, UsedQty,
+   carton.ProductName, carton.CTNColor, carton.CTNOrderDate,CTNType, 
+   CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size, carton.CTNUnit, 
+   carton.JobNo FROM carton   
+   INNER JOIN ppcustomer ON ppcustomer.CustId=Carton.CustId1 
+   WHERE (`JobType` = 'OnlyProduct' OR CTNStatus = 'Rejected' OR ppcustomer.CustName = 'BGC' ) AND JobNo != 'NULL'"; 
   $Data=$Controller->QueryData($SQL,[]); 
 ?>
 
@@ -23,10 +32,10 @@
        
         <h3  class = "m-0 p-0  " > 
             <a class= "btn btn-outline-primary btn-sm " href="index.php">
-				<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-						<path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
-				</svg>
-			</a>  
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
+                </svg>
+              </a>  
  
           <svg width="55" height="55" viewBox="0 0 881 686" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M440.5 0L68.2668 149.672L440.5 299.344L812.735 149.672L440.5 0Z" fill="#F0DCBE"/>
@@ -39,7 +48,7 @@
 
         
           
-         Finished Goods <span style= "color:#FA8b09;"> </span>
+         BG Finished Goods <span style= "color:#FA8b09;"> </span>
         </h3>
         <div  class = "my-1"> <!--Button trigger modal div-->
            
@@ -81,7 +90,7 @@
                         <th>Job #</th>
                         <th>Ply</th>
                         <th>P.Type</th>
-                        <th>Date</th>
+                        <th>Customer</th>
                         <th>Product Name</th>
                         <th>Size(LxWxH)cm</th>
                         <th>Color</th>
@@ -96,9 +105,9 @@
                   <?php $Count=1;
                       while($Rows=$Data->fetch_assoc())
                       {
-                        $Remain=$Rows['ProQty']-$Rows['ProOutQty'];
+                      
                         ?>
-                            <input type="hidden" name="ReminQTY" id="ReminQTY" value="<?=$Remain?>">
+                            <input type="hidden" name="ReminQTY" id="ReminQTY" value="<?=$Rows['ProductQTY']-$Rows['UsedQty']?>">
                             <tr>
                               <td>
                                   <a href = "#"onclick = "view_details(`details_tr_<?=$Rows['CTNId']?>`)" class = "btn " >
@@ -107,35 +116,27 @@
                                         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                       </svg> 
                                   </a>
-                                  
                                 </td>
                                 <td><?=$Count?> </td>
                                 <td><?=$Rows['JobNo']?></td>
                                 <td><?=$Rows['CTNType'].' Ply'?></td>
                                 <td><?=$Rows['CTNUnit']?></td>
-                                <td><?=substr($Rows['ProSubmitDate'], 0 , 16)?></td>
+                                <td><?=$Rows['CustName']?></td>
                                 <td><?=$Rows['ProductName']?></td>
                                 <td><?=$Rows['Size']?></td>
                                 <td><?=$Rows['CTNColor']?></td>
                                 <td><?=$Rows['CTNQTY']?></td>
-                                <td><?=$Rows['ProQty']?></td>
-                                <td><?=$Rows['ProOutQty']?></td>
-                                <td><?=$Remain?></td>
+                                <td><?=$Rows['ProductQTY']?></td>
+                                <td><?=$Rows['UsedQty']?></td>
+                                <td><?= $Rows['ProductQTY']-$Rows['UsedQty']?></td>
                                 <td>
-                                  <!-- 
-                                      <button type="button" class = "btn btn-outline-primary btn-sm fw-bold border-3" 
-                                                      onclick = "PutQTYToModal(<?=$Rows['ProQty'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['CustId']?>' '<?=$Rows['ProId']?>'  )" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 
-                                          Sale
-                                      </button>  
-                                  -->
                                   <?php  if(in_array( $Gate['VIEW_SALE_BUTTON_IJ'] , $_SESSION['ACCESS_LIST']  )) { ?> 
-                                      <button class="btn btn-outline-primary fw-bold border-2" type="button" onclick = "PutQTYToModal('<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>','<?=$Rows['ProOutQty']?>')" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Sale</button>
+                                      <button class="btn btn-outline-primary fw-bold border-2" type="button" 
+                                      onclick = "PutQTYToModal('<?=$Rows['CTNId']?>', '<?=$Rows['UsedQty']?>','<?=$Rows['ProductQTY']?>')" 
+                                      data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Sale</button>
                                   <?php } ?> 
-                                
                                 </td>
                             </tr>
-
-                      
 
                               <tr id = "details_tr_Title_<?=$Rows['CTNId']?>"  style = "display:none; color:#D09CFA;">
                                   <th></th> 
@@ -143,8 +144,8 @@
                                   <th></th> 
                                   <th>#</th>
                                   <th>Cust Id</th>
-                                  <th>Sale Date</th>
                                   <th>Cust Name</th>
+                                  <th>Sale Date</th>
                                   <th>Sale QTY</th>
                                   <th>Sale Price</th>
                                   <th>Total Price</th>
@@ -166,8 +167,8 @@
                                         <td> </td>
                                         <td><?=$Counter?></td>
                                         <td><?=$CTN_Sale['SaleCustomerId']?></td>
-                                        <td><?=substr($CTN_Sale['SaleDate'], 0 , 16)?></td>
                                         <td><?=$CTN_Sale['CustName']?> </td>
+                                        <td><?=substr($CTN_Sale['SaleDate'], 0 , 16)?></td>
                                         <td><?=$CTN_Sale['SaleQty']?></td>
                                         <td><?=$CTN_Sale['SalePrice']?></td>
                                         <td><?=$CTN_Sale['SaleTotalPrice']?></td>
@@ -253,17 +254,18 @@
         </div>
       
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="AVLQTY" placeholder="name@example.com" name="AVLQTY" readonly onchange="TakeValue(this.name, this.value);">
+          <input type="text" class="form-control" id="AVLQTY" placeholder="" name="AVLQTY"
+           readonly onchange="TakeValue(this.name, this.value);">
           <label for="floatingInput">Available QTY</label>
         </div>
        
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="SaleQTY" placeholder="name@example.com" name="SaleQTY" onchange="TakeValue(this.name, this.value);">
+          <input type="text" class="form-control" id="SaleQTY" placeholder="" name="SaleQTY" onchange="TakeValue(this.name, this.value);">
           <label for="floatingInput">Sales QTY</label>
         </div>
    
         <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="UnitePrice" placeholder="name@example.com" name="UnitePrice" onchange="TakeValue(this.name, this.value);">
+          <input type="text" class="form-control" id="UnitePrice" placeholder="" name="UnitePrice" onchange="TakeValue(this.name, this.value);">
           <label for="floatingInput">Unit Price</label>
         </div>
 
@@ -303,17 +305,16 @@ function TakeValue(name , value)
 
 function CalculatePlates(total)
 {
-    
-      let TotalPrice =(Number(total.SaleQTY) * Number(total.UnitePrice));
-      document.getElementById("TotalPrice").value=TotalPrice;
-    
-    
+  let TotalPrice =(Number(total.SaleQTY) * Number(total.UnitePrice));
+  document.getElementById("TotalPrice").value=TotalPrice;
 }
 
 
 
 function PutQTYToModal(CTNID,  ProID,ProOutQTY )
 {
+
+  // // $Rows['ProductQTY']-$Rows['UsedQty']
     document.getElementById("CTNId").value=CTNID;
     document.getElementById("ProId").value=ProID;
     document.getElementById("ProOutQTY").value=ProOutQTY;
