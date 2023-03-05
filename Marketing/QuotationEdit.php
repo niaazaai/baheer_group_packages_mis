@@ -1314,11 +1314,18 @@ function ChangeDieckle(value) {
 
  </script>
   <?php 
-    $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
-      'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
-      'PaperHeight' => $CTN['CTNHeight'] ,  'NoColor' => $CTN['polymer_info'] ,  
-      'DiePrice' => $CTN['CTNDiePrice'] ,  'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD']] , 'DieExist' => $CTN['die_info']; 
-      $CTNType = $CTN['CTNType'];  
+    $CallAgain = [  
+    'PaperGrade'  => $CTN['GrdPrice'] , 
+    'CartonQTY' => $CTN['CTNQTY']  ,
+      'PaperLength' => $CTN['CTNLength'] , 
+       'PaperWidth' => $CTN['CTNWidth'] , 
+      'PaperHeight' => $CTN['CTNHeight'] ,  
+      'NoColor' => $CTN['polymer_info'] ,  
+      'DiePrice' => $CTN['CTNDiePrice'] ,  
+      'Tax' => $CTN['Tax']  ,
+       'ExchangeRate' => $CTN['PexchangeUSD'] , 
+       'DieExist' => $CTN['die_info'],  
+      $CTNType => $CTN['CTNType']];  
     //  , 'Currency' => $CTN['CtnCurrency']  
       $Exct = "<script>" ; 
       $Exct .= "ShowPly($CTNType);"; 
@@ -1342,7 +1349,6 @@ function ChangeDieckle(value) {
     }
   }
   CheckCancelCommentLength(); 
-
 
   function CheckDiePriceInput(value){
     if(value == 'No Die' || value == 'Die Exist') {

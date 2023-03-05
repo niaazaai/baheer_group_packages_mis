@@ -525,7 +525,7 @@
           </div>
 
 
-          <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" id = "NoColorCol">
               <label for="NoColor" class="form-label">Select Polymer<span class="text-danger"> * </span></label>
               <select class="form-select" name="NoColor" id="NoColor" onchange="AddInputValues(this.name , this.value);" >
                 <option selected value="No Print" >No Print</option>
@@ -550,7 +550,8 @@
               </select>
           </div>
 
-          <div id = "PolymerPriceCol" class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12">
+          
+          <div id = "PolymerPriceCol" class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12" >
             <label for="PolymerPrice" class="form-label">Polymer Price  </label>
             <input class="form-control" id="PolymerPrice" name="PolymerPrice" type="text" required   />
           </div>
@@ -560,7 +561,7 @@
             <input class="form-control"   placeholder="Die Price" id = "DiePriceInput" name="DiePrice"     type="text" onchange = "AddInputValues(this.name , this.value)" value = ""  />
           </div>
 
-       
+        
           <div id = "NoFlipCol" class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <label   for="NoFlip"> Manual </label>
                 <select class="form-select" name="NoFlip" id="NoFlip" required onchange = "ShowNoFlip( this.value)" >
@@ -742,6 +743,12 @@
       document.getElementById('PaperLayerGSM_'+ name.slice(-1)).value = 250;
       document.getElementById('offesetp').checked = true;  
       ChangeGSM('PaperLayerPrice_'+ name.slice(-1),250); 
+ 
+      document.getElementById('NoColorCol').style.display = 'none'; 
+      document.getElementById('PolymerPriceCol').style.display = 'none'; 
+      document.getElementById('NoFlipCol').style.display = 'none'; 
+      document.getElementById('NoFilpArea').style.display = 'none'; 
+
     }  
     else  {
       document.getElementById('PaperLayerGSM_'+ name.slice(-1)).value = 125 ; 
@@ -773,13 +780,15 @@
       }  
     }
 
-    if(value == 'No Print' || value == 'Polymer Exist' || value  == 'Personal Polymer' || value == 'Free Polymer') {
-      document.getElementById('NoFlipCol').style.display = "none"; 
-      document.getElementById('PolymerPriceCol').style.display = "none"; 
-    }
-    else {
-      document.getElementById('NoFlipCol').style.display = ""; 
-      document.getElementById('PolymerPriceCol').style.display = ""; 
+    if (name == 'NoColor') {
+      if(value == 'No Print' || value == 'Polymer Exist' || value  == 'Personal Polymer' || value == 'Free Polymer') {
+        document.getElementById('NoFlipCol').style.display = "none"; 
+        document.getElementById('PolymerPriceCol').style.display = "none"; 
+      }
+      else if ( value == '1' || value == '2' || value == '3' ||value == '4' ) {
+            document.getElementById('NoFlipCol').style.display = ""; 
+            document.getElementById('PolymerPriceCol').style.display = ""; 
+      }
     }
 
     value = Precision(value)

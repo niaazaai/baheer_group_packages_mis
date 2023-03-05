@@ -165,12 +165,11 @@
                         <li><a class="dropdown-item" href="#" onclick = "SetStatus(`Cleaning`)">Cleaning - صفا کاری</a></li>
                         <li><a class="dropdown-item" href="#" onclick = "SetStatus(`Maintaining`)">Maintaining - حفظ و مراقبت</a></li>
                         <li><a class="dropdown-item" href="#" onclick = "SetStatus(`Polymer & Die Issue`)">Polymer Or Die Issue - بسته کردن دایی یا پولیمیر</a></li>
-                        <li><a class="dropdown-item" href="#" onclick = "SetStatus(`Shift Change`)">Shift Change - تبدیل شفت</a></li>
                     </ul>
                 </div>'; 
             break;
         }
-
+        // <li><a class="dropdown-item" href="#" onclick = "SetStatus(`Shift Change`)">Shift Change - تبدیل شفت</a></li>
     }
     else {
         header('Location:MachineOpreatorList.php');
@@ -315,7 +314,10 @@
                 </div>
                 
                 <div class = "" >
-                    <form action="MachineProductionHistory.php" class = "d-flex justify-content-end mt-2"  method="post"  >
+                    
+                
+
+                    <form action="MachineProductionHistory.php" class = "d-flex justify-content-end "  method="post"  >
                         <input type="hidden" name="status" id = "status"  value = "<?=(isset($status) && !empty($status)) ? $status : 'configure machine';?>" >
                         <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
                         <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[0]['CTNId']?>">
@@ -325,14 +327,21 @@
                             <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[1]['CTNId']?>">
                             <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[1]['cycle_id']?>">
                         <?php endif;  ?>
-                            <?=$button?>
+                        <?=$button?>
+                        <div class = "mt-3 ms-2" >
+                            <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">تبدیل شفت</a>
+                        </div>
                     </form> 
+
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+
+
+
 
 <?php if(trim($machine_['machine_name']) == 'Carrogation 5 Ply'  || trim($machine_['machine_name']) == 'Carrogation 3 Ply') { ?>
  
@@ -346,7 +355,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                     </svg>
-                Customer Information  </th>
+                Customer Info   </th>
             </tr>
         </thead>
         <tbody>
@@ -403,7 +412,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16" style = "transform:rotate(180deg)">
                         <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
                     </svg>
-                    Size Information  
+                   Machine Info (mm)
                 </th>
             </tr>
         </thead>
@@ -555,7 +564,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-paint-bucket" viewBox="0 0 16 16">
                         <path d="M6.192 2.78c-.458-.677-.927-1.248-1.35-1.643a2.972 2.972 0 0 0-.71-.515c-.217-.104-.56-.205-.882-.02-.367.213-.427.63-.43.896-.003.304.064.664.173 1.044.196.687.556 1.528 1.035 2.402L.752 8.22c-.277.277-.269.656-.218.918.055.283.187.593.36.903.348.627.92 1.361 1.626 2.068.707.707 1.441 1.278 2.068 1.626.31.173.62.305.903.36.262.05.64.059.918-.218l5.615-5.615c.118.257.092.512.05.939-.03.292-.068.665-.073 1.176v.123h.003a1 1 0 0 0 1.993 0H14v-.057a1.01 1.01 0 0 0-.004-.117c-.055-1.25-.7-2.738-1.86-3.494a4.322 4.322 0 0 0-.211-.434c-.349-.626-.92-1.36-1.627-2.067-.707-.707-1.441-1.279-2.068-1.627-.31-.172-.62-.304-.903-.36-.262-.05-.64-.058-.918.219l-.217.216zM4.16 1.867c.381.356.844.922 1.311 1.632l-.704.705c-.382-.727-.66-1.402-.813-1.938a3.283 3.283 0 0 1-.131-.673c.091.061.204.15.337.274zm.394 3.965c.54.852 1.107 1.567 1.607 2.033a.5.5 0 1 0 .682-.732c-.453-.422-1.017-1.136-1.564-2.027l1.088-1.088c.054.12.115.243.183.365.349.627.92 1.361 1.627 2.068.706.707 1.44 1.278 2.068 1.626.122.068.244.13.365.183l-4.861 4.862a.571.571 0 0 1-.068-.01c-.137-.027-.342-.104-.608-.252-.524-.292-1.186-.8-1.846-1.46-.66-.66-1.168-1.32-1.46-1.846-.147-.265-.225-.47-.251-.607a.573.573 0 0 1-.01-.068l3.048-3.047zm2.87-1.935a2.44 2.44 0 0 1-.241-.561c.135.033.324.11.562.241.524.292 1.186.8 1.846 1.46.45.45.83.901 1.118 1.31a3.497 3.497 0 0 0-1.066.091 11.27 11.27 0 0 1-.76-.694c-.66-.66-1.167-1.322-1.458-1.847z"/>
                     </svg>
-                    Printing Information  
+                    Printing Info  
                 </th>
             </tr>
         </thead>
@@ -622,7 +631,7 @@
                         <path d="M6.705 8.139a.25.25 0 0 0-.288-.376l-1.5.5.159.474.808-.27-.595.894a.25.25 0 0 0 .287.376l.808-.27-.595.894a.25.25 0 0 0 .287.376l1.5-.5-.159-.474-.808.27.596-.894a.25.25 0 0 0-.288-.376l-.808.27.596-.894Z"/>
                         <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm-6.202-4.751 1.988-1.657a4.5 4.5 0 0 1 7.537-4.623L7.497 6.5l1 2.5 1.333 3.11c-.56.251-1.18.39-1.833.39a4.49 4.49 0 0 1-1.592-.29L4.747 14.2a7.031 7.031 0 0 1-2.949-2.951ZM12.496 8a4.491 4.491 0 0 1-1.703 3.526L9.497 8.5l2.959-1.11c.027.2.04.403.04.61Z"/>
                     </svg>
-                    Plan Information
+                    Plan Info
                 </th>
             </tr>
         </thead>
@@ -665,7 +674,7 @@
         <thead style = "border-bottom:2px solid black;">
             <tr> <th scope="col" colspan=6 class ="py-1" >
             <svg fill="#000000" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 360" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_16_" d="M205,25C119.533,25,50,94.533,50,180c0,40.473,15.599,77.365,41.092,105H0v50h210v-0.089 c83.162-2.65,150-71.117,150-154.911C360,94.533,290.467,25,205,25z M116.731,217.83c-20.893,0-37.83-16.937-37.83-37.83 s16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83S137.624,217.83,116.731,217.83z M205,306.099 c-20.893,0-37.83-16.937-37.83-37.83s16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83S225.893,306.099,205,306.099z M205,129.56 c-20.893,0-37.83-16.937-37.83-37.83c0-20.893,16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83 C242.83,112.623,225.893,129.56,205,129.56z M293.269,217.83c-20.893,0-37.83-16.937-37.83-37.83s16.937-37.83,37.83-37.83 s37.83,16.937,37.83,37.83S314.162,217.83,293.269,217.83z"></path> </g></svg>
-            Paper Information (First Job) [<?= $CTN_DATA[0]['JobNo']; ?>] </th> </tr>
+            Paper Info (First Job) [<?= $CTN_DATA[0]['JobNo']; ?>] </th> </tr>
         </thead>
         <tbody>
             <tr class ="text-center" >
@@ -684,7 +693,7 @@
             <thead style = "border-bottom:2px solid black;">
                 <tr> <th scope="col" colspan=6 class ="py-1" >
                 <svg fill="#000000" height="20px" width="20px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 360 360" xml:space="preserve"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path id="XMLID_16_" d="M205,25C119.533,25,50,94.533,50,180c0,40.473,15.599,77.365,41.092,105H0v50h210v-0.089 c83.162-2.65,150-71.117,150-154.911C360,94.533,290.467,25,205,25z M116.731,217.83c-20.893,0-37.83-16.937-37.83-37.83 s16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83S137.624,217.83,116.731,217.83z M205,306.099 c-20.893,0-37.83-16.937-37.83-37.83s16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83S225.893,306.099,205,306.099z M205,129.56 c-20.893,0-37.83-16.937-37.83-37.83c0-20.893,16.937-37.83,37.83-37.83s37.83,16.937,37.83,37.83 C242.83,112.623,225.893,129.56,205,129.56z M293.269,217.83c-20.893,0-37.83-16.937-37.83-37.83s16.937-37.83,37.83-37.83 s37.83,16.937,37.83,37.83S314.162,217.83,293.269,217.83z"></path> </g></svg>
-                    Paper Information (Second Job ) [<?= $CTN_DATA[1]['JobNo']; ?>] </th> </tr>
+                    Paper Info (Second Job ) [<?= $CTN_DATA[1]['JobNo']; ?>] </th> </tr>
             </thead>
             <tbody>
                 <tr class ="text-center" >
@@ -732,7 +741,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                     </svg>
-                Customer Information  </th>
+                Customer Info   </th>
             </tr>
         </thead>
         <tbody>
@@ -775,7 +784,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16" style = "transform:rotate(180deg)">
                         <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
                     </svg>
-                    Size Information  
+                    Product Info (mm)
                 </th>
             </tr>
         </thead>
@@ -875,7 +884,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-paint-bucket" viewBox="0 0 16 16">
                         <path d="M6.192 2.78c-.458-.677-.927-1.248-1.35-1.643a2.972 2.972 0 0 0-.71-.515c-.217-.104-.56-.205-.882-.02-.367.213-.427.63-.43.896-.003.304.064.664.173 1.044.196.687.556 1.528 1.035 2.402L.752 8.22c-.277.277-.269.656-.218.918.055.283.187.593.36.903.348.627.92 1.361 1.626 2.068.707.707 1.441 1.278 2.068 1.626.31.173.62.305.903.36.262.05.64.059.918-.218l5.615-5.615c.118.257.092.512.05.939-.03.292-.068.665-.073 1.176v.123h.003a1 1 0 0 0 1.993 0H14v-.057a1.01 1.01 0 0 0-.004-.117c-.055-1.25-.7-2.738-1.86-3.494a4.322 4.322 0 0 0-.211-.434c-.349-.626-.92-1.36-1.627-2.067-.707-.707-1.441-1.279-2.068-1.627-.31-.172-.62-.304-.903-.36-.262-.05-.64-.058-.918.219l-.217.216zM4.16 1.867c.381.356.844.922 1.311 1.632l-.704.705c-.382-.727-.66-1.402-.813-1.938a3.283 3.283 0 0 1-.131-.673c.091.061.204.15.337.274zm.394 3.965c.54.852 1.107 1.567 1.607 2.033a.5.5 0 1 0 .682-.732c-.453-.422-1.017-1.136-1.564-2.027l1.088-1.088c.054.12.115.243.183.365.349.627.92 1.361 1.627 2.068.706.707 1.44 1.278 2.068 1.626.122.068.244.13.365.183l-4.861 4.862a.571.571 0 0 1-.068-.01c-.137-.027-.342-.104-.608-.252-.524-.292-1.186-.8-1.846-1.46-.66-.66-1.168-1.32-1.46-1.846-.147-.265-.225-.47-.251-.607a.573.573 0 0 1-.01-.068l3.048-3.047zm2.87-1.935a2.44 2.44 0 0 1-.241-.561c.135.033.324.11.562.241.524.292 1.186.8 1.846 1.46.45.45.83.901 1.118 1.31a3.497 3.497 0 0 0-1.066.091 11.27 11.27 0 0 1-.76-.694c-.66-.66-1.167-1.322-1.458-1.847z"/>
                     </svg>
-                    Printing Information  
+                    Printing Info
                 </th>
                 <th class ="py-1" > 
                     Note
@@ -920,7 +929,7 @@
     </div>
 
     <div >
-        <!-- <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image"> -->
+        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
 
     </div><!-- end of card-body -->
@@ -939,7 +948,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                     </svg>
-                Customer Information  </th>
+                Customer Info </th>
             </tr>
         </thead>
         <tbody>
@@ -976,7 +985,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16" style = "transform:rotate(180deg)">
                         <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
                     </svg>
-                    Size Information  
+                    Product Info (mm)
                 </th>
             </tr>
         </thead>
@@ -1088,7 +1097,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
                         <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7Zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5.784 6A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216ZM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                     </svg>
-                Customer Information  </th>
+                Customer Info  </th>
             </tr>
         </thead>
         <tbody>
@@ -1125,7 +1134,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-rulers" viewBox="0 0 16 16" style = "transform:rotate(180deg)">
                         <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1H1z"/>
                     </svg>
-                    Size Information  
+                    Product Info (mm)
                 </th>
             </tr>
         </thead>
@@ -1290,7 +1299,6 @@
                 </div>
                 <?php endif;  ?>
             </div>
-            
           
             <div class="form-floating ">
                 <input type="number" name = "number_labor" class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
@@ -1307,6 +1315,82 @@
     </div>
   </div>
 </div>
+
+<!-- SHIFT OFFCANVAS  -->
+<div class="offcanvas offcanvas-end " style = "width:40%;"  tabindex="-1" id="offcanvasRight"  aria-labelledby="offcanvasRightLabel" >
+  <div class="offcanvas-header" >
+    <h5 id="offcanvasRightLabel">Change Shift Form</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body"  >
+    <form action="ShiftRegister.php" method = "post">
+        <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
+        <input type="hidden" name="CTNId" value = "<?=$CTN_DATA[0]['CTNId']?>">
+        <input type="hidden" name="cycle_id" value = "<?=$Cut_Qty[0]['cycle_id']?>"> 
+        <input type="hidden" name="double_job" value = "<?=$double_job?>">
+        <input type="hidden" name="EId" value = "<?=$_SESSION['EId']?>">
+
+        <div class="row">
+            <div class="col-lg-4 col-sm-12 col-md-4 ">
+                <div class="form-floating ">
+                    <input type="number" name = "produced_qty" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
+                    <label for="floatingInput">تعداد تولید</label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12 col-md-4">
+                <div class="form-floating ">
+                    <input type="number" name = "wast" class="form-control mb-3" value = ">"  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                    <label for="floatingInput"> تعداد ضایعات </label>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-12 col-md-4 ">
+                <div class="form-floating ">
+                    <input type="number" name = "labor" class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
+                    <label for="floatingInput">تعداد کارگر</label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">  نمودن  </button>
+        </div>
+    </form>
+
+    <?php 
+    // echo $CTN_DATA[0]['CTNId']; 
+    // echo "<br>"; 
+    // echo $Cut_Qty[0]['cycle_id']; 
+    // echo "<br>";
+    // echo $machine_id; 
+
+
+    $Row = $Controller->QueryData('SELECT produced_qty,wast,labor,start_date,end_date,Ename FROM machine_shift_history INNER JOIN employeet ON machine_shift_history.EId = employeet.EId  WHERE CTNId = ? AND cycle_id = ? AND machine_id = ? ',
+    [$CTN_DATA[0]['CTNId'],$Cut_Qty[0]['cycle_id'],$machine_id]);
+ 
+    ?>
+    <table class = "table table-bordered">
+        <tr>
+            <th>Opreator</th>
+            <th>Produced </th>
+            <th>Wast</th>
+            <th>Labor</th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+       <?php while($Shift = $Row->fetch_assoc()){ ?>
+        <tr>
+            <td><?= $Shift['Ename'];?></td>
+            <td><?= $Shift['produced_qty'];?></td>
+            <td><?= $Shift['wast'];?></td>
+            <td><?= $Shift['labor'];?></td>
+            <td><?= $Shift['start_date'];?></td>
+            <td><?= $Shift['end_date'];?></td>
+        </tr>  
+       <?php } ?>              
+    </table>
+    
+  </div>
+</div>
+
 
 
 <meta id = "production_start_date"  name="production_start_date" content="<?=(isset($production_start_date)) ? $production_start_date : 'NULL';?>">

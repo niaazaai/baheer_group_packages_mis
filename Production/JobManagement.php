@@ -205,7 +205,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     <table class="table table-bordered custom-font " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
-                <th scope="col" colspan=6 class ="py-1" >   Customer Information  </th>
+                <th scope="col" colspan=6 class ="py-1" >   Customer Info  </th>
             </tr>
         </thead>
         <tbody>
@@ -215,11 +215,11 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                     <div class =""><?=$Product['JobNo'];?></div>
                 </th>
                 <th scope="col" >
-                    <div  class ="text-secondary">Company Name:</div>
+                    <div  class ="text-secondary">Company:</div>
                     <div><?=$Product['CustName'];?></div>
                 </th>
                 <th scope="col">
-                    <div  class ="text-secondary">Product Name:</div>
+                    <div  class ="text-secondary">Product:</div>
                     <div><?=$Product['ProductName'];?></div>
                 </th>
 
@@ -239,8 +239,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <th scope="col">
                     <div  class ="text-secondary">Deadline:</div>
                     <div>
-                        <?php 
-                            $a =  Carbon::createFromTimeStamp(strtotime($Product['CTNFinishDate']),'Asia/Kabul')->diffForHumans();
+                        <?php  $a =  Carbon::createFromTimeStamp(strtotime($Product['CTNFinishDate']),'Asia/Kabul')->diffForHumans();
                             echo "<span class = 'badge bg-dark' style = 'font-size:11px;' >{$a}</span>";
                         ?>
                     </div>
@@ -252,7 +251,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     <table class="table table-bordered custom-font " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
-                <th scope="col" colspan=6 class ="py-1" >   Size Information  <span class = "bg-danger  text-white" style = "padding:2px; "> <?=$Product['CTNType'];?> Ply </span>   (mm) </th>
+                <th scope="col" colspan=6 class ="py-1" >   Product Info  <span class = "bg-danger  text-white" style = "padding:2px; "> <?=$Product['CTNType'];?> Ply </span>   (mm) </th>
             </tr>
         </thead>
         <tbody>
@@ -369,7 +368,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     <table class="table table-bordered custom-font " >
         <thead style = "border-bottom:2px solid black;">
             <tr>
-                <th scope="col" colspan=6 class ="py-1" >   Printing Information  </th>
+                <th scope="col" colspan=6 class ="py-1" >   Printing Info  </th>
             </tr>
         </thead>
         <tbody>
@@ -436,7 +435,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
     <table class="table table-bordered" >
         <thead style = "border-bottom:2px solid black;">
             <tr>
-                <th scope="col" colspan=6 class ="py-1 custom-font" >Plan Information</th>
+                <th scope="col" colspan=6 class ="py-1 custom-font" >Plan Info</th>
             </tr>
         </thead>
         <tbody>
@@ -488,9 +487,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
             <tr>
                 <th>
                     <div class = "d-flex justify-content-between m-0 p-0">
-                        <span class ="py-1">Paper Information
-                           
-                        </span>
+                        <span class ="py-1">Paper Info </span>
                         <span class =" "> 
                             <!-- btn btn-outline-primary m-0  -->
                             <a type="button" class="" href="AvailablePaperStock.php?CTNId=<?=$CTNId;?>" >
@@ -582,7 +579,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-info" viewBox="0 0 16 16">
                                     <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
                                 </svg>
-                            </a>  Machine Information</span>
+                            </a>  Machine Info</span>
                         <span class ="py-1">
                             <a href="CreateCycle.php?CTNId=<?=$CTNId?>" class="btn btn-outline-success btn-sm " onclick = "return confirm('آیا مطمین استید برای ایجاد  دوره جدید تولیدی برای جاب مربوطه ')" >
                                 <svg style = "transform:rotate(30deg);"  xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="p-0 m-0" viewBox="0 0 16 16">
