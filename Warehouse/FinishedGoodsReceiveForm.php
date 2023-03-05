@@ -188,11 +188,11 @@ use Carbon\Carbon;
         </div> <!-- end of row  -->
 
         <form action="" method="POST" class = "m-0 p-0" >
-                    <div class = "d-flex justify-content-end" >
-                    <input type="submit" name="Save&submit" class="btn btn-outline-primary" value="Stock in">
-                    <input type="submit" name="Reject" class="btn btn-outline-danger ms-2" value="Reject">
-                    </div>
-            </form>
+            <div class = "d-flex justify-content-end" >
+                <input type="submit" name="Save&submit" class="btn btn-outline-primary" value="Stock in">
+                <input type="submit" name="Reject" class="btn btn-outline-danger ms-2" value="Reject">
+            </div>
+        </form>
     </div><!-- end of card-body  -->
 </div><!-- end of card -->
  
