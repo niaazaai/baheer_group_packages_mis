@@ -12,8 +12,40 @@ isset($_REQUEST['cycle_id']) &&  !empty($_REQUEST['cycle_id'])  ) {
     $number_labor = (int) $Controller->CleanInput($_REQUEST['number_labor']);
     $machine_id = $Controller->CleanInput($_REQUEST['machine_id']);
 
-    // var_dump($_REQUEST['wast_qty']); 
-    // die(); 
+
+    // THIS BLOCK OF CODE IS USED WHEN THE OPERATOR WANTS TO END THE JOB AND SHIFT AT THE SAME TIME 
+    if(isset($_REQUEST['last_shift']) && !empty($_REQUEST['last_shift'])) {
+        if($_REQUEST['last_shift'] == 'LAST_SHIFT') {
+
+
+            // CHECK IF WE ALREADY HAVE THE RECORD OR NOT 
+            $Row = $Controller->QueryData('SELECT * FROM machine_shift_history 
+            WHERE CTNId = ? AND cycle_id = ? AND machine_id = ? AND EId = ?',
+            [$_REQUEST['CTNId'][0] ,$_REQUEST['cycle_id'][0] ,$_REQUEST['machine_id'] , $_REQUEST['shift_eid'] ]);
+            
+            if($Row->num_rows > 0 ) {
+                echo "Do Nothing !";  // WE DON'T NEED TO REDIRECT BECAUSE WE NEED DO OTHER OPERATION 
+                // header("Location:JobProcess.php?msg=Shift already exist&class=danger&CTNId=" .$_REQUEST['CTNId'] ."&CYCLE_ID=" .$_REQUEST['cycle_id'] ."&machine_id=" .$_REQUEST['machine_id'] ."&double_job=" . $double_job ); 
+            }
+            else {
+                $con = $Controller->QueryData('INSERT INTO 
+                machine_shift_history (`CTNId`, `cycle_id`, `machine_id`, `EId`, `produced_qty`, `wast`, `labor`, `start_date`, `end_date` )
+                VALUES (?,?,?,?,?,?,?,?,?)',
+                [
+                    $_REQUEST['CTNId'][0]  ,
+                    $_REQUEST['cycle_id'][0] ,
+                    $_REQUEST['machine_id'] , 
+                    $_REQUEST['shift_eid'] , 
+                    $_REQUEST['shift_produced_qty'] ,
+                    $_REQUEST['shift_wast_qty'] ,
+                    $_REQUEST['shift_labor'] , 
+                    date("Y-m-d H:i:s") , // ABOUT DATE PLEASE TAKE THE CLOCK IN OF ATTENDANCE FOR START OF SHIFT ( start_date )
+                    date("Y-m-d H:i:s")   
+                ]);
+            }
+
+        } // end of LAST_SHIFT 
+    }// end of last shift isset and empty block 
     
     $flag = true; 
     foreach ($_REQUEST['cycle_id'] as $key => $cycle_id) {
@@ -44,9 +76,8 @@ isset($_REQUEST['cycle_id']) &&  !empty($_REQUEST['cycle_id'])  ) {
     }
 
     if($flag)  { 
-        // header('Location:JobProcess.php?CTNId='. $_REQUEST['CTNId'][0] .'&CYCLE_ID='.$_REQUEST['cycle_id'][0] . '&machine_id=' . $machine_id .'&double_job='.$double_job   );
-        header('Location:JobUnderProcess.php');
-
+        header('Location:JobProcess.php?CTNId='. $_REQUEST['CTNId'][0] .'&CYCLE_ID='.$_REQUEST['cycle_id'][0] . '&machine_id=' . $machine_id .'&double_job='.$double_job   );
+        // header('Location:JobUnderProcess.php');
     }
     else {
         die('<h3> Somthing Went Wrong</h3>'); 

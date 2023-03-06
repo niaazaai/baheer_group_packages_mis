@@ -114,10 +114,13 @@ $SQL='';
                 $To = date('Y-m-d Th:i:s' , strtotime($_POST['To'])); 
                 $From = date('Y-m-d Th:i:s' , strtotime($_POST['From'])); 
             
-                $SQL=$Controller->QueryData("SELECT `GidPkg`, `IdStockOutPkg`,CtnoutId,OutDateTime, gatepasspkg.`EmpId`, `OutTime`, `GatepassStatus`,carton.JobNo,CTNQTY,ppcustomer.CustName, carton.ProductName, cartonproduction.ProSize, 
-                cartonstockout.CtnOutQty,cartonstockout.CtnDriverName, cartonstockout.CtnCarName, cartonstockout.CtnDriverMobileNo, cartonstockout.CtnCarNo, OutTime FROM `gatepasspkg` 
+                $SQL=$Controller->QueryData("SELECT `GidPkg`, `IdStockOutPkg`,CtnoutId,OutDateTime, gatepasspkg.`EmpId`, `OutTime`, `GatepassStatus`,carton.JobNo,CTNQTY,ppcustomer.CustName,
+                carton.ProductName, cartonproduction.ProSize,cartonstockout.CtnOutQty,cartonstockout.CtnDriverName, cartonstockout.CtnCarName, cartonstockout.CtnDriverMobileNo, cartonstockout.CtnCarNo,OutTime 
+                FROM `gatepasspkg` 
                 INNER JOIN employeet ON employeet.EId=gatepasspkg.EmpId
-                INNER JOIN cartonstockout ON cartonstockout.CtnoutId=gatepasspkg.IdStockOutPkg INNER JOIN carton ON carton.CTNId=cartonstockout.CtnJobNo INNER JOIN ppcustomer ON ppcustomer.CustId=cartonstockout.CtnCustomerId 
+                INNER JOIN cartonstockout ON cartonstockout.CtnoutId=gatepasspkg.IdStockOutPkg 
+                INNER JOIN carton ON carton.CTNId=cartonstockout.CtnJobNo 
+                INNER JOIN ppcustomer ON ppcustomer.CustId=cartonstockout.CtnCustomerId 
                 INNER JOIN cartonproduction ON cartonproduction.ProId=cartonstockout.PrStockId WHERE GatepassStatus='Carton Out' AND OutTime between ? AND ? ",[$From,$To]); 
         
     

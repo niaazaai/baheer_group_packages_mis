@@ -72,7 +72,10 @@
                 array_push($CTN_DATA,$Row);
                 array_push($UsedPaper,$Controller->QueryData('SELECT * FROM used_paper WHERE carton_id = ?', [$um['double_job_carton_id']])->fetch_assoc());
                 array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty,cycle_plan_qty FROM production_cycle WHERE cycle_id = ?', [$um['cycle_id']])->fetch_assoc());
-            }
+            }// end of while 
+
+
+            
         }
 
         /*
@@ -84,7 +87,6 @@
         */
 
         $selected_machine  = $Controller->QueryData('SELECT * FROM machine WHERE machine_id = ? ' , [$machine_id]); 
-        // var_dump( );
         
         $machine_ = '';  
         if($selected_machine->num_rows > 0) {
@@ -111,10 +113,8 @@
                 // echo $mph['status'];
                 // echo "<br>";
                 $machine_state =  trim($mph['status']);
-
                 if( $machine_state == 'Start Configuration') {
                    $production_start_date =  $mph['start_time']; 
-                  
                 }
             }
         }
@@ -129,14 +129,14 @@
         switch ($machine_state) {
 
             case 'first time':
-                $button = '<button type="submit"  class = "btn btn-warning mt-3" > اماده نمودن ماشین  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
+                $button = '<button type="submit"  class = "btn btn-warning  " > اماده نمودن ماشین  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
                 <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3c0-.269-.035-.53-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814L1 0Zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708ZM3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026L3 11Z"/>
               </svg> </button>'; 
                 $status = 'Start Configuration'; 
                 break;
                 
             case 'Start Configuration':
-                $button = '<button type="submit"  class = "btn btn-success mt-3 " onclick = "return confirm(`😕 آیا مطمین استید برای شروع تولید؟ 😕`);" > شروع تولید 
+                $button = '<button type="submit"  class = "btn btn-success  " onclick = "return confirm(`😕 آیا مطمین استید برای شروع تولید؟ 😕`);" > شروع تولید 
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-play-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                     <path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445z"/>
@@ -145,7 +145,8 @@
                 break;
                 
             case 'Job Completed':
-                $button = '<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class = "btn btn-outline-success mt-3"  > مرحله تکمیل شد </button>';
+                // $button = '<button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class = "btn btn-outline-success mt-3"  > مرحله تکمیل شد </button>';
+                $button = '<span class = "btn btn-outline-success " style = "border-radius:0px;"> تولید در ماشین تکمیل شد</span>';
                 $status = 'Job Completed'; 
             break;
 
@@ -265,6 +266,8 @@
             </h4>
         </div>
       
+     
+
         <span>
             <span class=  "p-1 pb-2 me-3 fs-4" style = "border-bottom:3px dotted <?=$class?>;">
                 <?php 
@@ -287,6 +290,12 @@
 
     </div>
 </div>
+<?php  if(isset($_GET['msg'])) {  ?>
+            <div class="alert  alert-dismissible fade show m-3 alert-<?php if(isset($_GET['class'])) echo $_GET['class'];  ?>" role="alert">
+                <strong>Message: </strong> <?=$_GET['msg']?>! 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
 
 <div class="card m-3 shadow">
     <div class="card-body">
@@ -312,34 +321,61 @@
                 <div class = "bg-dark text-center" style = "width:230px;border-radius:5px;font-family: 'seven-segment';" >
                     <span id = "clock" class="countup-timer m-0  pt-1 px-1" ></span>
                 </div>
-                
-                <div class = "" >
-                    
-                
-
-                    <form action="MachineProductionHistory.php" class = "d-flex justify-content-end "  method="post"  >
-                        <input type="hidden" name="status" id = "status"  value = "<?=(isset($status) && !empty($status)) ? $status : 'configure machine';?>" >
-                        <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
-                        <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[0]['CTNId']?>">
-                        <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[0]['cycle_id']?>">
-                        <input type="hidden" name="double_job" value = "<?=$double_job?>">
-                        <?php if(isset($CTN_DATA[1])): ?>
-                            <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[1]['CTNId']?>">
-                            <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[1]['cycle_id']?>">
-                        <?php endif;  ?>
-                        <?=$button?>
-                        <div class = "mt-3 ms-2" >
-                            <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">تبدیل شفت</a>
-                        </div>
-                    </form> 
-
-                </div>
+                <form action="MachineProductionHistory.php"  method="post"  >
+                    <input type="hidden" name="status" id = "status"  value = "<?=(isset($status) && !empty($status)) ? $status : 'configure machine';?>" >
+                    <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
+                    <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[0]['CTNId']?>">
+                    <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[0]['cycle_id']?>">
+                    <input type="hidden" name="double_job" value = "<?=$double_job?>">
+                    <?php if(isset($CTN_DATA[1])): ?>
+                        <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[1]['CTNId']?>">
+                        <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[1]['cycle_id']?>">
+                    <?php endif;  ?>
+                    <?=$button?>
+                </form> 
+               
             </div>
 
         </div>
+
+        
+
     </div>
 </div>
 
+<div class = "card m-3 shadow">
+    <div class="card-body d-flex justify-content-end  ">
+        <div>
+            <a class="btn mx-3" style = "background-color:#6610f2; color:white; " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                نمایش تولید گذشته ماشین ها
+            </a>
+        </div>
+
+        <div   >
+            <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">ثبت تعداد تولید</a>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="collapse shadow m-3" id="collapseExample">
+  <div class="card card-body">
+                        
+    <?php 
+      $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
+      while($um = $used_machine->fetch_assoc()){
+        // var_dump($um['machine_name'] , $um['produced_qty'] ); 
+
+        echo $um['machine_name']  . ' - '.   $um['produced_qty']  . ' - '.   $um['wast_qty'] ; 
+        echo "<br>"; 
+      }// end of while 
+
+    ?>
+  
+
+  </div>
+</div>
 
 
 
@@ -1236,6 +1272,32 @@
 
 <?php $show_double_input = false ; if(isset($CTN_DATA[1]))  $show_double_input = true;   ?>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- Modal -->
 <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog <?=($show_double_input) ? 'modal-lg': '' ; ?>">
@@ -1251,6 +1313,12 @@
             <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
             <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[0]['CTNId']?>">
             <input type="hidden" name="cycle_id[]" value = "<?=$Cut_Qty[0]['cycle_id']?>">
+
+            <input type="hidden" name="last_shift" id = "last_shift">
+            <input type="hidden" name="shift_wast_qty" id = "shift_wast_qty1">
+            <input type="hidden" name="shift_produced_qty" id = "shift_produced_qty1">
+            <input type="hidden" name="shift_labor" id = "shift_labor1">
+            <input type="hidden" name="shift_eid" value = "<?=$_SESSION['EId']?>" >
 
             <?php if(isset($CTN_DATA[1])): ?>
                 <input type="hidden" name="CTNId[]" value = "<?=$CTN_DATA[1]['CTNId']?>">
@@ -1269,31 +1337,31 @@
             <div class="row">
                 <div class="<?=($show_double_input) ? 'col-lg-6': 'col-lg-12' ; ?> col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
+                        <input type="number" name = "produced_qty[]" readonly id = "final_produced_qty" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
                         <label for="floatingInput">تعداد تولید</label>
                     </div>
                 </div>
                 <?php if(isset($CTN_DATA[1])): ?>
                 <div class="col-lg-6 col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "produced_qty[]" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
+                        <input type="number" name = "produced_qty[]" readonly class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
                         <label for="floatingInput">تعداد تولید</label>
                     </div>
                 </div>
-                <?php endif;  ?>
+                <?php endif; ?>
             </div>
 
             <div class="row">
                 <div class="<?=($show_double_input) ? 'col-lg-6': 'col-lg-12' ; ?> col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = ">"  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                        <input type="number" name = "wast_qty[]"  readonly id = "final_wast_qty" class="form-control mb-3" placeholder="تعداد ضایعات" aria-label="produced_qty">
                         <label for="floatingInput"> تعداد ضایعات </label>
                     </div>
                 </div>
                 <?php if(isset($CTN_DATA[1])): ?>
                 <div class="col-lg-6 col-sm-12">
                     <div class="form-floating ">
-                        <input type="number" name = "wast_qty[]" class="form-control mb-3" value = ""  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                        <input type="number" name = "wast_qty[]" readonly class="form-control mb-3" value = ""  placeholder="تعداد ضایعات" aria-label="produced_qty">
                         <label for="floatingInput"> تعداد ضایعات </label>
                     </div>
                 </div>
@@ -1301,7 +1369,7 @@
             </div>
           
             <div class="form-floating ">
-                <input type="number" name = "number_labor" class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
+                <input type="number" name = "number_labor" readonly class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
                 <label for="floatingInput">تعداد کارگر</label>
             </div>
 
@@ -1316,57 +1384,77 @@
   </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- SHIFT OFFCANVAS  -->
 <div class="offcanvas offcanvas-end " style = "width:40%;"  tabindex="-1" id="offcanvasRight"  aria-labelledby="offcanvasRightLabel" >
   <div class="offcanvas-header" >
-    <h5 id="offcanvasRightLabel">Change Shift Form</h5>
+    <h5 id="offcanvasRightLabel">برای تبدیل نموند شتف خویش از این فور و گزینه استفاده نمایید</h5>
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body"  >
     <form action="ShiftRegister.php" method = "post">
-        <input type="hidden" name="machine_id" value = "<?=$machine_id?>" >
-        <input type="hidden" name="CTNId" value = "<?=$CTN_DATA[0]['CTNId']?>">
-        <input type="hidden" name="cycle_id" value = "<?=$Cut_Qty[0]['cycle_id']?>"> 
-        <input type="hidden" name="double_job" value = "<?=$double_job?>">
-        <input type="hidden" name="EId" value = "<?=$_SESSION['EId']?>">
-
+        <input type="hidden" name = "machine_id" value = "<?=$machine_id?>" >
+        <input type="hidden" name = "CTNId" value = "<?=$CTN_DATA[0]['CTNId']?>">
+        <input type="hidden" name = "cycle_id" value = "<?=$Cut_Qty[0]['cycle_id']?>"> 
+        <input type="hidden" name = "double_job" value = "<?=$double_job?>">
+        <input type="hidden" name = "EId" value = "<?=$_SESSION['EId']?>">
+        <input type="hidden" name = "start_date"  value = "<?=$_SESSION['last_login_timestamp']?>">
+        
+        <?php if(trim($machine_['machine_name']) == 'Carrogation 5 Ply'  || trim($machine_['machine_name']) == 'Carrogation 3 Ply') { ?>
+            <div class="alert alert-danger" role="alert">
+                <strong class = "text-danger " style = "font-size:13px;" >لطف نموده مقدار کت را ذخیره نمایید</strong>
+            </div>
+        <?php } ?>
+               
         <div class="row">
             <div class="col-lg-4 col-sm-12 col-md-4 ">
                 <div class="form-floating ">
-                    <input type="number" name = "produced_qty" class="form-control mb-3" value = "" placeholder="تعداد تولید" aria-label="produced_qty">
-                    <label for="floatingInput">تعداد تولید</label>
+                    <input type="number" name = "produced_qty" id = "shift_produced_qty"class="form-control mb-3"   placeholder="تعداد تولید" aria-label="produced_qty">
+                    <?php if(trim($machine_['machine_name']) == 'Carrogation 5 Ply'  || trim($machine_['machine_name']) == 'Carrogation 3 Ply') { ?>
+                        <label for="floatingInput">مقدار کت</label>
+                    <?php } else { ?>
+                        <label for="floatingInput">تعداد تولید</label>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 col-md-4">
                 <div class="form-floating ">
-                    <input type="number" name = "wast" class="form-control mb-3" value = ">"  placeholder="تعداد ضایعات" aria-label="produced_qty">
+                    <input type="number" name = "wast"  id = "shift_wast_qty" class="form-control mb-3"   placeholder="تعداد ضایعات" aria-label="produced_qty">
                     <label for="floatingInput"> تعداد ضایعات </label>
                 </div>
             </div>
             <div class="col-lg-4 col-sm-12 col-md-4 ">
                 <div class="form-floating ">
-                    <input type="number" name = "labor" class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
+                    <input type="number" name = "labor" id = "shift_labor" class="form-control mb-3" value = "18" placeholder="تعداد کارگر" aria-label="produced_qty">
                     <label for="floatingInput">تعداد کارگر</label>
                 </div>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary">  نمودن  </button>
+      
+
+        <div class="modal-footer" class= "d-flex justify-content-start" >
+            <div> <button type="submit" class="btn btn-primary">ثبت و تبدیل شفت</button></div>
+            <div> <button type="button" onclick = "GetProductionAmount()" data-bs-toggle="modal" data-bs-target="#exampleModal" class = "btn btn-outline-success">تکمیل نمودن جاب</button></div>
         </div>
     </form>
 
     <?php 
-    // echo $CTN_DATA[0]['CTNId']; 
-    // echo "<br>"; 
-    // echo $Cut_Qty[0]['cycle_id']; 
-    // echo "<br>";
-    // echo $machine_id; 
-
-
-    $Row = $Controller->QueryData('SELECT produced_qty,wast,labor,start_date,end_date,Ename FROM machine_shift_history INNER JOIN employeet ON machine_shift_history.EId = employeet.EId  WHERE CTNId = ? AND cycle_id = ? AND machine_id = ? ',
-    [$CTN_DATA[0]['CTNId'],$Cut_Qty[0]['cycle_id'],$machine_id]);
- 
+        $Row = $Controller->QueryData('SELECT produced_qty,wast,labor,start_date,end_date,Ename FROM machine_shift_history INNER JOIN employeet ON machine_shift_history.EId = employeet.EId  WHERE CTNId = ? AND cycle_id = ? AND machine_id = ? ',
+        [$CTN_DATA[0]['CTNId'],$Cut_Qty[0]['cycle_id'],$machine_id]);
     ?>
+    <div class = "h5">  لست شفت های گذشته  </div>
+    <hr>
     <table class = "table table-bordered">
         <tr>
             <th>Opreator</th>
@@ -1376,7 +1464,7 @@
             <th>Start</th>
             <th>End</th>
         </tr>
-       <?php while($Shift = $Row->fetch_assoc()){ ?>
+       <?php $total_produced = 0 ; $total_wast = 0;  while($Shift = $Row->fetch_assoc()){ ?>
         <tr>
             <td><?= $Shift['Ename'];?></td>
             <td><?= $Shift['produced_qty'];?></td>
@@ -1385,9 +1473,18 @@
             <td><?= $Shift['start_date'];?></td>
             <td><?= $Shift['end_date'];?></td>
         </tr>  
-       <?php } ?>              
+       <?php    $total_produced +=  $Shift['produced_qty'] ;
+                $total_wast +=  $Shift['wast'] ; } 
+        ?>      
+
+       <tr>
+        <td>Total</td>
+        <td id = "total_produced"><?=$total_produced?></td>
+        <td id = "total_wast"><?=$total_wast?></td>
+       </tr>
     </table>
     
+
   </div>
 </div>
 
@@ -1427,6 +1524,24 @@
         stat.value = status; 
         if(confirm('ایا مطمین استید برای متوقف نمودن تولید؟')) stat.form.submit(); 
         else return ; 
+    }
+</script>
+<script>
+    function GetProductionAmount() {
+        let shift_pro_qty   = Number(document.getElementById('shift_produced_qty').value); 
+        let shift_wast_qty  = Number(document.getElementById('shift_wast_qty').value); 
+        let shift_labor     = Number(document.getElementById('shift_labor').value); 
+        let total_pro_qty   = Number(document.getElementById('total_produced').innerHTML) ; 
+        let total_wast_qty  = Number(document.getElementById('total_wast').innerHTML) ; 
+
+        document.getElementById('final_produced_qty').value  = shift_pro_qty + total_pro_qty ; 
+        document.getElementById('final_wast_qty').value = shift_wast_qty + total_wast_qty ; 
+        
+        document.getElementById('last_shift').value = 'LAST_SHIFT'; 
+        document.getElementById('shift_wast_qty1').value = Number(document.getElementById('shift_wast_qty').value);
+        document.getElementById('shift_produced_qty1').value = Number(document.getElementById('shift_produced_qty').value);
+        document.getElementById('shift_labor1').value = Number(shift_labor);
+
     }
 </script>
 

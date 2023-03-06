@@ -7,12 +7,44 @@
     }
     require_once '../App/partials/Menu/MarketingMenu.inc';
 
+    if(isset($_POST['Update']) && !empty($_POST['Update']))
+    {
+        $ProId=$_POST['ProId'];
+        $Plate=$_POST['Plate'];
+        $Line=$_POST['Line'];
+        $Pack=$_POST['Pack'];
+        $ExtraPack=$_POST['ExtraPack']; 
+        $Carton=$_POST['Carton'];
+        $ExtraCarton=$_POST['ExtraCarton']; 
+
+        $Select=$Controller->QueryData("SELECT Plate , `Line`, Pack  , ExtraPack , Carton , ExtraCarton WHERE ProId=?",[$ProId]);
+        $Data=$Select->fetch_assoc();
+       
+        $Update=$Controller->QueryData("UPDATE cartonproduction SET Plate = ?, `Line` = ?, Pack = ? , ExtraPack = ?, Carton = ? , ExtraCarton = ? WHERE ProId = ? ",[$Plate,$Line,$Pack,$ExtraPack,$Carton,$ExtraCarton,$ProId]);
+        if($Update) 
+        { 
+            // this block will get the carton produced qty and update it with new value. 
+            $Produced_QTY =  $Controller->QueryData("SELECT ProductQTY , CTNId  FROM carton WHERE CTNId = ? ",[$_REQUEST['CTNId']]);
+
+            $PQTY  = $Produced_QTY->fetch_assoc()['ProductQTY'] ;  
+            $PQTY += $_REQUEST['Total'];
+
+            $Update_produced = $Controller->QueryData("UPDATE carton SET ProductQTY = ? WHERE CTNId = ? ",[ $PQTY , $_REQUEST['CTNId'] ]);
+            if($Update_produced && $pro_cycle && $Produced_QTY) header('Location:FinishList.php?msg=Data Saved Successfully&class=success'); 
+            
+        }
+        
+
+      
+
+    }
+
     $DataRows=$Controller->QueryData("SELECT  carton.JobNo , carton.CTNId , carton.CTNQTY , carton.ProductName , ppcustomer.CustName , cartonproduction.ProId ,cartonproduction.CtnId1 ,cartonproduction.CompId 
-                                              ,cartonproduction.ProQty ,ProOutQty,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton,ExtraCarton  ,DesignImage,CustId1
+                                              ,cartonproduction.ProQty,cartonproduction.ProId ,ProOutQty,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton,ExtraCarton  ,DesignImage,CustId1
       FROM cartonproduction INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 INNER JOIN ppcustomer ON  cartonproduction.CompId = ppcustomer.CustId INNER JOIN designinfo ON carton.CTNId = designinfo.CaId 
       WHERE ProStatus='Pending'",[]) ;
 
- 
+
 
 ?>
 <style>
@@ -76,7 +108,7 @@
                             <td> 
                             
                                                                                                                                                           
-                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['CustId1']?> ,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>,<?=$Rows['Plate']?>,<?=$Rows['Line']?>,<?=$Rows['Pack']?>,<?=$Rows['ExtraPack']?>,<?=$Rows['Carton']?>,<?=$Rows['ExtraCarton']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-success btn-sm ">   
+                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['ProId']?>,<?=$Rows['CustId1']?> ,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>,<?=$Rows['Plate']?>,<?=$Rows['Line']?>,<?=$Rows['Pack']?>,<?=$Rows['ExtraPack']?>,<?=$Rows['Carton']?>,<?=$Rows['ExtraCarton']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-success btn-sm ">   
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
                                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                                     </svg> Register
@@ -97,6 +129,7 @@
     </div>
 </div>
 
+ 
 <!-- Modal : for registering cycle production -->
 <div class="modal fade " id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -105,10 +138,11 @@
         <strong class="modal-title text-end" id="exampleModalLabel"> Cycle Finish Goods Form</strong>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="RegisterCycleToCartonProduction.php" method = "post" >
+      <form action="" method = "post" >
         <input type="hidden" name="CustId" id = "FJL_cust_id"  >
         <input type="hidden" name="CYCLE_ID" id = "FJL_cycle_id" >
         <input type="hidden" name="CTNId" id = "FJL_ctn_id" >
+        <input type="hidden" name="ProId" id="ProId" value="">
 
         <div class="modal-body">
             <div class="row mb-3 d-flex justify-content-center">
@@ -130,7 +164,7 @@
             <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-lg-12">
                     <div class="form-floating ">
-                        <input type="text"  class="form-control " readonly placeholder  = "Product Name" id = "FJL_product_name"     >
+                        <input type="text"  class="form-control " readonly placeholder  = "Product Name" id = "FJL_product_name"  >
                         <label for="floatingInput">Product Name </label>
                     </div>
                 </div>
@@ -151,18 +185,16 @@
                 </div>
                 <div class="col-lg-3">
                     <div class="form-floating ">
-                        <input type="text" name = "Pack" name="Pack" class="form-control "  onchange = "InputValue(this.name , this.value)" placeholder  = "Pack" >
+                        <input type="text" name = "Pack"  id="Pack" class="form-control "  onchange = "InputValue(this.name , this.value)" placeholder  = "Pack" >
                         <label for="floatingInput">Pack</label>
                     </div>
                 </div>
                 <div class="col-lg-3">
 
                 <div class="form-floating ">
-                        <input type="text" name = "ExtraPack" id="ExtraPack" class="form-control" placeholder  = "Ex Packs" id = "ExtraPack"   onchange = "InputValue(this.name , this.value)"  >
+                        <input type="text" name = "ExtraPack" id="ExtraPack" class="form-control" placeholder  = "Ex Packs"     onchange = "InputValue(this.name , this.value)"  >
                         <label for="floatingInput">Ex Packs</label>
-                    </div>
-
-                   
+                    </div> 
                 </div>
             </div>
 
@@ -175,13 +207,13 @@
                 </div>
                 <div class="col-lg-4">
                     <div class="form-floating ">
-                        <input type="text" name = "Carton" id="Carton" class="form-control " id = "Carton" placeholder  = "Per Packs" onchange = "InputValue(this.name , this.value)" >
+                        <input type="text" name = "Carton"  id = "Carton" class="form-control "  placeholder  = "Per Packs" onchange = "InputValue(this.name , this.value)" >
                         <label for="floatingInput">Per Packs</label>
                     </div>
                 </div>
                 <div class="col-lg-4">
                     <div class="form-floating ">
-                        <input type="text" name = "ExtraCarton" id="ExtraCarton" class="form-control " id = "ExtraCarton"   placeholder  = "Extra Carton" onchange = "InputValue(this.name , this.value)"  >
+                        <input type="text" name = "ExtraCarton"   class="form-control " id = "ExtraCarton"   placeholder  = "Extra Carton" onchange = "InputValue(this.name , this.value)"  >
                         <label for="floatingInput">Extra Carton  </label>
                     </div>
                 </div>
@@ -210,7 +242,7 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-outline-primary">Save Cycle</button>
+            <input type="submit" class="btn btn-outline-primary" name="Update" value="Update">
         </div>
       </form>
     </div>
@@ -221,7 +253,8 @@
 
 
 <script>
-    function search(InputId ,tableId )  {
+    function search(InputId ,tableId ) 
+    {
         var input, filter, table, tr, td, i, txtValue;
         input = document.getElementById(InputId);
         filter = input.value.toUpperCase();
@@ -229,14 +262,19 @@
         tr = table.getElementsByTagName("tr");
 
         // Loop through all table rows, and hide those who don't match the search query
-        for (i = 1; i < tr.length; i++) {
+        for (i = 1; i < tr.length; i++) 
+        {
             td = tr[i];
-            if (td) {
+            if (td) 
+            {
                 txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-                } else {
-                tr[i].style.display = "none";
+                if (txtValue.toUpperCase().indexOf(filter) > -1) 
+                {
+                    tr[i].style.display = "";
+                } 
+                else 
+                {
+                    tr[i].style.display = "none";
                 }
             }
         }
@@ -244,30 +282,33 @@
 
    
     
-    function AddCycleForCProduction(CustId , CTNId , JobNo , ProductName , CTNQTY, Plate, Line, Pack, ExtraPack, Carton, ExtraCarton){
+    function AddCycleForCProduction(proid ,CustId , CTNId , JobNo , ProductName , CTNQTY, Plate, Line, Pack, ExtraPack, Carton, ExtraCarton)
+    {
        
         document.getElementById('FJL_cust_id').value = CustId; 
         document.getElementById('FJL_ctn_id').value = CTNId; 
         document.getElementById('FJL_job_no').value = JobNo; 
         document.getElementById('FJL_product_name').value = ProductName; 
-        document.getElementById('FJL_order_qty').value = CTNQTY; 
-
+        document.getElementById('FJL_order_qty').value = CTNQTY;  
         document.getElementById('Plate').value = Plate; 
         document.getElementById('Line').value = Line; 
         document.getElementById('Pack').value = Pack; 
         document.getElementById('ExtraPack').value = ExtraPack; 
         document.getElementById('Carton').value = Carton; 
         document.getElementById('ExtraCarton').value = ExtraCarton; 
+        document.getElementById('ProId').value=proid;
 
     }
 
     let total = {}; 
-    function InputValue(name , value)   {
+    function InputValue(name , value)   
+    {
         total[name] = value; 
         CalculatePlates(); 
     }
     
-    function CalculatePlates(){
+    function CalculatePlates()
+    {
         let TotalPacks = 0 ; 
         let FinalTotal = 0 ; 
         TotalPacks = ( Number(total.Plate) * Number(total.Line) * Number(total.Pack) ) + Number(total.ExtraPack)  ;

@@ -18,25 +18,24 @@ if(
     $Row = $Controller->QueryData('SELECT * FROM machine_shift_history 
     WHERE CTNId = ? AND cycle_id = ? AND machine_id = ? AND EId = ?',
     [$_REQUEST['CTNId'] ,$_REQUEST['cycle_id'] ,$_REQUEST['machine_id'] , $_REQUEST['EId'] ]);
-
     
     if($Row->num_rows > 0 ) {
-        var_dump($_REQUEST); 
-        // echo "Update";
+        header("Location:JobProcess.php?msg=Shift already exist&class=danger&CTNId=" .$_REQUEST['CTNId'] ."&CYCLE_ID=" .$_REQUEST['cycle_id'] ."&machine_id=" .$_REQUEST['machine_id'] ."&double_job=" . $double_job ); 
     }
     else {
-        // echo "insert new ";
+        $con = $Controller->QueryData('INSERT INTO machine_shift_history (`CTNId`, `cycle_id`, `machine_id`, `EId`, `produced_qty`, `wast`, `labor`, `start_date`, `end_date` )
+        VALUES (?,?,?,?,?,?,?,?,?)',
+        [
+            $_REQUEST['CTNId'] ,$_REQUEST['cycle_id'] ,$_REQUEST['machine_id'] , $_REQUEST['EId'] , 
+            $_REQUEST['produced_qty'] ,$_REQUEST['wast'] ,$_REQUEST['labor'] , 
+            gmdate("Y-m-d H:i:s", $_REQUEST['start_date']) ,date("Y-m-d H:i:s") 
+        ]);
 
-        // INSERT INTO `machine_shift_history`(`id`, `CTNId`, `cycle_id`, `machine_id`, `EId`, `produced_qty`, `wast`, `labor`, `start_date`, `end_date`) 
-        //VALUES ('[value-1]','[value-2]','[value-3]','[value-4]','[value-5]','[value-6]','[value-7]','[value-8]','[value-9]','[value-10]')
-$Controller->QueryData('INSERT INTO machine_shift_history  (`CTNId`, `cycle_id`, `machine_id`, `EId`, `produced_qty`, `wast`, `labor`, `start_date`, `end_date` )
-        VALUES (?,?,?,?,?,?,?,?,?,?) ',
-        [$_REQUEST['CTNId'] ,$_REQUEST['cycle_id'] ,$_REQUEST['machine_id'] , $_REQUEST['EId'] ]);
+        if($con) {
+            header("Location:JobProcess.php?msg=shift changed successfully&class=success&CTNId=" .$_REQUEST['CTNId'] ."&CYCLE_ID=" .$_REQUEST['cycle_id'] ."&machine_id=" .$_REQUEST['machine_id'] ."&double_job=" . $double_job );
+        }
+        else  header("Location:JobProcess.php?msg=Somthing went wrong&class=danger&CTNId=" .$_REQUEST['CTNId'] ."&CYCLE_ID=" .$_REQUEST['cycle_id'] ."&machine_id=" .$_REQUEST['machine_id'] ."&double_job=" . $double_job ); 
     }
-
-
-
-
 }
 
 
