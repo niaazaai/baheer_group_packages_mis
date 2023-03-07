@@ -57,7 +57,6 @@ $SQL='';
 
 
 
- 
 
 
  <div class="card m-3 shadow">
@@ -70,7 +69,7 @@ $SQL='';
                 </div>
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12  ">
                     <label for="From" class="fw-bold pb-1">To</label>
-                    <input type="date" name="To" id='To' class="form-control" onfocusout="this.form.submit()">
+                    <input type="date" name="To" id='To' class="form-control" onchange="this.form.submit()">
                 </div>
             
               
@@ -83,10 +82,6 @@ $SQL='';
     </div>                
  </div>
    
-
- 
-
-
  
 <div class="card m-3 shadow ">
   <div class="card-body d-flex justify-content-between ">
@@ -110,40 +105,40 @@ $SQL='';
             <?php
             if(isset($_POST['From']) && isset($_POST['To']) && !empty($_POST['From']) && !empty($_POST['To']))
             { 
-        
-                $To = date('Y-m-d Th:i:s' , strtotime($_POST['To'])); 
-                $From = date('Y-m-d Th:i:s' , strtotime($_POST['From'])); 
+                
+                $To = date('Y-m-d' , strtotime($_POST['To'])); 
+                $From = date('Y-m-d' , strtotime($_POST['From'])); 
+
+                
             
-                $SQL=$Controller->QueryData("SELECT `GidPkg`, `IdStockOutPkg`,CtnoutId,OutDateTime, gatepasspkg.`EmpId`, `OutTime`, `GatepassStatus`,carton.JobNo,CTNQTY,ppcustomer.CustName,
-                carton.ProductName, cartonproduction.ProSize,cartonstockout.CtnOutQty,cartonstockout.CtnDriverName, cartonstockout.CtnCarName, cartonstockout.CtnDriverMobileNo, cartonstockout.CtnCarNo,OutTime 
+                $SQL=$Controller->QueryData("SELECT `GidPkg`, `IdStockOutPkg`,CtnoutId,OutDateTime, gatepasspkg.`EmpId`, `OutTime`, `GatepassStatus`,carton.JobNo,CTNQTY,ppcustomer.CustName, carton.ProductName, cartonproduction.ProSize, 
+                cartonstockout.CtnOutQty,cartonstockout.CtnDriverName, cartonstockout.CtnCarName, cartonstockout.CtnDriverMobileNo, cartonstockout.CtnCarNo, OutTime 
                 FROM `gatepasspkg` 
-                INNER JOIN employeet ON employeet.EId=gatepasspkg.EmpId
                 INNER JOIN cartonstockout ON cartonstockout.CtnoutId=gatepasspkg.IdStockOutPkg 
                 INNER JOIN carton ON carton.CTNId=cartonstockout.CtnJobNo 
                 INNER JOIN ppcustomer ON ppcustomer.CustId=cartonstockout.CtnCustomerId 
-                INNER JOIN cartonproduction ON cartonproduction.ProId=cartonstockout.PrStockId WHERE GatepassStatus='Carton Out' AND OutTime between ? AND ? ",[$From,$To]); 
-        
+                INNER JOIN cartonproduction ON cartonproduction.ProId=cartonstockout.PrStockId 
+                WHERE GatepassStatus='Carton Out' AND OutTime between ? AND ? ",[$From,$To]); 
     
-            
-                    while($Rows=$SQL->fetch_assoc())
-                    {?>
-                        <tr>
-                            <td class="text-center"><?=$Rows['CtnoutId']?></td>
-                            <td class="text-center"><?=$Rows['JobNo']?></td>
-                            <td class="text-center"><?=$Rows['OutDateTime']?></td>
-                            <td class="text-center"><?=$Rows['CustName']?></td>
-                            <td class="text-center"><?=$Rows['ProductName']?></td>
-                            <td class="text-center"><?=$Rows['CTNQTY']?></td>
-                            <td class="text-center"><?=$Rows['CtnDriverName']?></td>
-                            <td class="text-center"><?=$Rows['CtnCarName']?></td>
-                            <td class="text-center"><?=$Rows['CtnCarNo']?></td>
-                            <td class="text-center ">
-                                <span class="badge bg-success"><?=$Rows['GatepassStatus']?></span> 
-                            </td> 
-                        </tr>
+                while($Rows=$SQL->fetch_assoc())
+                {?>
+                    <tr>
+                        <td class="text-center"><?=$Rows['CtnoutId']?></td>
+                        <td class="text-center"><?=$Rows['JobNo']?></td>
+                        <td class="text-center"><?=$Rows['OutDateTime']?></td>
+                        <td class="text-center"><?=$Rows['CustName']?></td>
+                        <td class="text-center"><?=$Rows['ProductName']?></td>
+                        <td class="text-center"><?=$Rows['CTNQTY']?></td>
+                        <td class="text-center"><?=$Rows['CtnDriverName']?></td>
+                        <td class="text-center"><?=$Rows['CtnCarName']?></td>
+                        <td class="text-center"><?=$Rows['CtnCarNo']?></td>
+                        <td class="text-center ">
+                            <span class="badge bg-success"><?=$Rows['GatepassStatus']?></span> 
+                        </td> 
+                    </tr>
 
-                    <?php
-                    }   
+                <?php
+                }   
             }
             ?>
                 <tr>

@@ -4,7 +4,6 @@
     require_once '../App/partials/Menu/MarketingMenu.inc'; 
     require '../Assets/Carbon/autoload.php'; 
     use Carbon\Carbon;
-
     function GenerateDate($date){
         $a =  Carbon::createFromTimeStamp(strtotime($date),'Asia/Kabul')->diffForHumans();
         return  "<span class = 'badge bg-dark' style = 'font-size:11px;' >{$a}</span>";
@@ -291,11 +290,11 @@
     </div>
 </div>
 <?php  if(isset($_GET['msg'])) {  ?>
-            <div class="alert  alert-dismissible fade show m-3 alert-<?php if(isset($_GET['class'])) echo $_GET['class'];  ?>" role="alert">
-                <strong>Message: </strong> <?=$_GET['msg']?>! 
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        <?php } ?>
+    <div class="alert  alert-dismissible fade show m-3 alert-<?php if(isset($_GET['class'])) echo $_GET['class'];  ?>" role="alert">
+        <strong>Message: </strong> <?=$_GET['msg']?>! 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<?php } ?>
 
 <div class="card m-3 shadow">
     <div class="card-body">
@@ -343,37 +342,48 @@
     </div>
 </div>
 
+
+
 <div class = "card m-3 shadow">
-    <div class="card-body d-flex justify-content-end  ">
-        <div>
+    <div class="card-body d-flex justify-content-between align-items-center">
+
+        <!-- <div>
+        اخرین مقدار تولید  : <?=$last_machine_produced_qty; ?>  
+        </div> -->
+
+        <div   >
+
             <a class="btn mx-3" style = "background-color:#6610f2; color:white; " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                 نمایش تولید گذشته ماشین ها
             </a>
-        </div>
-
-        <div   >
             <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">ثبت تعداد تولید</a>
         </div>
 
     </div>
 </div>
 
-
 <div class="collapse shadow m-3" id="collapseExample">
-  <div class="card card-body">
-                        
-    <?php 
-      $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
-      while($um = $used_machine->fetch_assoc()){
-        // var_dump($um['machine_name'] , $um['produced_qty'] ); 
-
-        echo $um['machine_name']  . ' - '.   $um['produced_qty']  . ' - '.   $um['wast_qty'] ; 
-        echo "<br>"; 
-      }// end of while 
-
-    ?>
-  
-
+  <div class="card card-body  d-flex justify-content-between align-items-center">
+   <ul class="list-group w-75 ">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+        ماشین   
+            <span class="badge bg-primary" style = "font-size:15px;">مقدار تولید شده در ماشین های گذشته</span>
+        </li>
+        <?php 
+            $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
+            $last_machine_produced_qty = 0 ; 
+            while($um = $used_machine->fetch_assoc()){ 
+                if(!empty($um['produced_qty'])) {
+                    $last_machine_produced_qty = $um['produced_qty']; 
+                    
+                } 
+        ?>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <?=$um['machine_name']?>
+                <span class="badge bg-primary" style = "font-size:15px;"> <?= isset($um['produced_qty']) ? $um['produced_qty'] : '0';  ?>  دانه</span>
+            </li>
+        <?php  } // end of while   ?>
+    </ul>
   </div>
 </div>
 
@@ -420,7 +430,7 @@
                 
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
-                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                    <div id = "lmpq__" class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
                     <div class=""><?=(isset($Cut_Qty[1]['cycle_plan_qty']) ) ? $Cut_Qty[1]['cycle_plan_qty'] : '';?></div>
                 </th>
 
@@ -806,7 +816,8 @@
 
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
-                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                    <!-- <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div> -->
+                    <div id = "lmpq__"  > <?=$last_machine_produced_qty; ?> </div>
                 </th>
             </tr>
         </tbody>
@@ -1008,7 +1019,8 @@
                 </th>
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
-                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                    <!-- <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div> -->
+                    <div id = "lmpq__"> <?=$last_machine_produced_qty; ?> </div>
                 </th>
             </tr>
         </tbody>
@@ -1157,7 +1169,8 @@
                 </th>
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
-                    <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div>
+                    <!-- <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div> -->
+                    <div id = "lmpq__"> <?=$last_machine_produced_qty; ?> </div>
                 </th>
             </tr>
         </tbody>
@@ -1534,7 +1547,17 @@
         let total_pro_qty   = Number(document.getElementById('total_produced').innerHTML) ; 
         let total_wast_qty  = Number(document.getElementById('total_wast').innerHTML) ; 
 
-        document.getElementById('final_produced_qty').value  = shift_pro_qty + total_pro_qty ; 
+        let total_qty =  shift_pro_qty + total_pro_qty; 
+        let plan_qty = Number(document.getElementById('lmpq__').innerHTML) ; 
+
+        if( total_qty > plan_qty) {
+            alert('مقدار تولید شده نسبت به مقدار کاری زیاد است  '); 
+            document.getElementById('shift_produced_qty').value = 0 ; 
+            document.getElementById('shift_produced_qty').style.border = "2px solid #FF0000"
+            return ; 
+        }
+
+        document.getElementById('final_produced_qty').value  = total_qty ; 
         document.getElementById('final_wast_qty').value = shift_wast_qty + total_wast_qty ; 
         
         document.getElementById('last_shift').value = 'LAST_SHIFT'; 
