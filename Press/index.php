@@ -16,7 +16,7 @@
       }  
 ?>
   <div class="m-3">
-    <div class="card text-white" style = "background-color:#9d0000;" >
+    <div class="card text-white" style = "background-color:#ff4e4e;" >
       <div class="card-body d-flex justify-content-between shadow">
           <h3 class="m-0 p-0"> 
           <svg id="marketing-svg" width="50" height="50" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -33,7 +33,7 @@
             <rect width="512" height="512" fill="white" data-darkreader-inline-fill="" style="--darkreader-inline-fill:#181a1b;"></rect>
             </clipPath>
             </defs>
-          </svg> Marketing Department
+          </svg> Press Department
           </h3>
           
         </div>

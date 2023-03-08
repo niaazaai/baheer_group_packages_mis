@@ -25,7 +25,7 @@
         ? , ? , ? , ?,? )",
 
         [$_REQUEST['CYCLE_ID'] , $_REQUEST['CTNId'] , $_SESSION['EId'] , $_REQUEST['CustId'] , 
-         $_REQUEST['Total'] ,$_REQUEST['Unit'] ,'Pending' ,  $_REQUEST['Plate'] , 
+         $_REQUEST['Total'] ,$_REQUEST['Unit'] ,' ' ,  $_REQUEST['Plate'] , 
          $_REQUEST['Line'] , $_REQUEST['Pack'] , $_REQUEST['ExtraPack'] ,  $_REQUEST['Carton']  , $_REQUEST['ExtraCarton']  ] );
 
 

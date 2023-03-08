@@ -16,8 +16,8 @@
       INNER JOIN  production_cycle on carton.CTNId = production_cycle.CTNId   
       WHERE cycle_status = 'Finish List' ",[]) ;
 
-    $DataRows=$Controller->QueryData("SELECT COUNT(ProId ) AS Id FROM cartonproduction WHERE ProStatus='Pending'  ",[]) ;
-    $Out=$DataRows->fetch_assoc();
+    $DataRow=$Controller->QueryData("SELECT COUNT(ProId ) AS Id FROM cartonproduction WHERE ProStatus='Pending'  ",[]) ;
+    $Out=$DataRow->fetch_assoc();
 
 ?>
 

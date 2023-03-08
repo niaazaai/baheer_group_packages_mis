@@ -832,11 +832,12 @@ if(isset($_POST['Update']))
                     <select name="DesignBy" id="DesignBy" class="form-select" <?php if($show['DesignStatus'] == 'Design Exist'){echo 'disabled';}?> required>
                         <option value="<?php if(isset($show['DesignerName1'])) echo $show['DesignerName1']; ?>" selected >   <?php if(isset($show['DesignerName1'])) echo $show['DesignerName1']; ?> </option>
                         <?php 
-                            $EmpQuery=$Controller->QueryData("SELECT `EmpName` FROM `employees` WHERE EmpUnit='Design' and EmpJobStatus ='Active'",[]);
+                            $EmpQuery=$Controller->QueryData("SELECT EmpName FROM employees WHERE EmpUnit='Design' and EmpJobStatus ='Active'",[]);
                             while($Row=$EmpQuery->fetch_assoc())  { ?>
                                 <option value="<?=$Row['EmpName']?>"><?php echo $Row['EmpName'];?></option>
                         <?php } ?>
                     </select>
+                                
                 </div>
     
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 fw-bold">

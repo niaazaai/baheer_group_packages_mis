@@ -17,7 +17,7 @@
         $ExtraPack=$_POST['ExtraPack']; 
         $Carton=$_POST['Carton'];
         $ExtraCarton=$_POST['ExtraCarton']; 
-        $Total= (int) $_POST['Total'];
+        $Total = (int) $_POST['Total'];
 
         $SelectCarton=$Controller->QueryData("SELECT ProductQTY FROM carton WHERE CTNId=?",[$CTNId]);
         $Show=$SelectCarton->fetch_assoc();
@@ -32,7 +32,7 @@
         $CurrentBalance=$ProductQTY - $Old_Total_final; 
         $NewBalance= $Total + $CurrentBalance;
  
-        $Update=$Controller->QueryData("UPDATE cartonproduction SET Plate = ?, `Line` = ?, Pack = ? , ExtraPack = ?, Carton = ? , ExtraCarton = ? WHERE ProId = ? ",[$Plate,$Line,$Pack,$ExtraPack,$Carton,$ExtraCarton,$ProId]);
+        $Update=$Controller->QueryData("UPDATE cartonproduction SET Plate = ?, `Line` = ?, Pack = ? , ExtraPack = ?, Carton = ? , ExtraCarton = ?, ProStatus = 'Fixed' WHERE ProId = ? ",[$Plate,$Line,$Pack,$ExtraPack,$Carton,$ExtraCarton,$ProId]);
         if($Update) 
         {  
             $Update_produced = $Controller->QueryData("UPDATE carton SET ProductQTY = ? WHERE CTNId = ? ",[$NewBalance , $CTNId ]);

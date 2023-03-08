@@ -20,7 +20,7 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
     {
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,
-                                `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  , carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
+                                `Ctnp5`, `Ctnp6`, `Ctnp7`,offesetp,designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignStatus  , carton.NoFlip, designer_id  FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design"   order by CTNOrderDate DESC';
     }
     else if($ListType=='JobUnderProcess')
@@ -28,7 +28,7 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
         $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
-        designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
+        designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
         ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
         where CTNStatus="DesignProcess" order by CTNOrderDate DESC';
     } 
@@ -39,7 +39,7 @@ else
     $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
     ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,  CFluteType, 
                                 `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage,CURRENT_TIMESTAMP,
-    designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime,carton.NoFlip FROM `carton` INNER JOIN ppcustomer 
+    designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime,carton.NoFlip , designer_id   FROM `carton` INNER JOIN ppcustomer 
     ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" order by CTNOrderDate DESC';
 }
 $DataRows=$Controller->QueryData($SQL,[]);
@@ -170,7 +170,34 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
           $class = '#20c997'; 
           $COUNTER=0;
           $Count = 1; 
-            while($Rows=$DataRows->fetch_assoc()) {    ?>
+
+        
+
+            // echo  $_SESSION['EId'];
+
+            // echo "<br>"; 
+            while($Rows=$DataRows->fetch_assoc()) {    
+              
+                  // echo $Rows['designer_id']; 
+                  // echo "<br>"; 
+                  // $did  = $Controller->QueryData('SELECT designer_id FROM designinfo 
+                  // WHERE designer_id = ? ',[$_SESSION['EId'] , $Rows['CTNId']  ]) ; 
+                  // $designer_id = '-1'; 
+
+                  // if($did->num_rows > 0 ) { $designer_id = $did->fetch_assoc()['designer_id'];  }
+                  // if($designer_id == '-1')  { continue;   }
+                  // else { if($designer_id != $_SESSION['EId'] ) continue; }
+
+                  // var_dump(trim($Rows['designer_id']) != trim($_SESSION['EId'])); echo "<br>"; 
+                  // var_dump($Rows['designer_id']); 
+                  // echo "<br>"; 
+                  
+                  if($_REQUEST['ListType']=='JobUnderProcess') {
+                      if(trim($Rows['designer_id']) == trim($_SESSION['EId'])) {}
+                      else continue; 
+                  }
+              
+              ?>
                 <tr>
                   <td><?=$Count?> </td>
                   <td><?=$Rows['CTNId']?></td>
