@@ -229,15 +229,15 @@ else {
                   </svg>
                       </a>
 
-              <?php  if(in_array( $Gate['REGISTER_NEW_CUSTOMER'] , $_SESSION['ACCESS_LIST']  )) { ?>
-                  <a href=" CustomerRegistrationForm.php" class = "btn btn-outline-primary btn-sm  "  title = "Click to add customer" >  
-                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16" >
-                      <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                      <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
-                  </svg> 
-                  Add Customer 
-                  </a>
-              <?php } ?>
+                <?php  if(in_array( $Gate['REGISTER_NEW_CUSTOMER'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                    <a href=" CustomerRegistrationForm.php" class = "btn btn-outline-primary btn-sm  "  title = "Click to add customer" >  
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16" >
+                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                    </svg> 
+                    Add Customer 
+                    </a>
+                <?php } ?>
 
                   <!-- <a href = "CustomerListPrint.php" class="btn btn-outline-primary  my-1"  title = "Click to Print Customer List ">
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
@@ -306,7 +306,8 @@ else {
             <label for="name" class="fw-bold">Select Specification   </label>
             <select class="form-select  my-1 "  onchange = "this.form.submit()" name="Specification" id = "Specification"  >
               <option  disabled="disabled"  >Select Specification</option> 
-              <option  selected  value="<?= (isset($_POST['Specification'])) ?  $_POST['Specification'] : 'ALL' ?>">   <?= (isset($_POST['Specification'])) ?  $_POST['Specification'] : 'ALL' ?>  </option>
+              <option selected value=""></option>  
+              <option   value="<?= (isset($_POST['Specification'])) ?  $_POST['Specification'] : 'ALL' ?>">   <?= (isset($_POST['Specification'])) ?  $_POST['Specification'] : 'ALL' ?>  </option>
               <option value="ALL">ALL </option>  
               <option value="VVIP">VVIP </option>
               <option value="VIP">VIP</option>

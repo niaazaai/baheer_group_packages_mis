@@ -1,4 +1,11 @@
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
+<?php ob_start();
+require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/HOMEPAGE';
+if(!in_array( $Gate['VIEW_GRADE_LIMIT_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+  }
+
 
 if (isset($_POST["grade_limit"]) && !empty($_POST["grade_limit"])) 
 {

@@ -16,14 +16,14 @@
     $pagination = new Zebra_Pagination();
     $RECORD_PER_PAGE = 15;
 
-    $DEFAULT_COLUMNS = "CTNId,JobNo , CustId, offesetp , flexop,   CTNOrderDate,ppcustomer.CustName,ProductName, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size  , CTNQTY,CTNPrice, CTNStatus,CtnCurrency "; 
-    $DEFAULT_TABLE_HEADING = '<th>#</th><th>Q-No</th><th>Job No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Size(LxWxH) (cm)</th>   <th>Order Qty</th><th>Unit Price</th><th>Status</th> <th>R Days</th> <th>OPS</th>'; 
+    $DEFAULT_COLUMNS = "CTNId,JobNo , CustId, offesetp , flexop,   CTNOrderDate,ppcustomer.CustName,ProductName, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size  , CTNQTY,CTNPrice, CTNStatus,CtnCurrency, DesignCode1,DesignImage "; 
+    $DEFAULT_TABLE_HEADING = '<th>#</th><th>Q-No</th><th>Job No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Size(LxWxH) (cm)</th>   <th>Order Qty</th><th>Unit Price</th><th>Status</th> <th>Design</th> <th>R Days</th> <th>OPS</th>'; 
     $COLUMNS = ''; 
     $TABLE_HEADING = ''; 
  
   if(isset($_POST["CustId"]) && !empty($_POST["CustId"]) ){
       $CustId=$_POST['CustId'];
-      $Query="SELECT DISTINCT $DEFAULT_COLUMNS FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE JobNo != 'NULL'  AND CTNStatus != 'Completed' AND CTNStatus != 'Cancel' AND 
+      $Query="SELECT DISTINCT $DEFAULT_COLUMNS FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId = carton.CTNId WHERE JobNo != 'NULL'  AND CTNStatus != 'Completed' AND CTNStatus != 'Cancel' AND 
       ppcustomer.CustId = ? AND  CTNStatus != 'Prospect'  AND  
       CTNStatus != 'Cancel'   AND  CTNStatus != 'Pending' AND  
       CTNStatus != 'Pospond'  AND  CTNStatus != 'InActive'  
@@ -33,14 +33,14 @@
   else if (isset($_POST["Search_input"]) && !empty($_POST["Search_input"])) {
       $JobNo=$_POST['Search_input'];
       $Query="SELECT DISTINCT $DEFAULT_COLUMNS
-      FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE 
+      FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId = carton.CTNId WHERE 
       JobNo != 'NULL'   AND carton.JobNo = ?  
       order by CTNOrderDate ASC";
       $DataRows  = $Controller->QueryData($Query, [$JobNo]);
   }  else {
 
         $Query="SELECT DISTINCT $DEFAULT_COLUMNS
-        FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE
+        FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId = carton.CTNId WHERE
             JobNo != 'NULL'  AND  CTNStatus != 'Completed' AND  CTNStatus != 'Prospect'  AND  CTNStatus != 'Cancel'  
             AND  CTNStatus != 'Pending' AND  CTNStatus != 'Pospond'  AND  CTNStatus != 'InActive'  order by CTNOrderDate ASC";
         $DataRows  = $Controller->QueryData($Query, []);
@@ -152,25 +152,32 @@
                                               ?> 
                                         </td>
                                         <td><?= $Rows['CTNStatus']  ?> </td>
-                                        <td>
+                                        <td class = " align-item-center " >        
+                                            <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']) )  { ?>
+                                            <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                                href="ShowDesignImage.php?Url=<?=$Rows['DesignImage']?>&ProductName=<?=$Rows['ProductName']?>" >
+                                            <?php   echo '<span class = "text-success" >'. $Rows['DesignCode1'] . '</span>';  ?>  
+                                            </a>
+                                            <?php }  else {
+                                                echo '<span class = "text-danger" >N/A</span>';
+                                            } ?>
+                                        </td>
+                                        <td> 
+                                            <?php
 
+                                              $class = "#0dcaf0";
+                                              $offset_flexo = '';
+                                              if ($Rows['offesetp'] == 'Yes' && $DaysLeft >= 15) {
+                                                  $class = '#dc3545';
+                                              } elseif ($Rows['flexop'] == 'Yes' && $DaysLeft >= 10) {
+                                                  $class = '#6610f2';
+                                              }
 
-                                          
-                                          <?php
+                                              $a =  Carbon::createFromTimeStamp(strtotime($Rows['CTNOrderDate']))->diffForHumans();
+                                              echo "<span class = ' badge' style = 'background-color: " . $class .  "'>" . $a . "    </span>" ;
+                                            ?>
 
-                        $class = "#0dcaf0";
-                        $offset_flexo = '';
-                        if ($Rows['offesetp'] == 'Yes' && $DaysLeft >= 15) {
-                            $class = '#dc3545';
-                        } elseif ($Rows['flexop'] == 'Yes' && $DaysLeft >= 10) {
-                            $class = '#6610f2';
-                        }
-
-                        $a =  Carbon::createFromTimeStamp(strtotime($Rows['CTNOrderDate']))->diffForHumans();
-                        echo "<span class = ' badge' style = 'background-color: " . $class .  "'>" . $a . "    </span>" ;
-                        ?>
-
-                        </td>
+                                        </td>
 
                         <td>  
                           <?php  if(in_array( $Gate['VIEW_JOB_CARD_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 

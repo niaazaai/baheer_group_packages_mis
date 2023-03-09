@@ -1,0 +1,11 @@
+<?php
+return [
+    'VIEW_SET_PRICE_DASHBOARD' => '266',
+    'VIEW_PRICE_SETTING_CARD' => '267', 
+    'VIEW_GRADE_LIMIT_CARD' => '268' ,
+    'VIEW_PRICE_SETTING_PAGE' => '269' ,  
+    'VIEW_GRADE_LIMIT_PAGE' => '270' ,
+    'VIEW_PRICE_HISTORY' => '271' ,
+    'VIEW_SET_PRICE_PAGE' => '272' ,
+]; 
+?>

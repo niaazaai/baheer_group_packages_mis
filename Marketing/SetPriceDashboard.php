@@ -1,4 +1,13 @@
-<?php require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';?>
+<?php ob_start(); 
+require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc';
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/HOMEPAGE';
+if(!in_array( $Gate['VIEW_SET_PRICE_DASHBOARD'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access this page!" );
+  }
+
+
+?>
 
 <style>
 
@@ -28,7 +37,7 @@
 </div>
 
 <div class="row m-3"> <!-- Start of the row -->
-    
+<?php  if(in_array( $Gate['VIEW_PRICE_SETTING_CARD'] , $_SESSION['ACCESS_LIST']  )) {?>
     <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ms-0 p-1 " >
         <a href="PriceSetting.php" style="text-decoration:none;">
             <div class="card shadow-lg py-2  "  style = "border:3px solid #0d6efd;"  >
@@ -48,8 +57,8 @@
             </div>
         </a>
     </div>
-
-    
+<?php } ?>
+<?php  if(in_array( $Gate['VIEW_GRADE_LIMIT_CARD'] , $_SESSION['ACCESS_LIST']  )) {?>
     <div class="col-lg-3 col-md-12 col-sm-12  col-xs-12  mt-1 pe-0" >
         <a href="SetGrade.php" style="text-decoration:none;">
             <div class="card shadow-lg py-2  "style = "border:3px solid #198754" >
@@ -69,7 +78,7 @@
             </div>
         </a>
     </div>
-
+<?php } ?>
 </div>
 
 <?php require_once '../App/partials/footer.inc'; ?>

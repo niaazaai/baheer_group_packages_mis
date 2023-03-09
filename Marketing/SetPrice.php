@@ -1,6 +1,11 @@
-<?php 
+<?php ob_start();
   require_once '../App/partials/header.inc';    
   require_once '../App/partials/Menu/MarketingMenu.inc';
+  $Gate = require_once  $ROOT_DIR . '/Auth/Gates/HOMEPAGE';
+    if(!in_array( $Gate['VIEW_SET_PRICE_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+        header("Location:index.php?msg=You are not authorized to access this page!" );
+    }
+
   require_once '../Assets/Zebra/Zebra_Pagination.php';
   $pagination = new Zebra_Pagination();
    

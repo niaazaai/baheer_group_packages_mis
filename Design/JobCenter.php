@@ -171,32 +171,24 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
           $COUNTER=0;
           $Count = 1; 
 
-        
+              // var_dump($_SESSION);
+                $Ename = $Controller->QueryData('SELECT Ename,EId FROM employeet WHERE EId = ? ',[$_SESSION['EId']   ])->fetch_assoc()['Ename'] ; 
+                // var_dump($Ename); 
 
-            // echo  $_SESSION['EId'];
 
-            // echo "<br>"; 
+
+                $DN  = $Controller->QueryData('SELECT DesignerName1 FROM designinfo WHERE DesignerName1 = ? ',[ $Ename   ]) ; 
+                
+                $DesignerName = '-1'; 
+                if($DN->num_rows > 0 ) {
+                   $DesignerName = $DN->fetch_assoc()['DesignerName1']; 
+                }
             while($Rows=$DataRows->fetch_assoc()) {    
               
-                  // echo $Rows['designer_id']; 
-                  // echo "<br>"; 
-                  // $did  = $Controller->QueryData('SELECT designer_id FROM designinfo 
-                  // WHERE designer_id = ? ',[$_SESSION['EId'] , $Rows['CTNId']  ]) ; 
-                  // $designer_id = '-1'; 
-
-                  // if($did->num_rows > 0 ) { $designer_id = $did->fetch_assoc()['designer_id'];  }
-                  // if($designer_id == '-1')  { continue;   }
-                  // else { if($designer_id != $_SESSION['EId'] ) continue; }
-
-                  // var_dump(trim($Rows['designer_id']) != trim($_SESSION['EId'])); echo "<br>"; 
-                  // var_dump($Rows['designer_id']); 
-                  // echo "<br>"; 
-                  
-                  if($_REQUEST['ListType']=='JobUnderProcess') {
-                      if(trim($Rows['designer_id']) == trim($_SESSION['EId'])) {}
-                      else continue; 
-                  }
-              
+                if( isset($_REQUEST['ListType']) && ( $_REQUEST['ListType']=='JobUnderProcess')) {
+                  if($Rows['DesignerName1'] == $DesignerName){}
+                  else {  if($DesignerName != '-1')  continue;   }
+                }
               ?>
                 <tr>
                   <td><?=$Count?> </td>

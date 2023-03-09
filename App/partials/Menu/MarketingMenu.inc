@@ -18,11 +18,7 @@
                 HOME   
               </a>
               <ul class="dropdown-menu" aria-labelledby="Home">
-                  <li><a class="dropdown-item fw-bold" href=" index.php"> Dashboard  </a></li>
-                  <li><a class="dropdown-item fw-bold" href="./../Marketing/SetPriceDashboard.php"> Set Price </a></li>
-                  <li><a class="dropdown-item fw-bold" href="#"> Import Data  </a></li>
-                  <li><a class="dropdown-item fw-bold" href="#"> All Jobs  </a></li>
-                  <li><a class="dropdown-item fw-bold" href="#"> Edit Jobs  </a></li>
+                   <li><a class="dropdown-item fw-bold" href="./../Marketing/SetPriceDashboard.php"> Set Price </a></li>
                    <li><a class="dropdown-item fw-bold" href="./../Auth/RoleList.php"> Access control </a></li>
               </ul>
           </li>
