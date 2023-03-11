@@ -12,33 +12,19 @@ function CheckPermission($permission_id , $role_id , $cont ){
 if(isset($_GET['role_id']) && !empty($_GET['role_id'])) {
 
     $role_id = $Controller->CleanInput($_GET['role_id']); 
-    $PermissionsList = $Controller->QueryData("SELECT  * FROM permission " , []);
-   
-    $AssignedPermissions = $Controller->QueryData("SELECT role.title as role_name , permission.title as permission_name,  role_permission.permission_id as pid 
-    , role_permission.role_id as rid  , role.description as role_description    
-    FROM role 
-    INNER JOIN role_permission ON role.id=role_permission.role_id 
-    INNER JOIN permission ON role_permission.permission_id =permission.id WHERE role_permission.role_id = ? " , [$role_id]);
+    $PermissionsList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Finance'" , []);
+    $MarketingList = $Controller->QueryData("SELECT  id,title, page FROM permission WHERE module = 'Marketing'" , []);
+    $DesignList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Design'" , []);
+    $WarehouseList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Warehouse'" , []);
+    $PressList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Press'" , []);
+    $ArchieveList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Archieve'" , []);
+    $ProductionList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Production'" , []);
+    $HomeList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Home'" , []);
+    
 
     if(isset($_REQUEST['title']))  {
         $title =  $_REQUEST['title']; 
     }  else $title= ''; 
-
-    // echo "<pre>"; 
-    // print_r($AssignedRights);
-    // echo "</pre>";
-
-    
-    // $Update=$Controller->QueryData("UPDATE employeet SET role_id=? WHERE EId=?",[$ID,$EmpEid]);
-    // if($Update)
-    // {
-    //     echo'<div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-    //     <strong>!</strong> Test Case Passed.
-    //     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    //   </div>';
-    // }
-    // else echo '212';
-        
 }
 else header('Location:ShowAccessList.php')
  
@@ -61,69 +47,432 @@ else header('Location:ShowAccessList.php')
     </div>
 </div> 
 
-<div class="row">
-    <div class="col-lg-6 col-sm-12 col-md-12 ">
+<div class="accordion accordion-flush m-3 shadow"   id="accordionFlushExample">
 
-    </div>
-    <div class="col-lg-6  col-sm-12 col-md-12">
-
-    </div>
-</div>
-
-<div class="row m-1 d-flex justify-content-center">
-    <div class="col-lg-8 col-md-8 col-sm-12  ">
-
-        <div class="card border-primary mb-3"  >
-            <div class="card-header bg-transparent border-primary fw-bold">ALL Permissions List </div>
-            <div class="card-body text-primary">
-                <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'JobTable' )">
-                
-                <table class= "table border"  id = "JobTable" >
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+      Finance Department Access List
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body d-flex justify-content-center">
+            <div style = "width:70%" > 
+                <input type="text" class="form-control border-3 mb-2" id = "Search_input" placeholder="Search Anything" onkeyup="search( this.id , 'FinanceList' )">
+                <table class= "table border"  id = "FinanceList"   >
                     <thead>
                             <tr class="table-info">
                                 <th >#</th>
                                 <th >Permissions</th>  
-                                <th >Page</th>
                                 <th class="text-center" tile = "assign role ">OPS</th>  
                             </tr>
                     </thead>
                     <tbody>
                         <form action="AssignPermission.php" method="post">
                             <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
-                            <input type="hidden" id = "permission_id" name="permission_id" >
-                            <input type="hidden" id = "title" name="title">
+                            <!-- <input type="hidden" id = "permission_id" name="permission_id" > -->
+                            <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                            <input type="hidden" name = "module"  value = "Finance">
 
-                            <?php $counter=1; while($Permissions = $PermissionsList->fetch_assoc())  {?>
+                            <?php $counter=1; while($Permissions = $PermissionsList->fetch_assoc()) {?>
                                 <tr>
                                     <td><?=$counter++;?></td>
-                                    <td><?=$Permissions['title']?></td>  
-                                    <td><?=$Permissions['page']?></td>
+                                    <td>
+                                        <div class = "d-flex justify-content-between align-item-center">
+                                            <div><?=$Permissions['title']?> </div>
+                                            <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                        </div>
+                                    </td>  
                                     <td class="text-center">  
                                         <div class="form-check form-switch d-flex justify-content-center">
-                                            <input class="form-check-input" type="checkbox" <?=CheckPermission( $Permissions['id']  ,   $_GET['role_id'] , $Controller);?> 
-                                             id="assign_switch_<?=$Permissions['id']?>" onclick="assign_permissions_to_roles(<?=$Permissions['id']?> , `<?=$title?>` , this.id );" >
+                                            
+                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
                                         </div>
                                     </td>
                                 </tr>
                             <?php }  ?>  
-                        </form>
+                            <tr>
+
+                                <td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td>
+                            </tr>
                     </tbody>
                 </table>
+                </form>
             </div>
-            <div class="card-footer bg-transparent border-primary text-end">
-                <button class ="btn btn-sm btn-outline-primary">Apply Permission </button>  
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        Marketing Department Access List 
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body d-flex justify-content-center"> 
+            <div style = "width:70%" > 
+                <input type="text"  class="form-control border-3 mb-2" id = "Search_input" placeholder="Search Anything" onkeyup="search( this.id , 'MarketingList' )">
+                <table class= "table border"  id = "MarketingList" >
+                    <thead>
+                            <tr class="table-info">
+                                <th >#</th>
+                                <th >Permissions</th>  
+                                <th class="text-center" tile = "assign role ">OPS</th>  
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <form action="AssignPermission.php" method="post">
+                            <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                            <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                            <input type="hidden" name = "module"  value = "Marketing">
+
+                            <?php $counter=1; while($Permissions = $MarketingList->fetch_assoc()) {?>
+                                <tr>
+                                    <td ><?=$counter++;?></td>
+                                    <td  >
+                                        <div class = "d-flex justify-content-between align-item-center">
+                                            <div><?=$Permissions['title']?> </div>
+                                            <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                        </div>
+                                    </td>  
+                                    <td  >  
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                             <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                              name = "permission_id[]">
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php }  ?>  
+                            <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                    </tbody>
+                </table>
+                </form>
             </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingThree">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+        Design Department Access List
+      </button>
+    </h2>
+    <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body d-flex justify-content-center"> 
+        <div style = "width:70%" >  
+            <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search( this.id , 'DesignList' )">
+            <table class= "table border"  id = "DesignList" >
+                <thead>
+                    <tr class="table-info">
+                        <th >#</th>
+                        <th >Permissions</th>  
+                        <th class="text-center" tile = "assign role ">OPS</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <form action="AssignPermission.php" method="post">
+                        <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                        <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                        <input type="hidden" name = "module"  value = "Design">
+                        <?php $counter=1; while($Permissions = $DesignList->fetch_assoc()) {?>
+                            <tr>
+                                <td ><?=$counter++;?></td>
+                                <td  >
+                                    <div class = "d-flex justify-content-between align-item-center">
+                                        <div><?=$Permissions['title']?> </div>
+                                        <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                    </div>
+                                </td>  
+                                <td  >  
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php }  ?>  
+                        <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                </tbody>
+            </table>
+            </form>
         </div>
 
+      </div>
     </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingFour">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+        Printing Press Department Access List
+      </button>
+    </h2>
+    <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-collapseFour" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body d-flex justify-content-center"> 
+        <div style = "width:70%" >  
+            <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search( this.id , 'PrintTable' )">
+            <table class= "table border"  id = "PrintTable" >
+                <thead>
+                        <tr class="table-info">
+                            <th >#</th>
+                            <th >Permissions</th>  
+                            <th class="text-center" tile = "assign role ">OPS</th>  
+                        </tr>
+                </thead>
+                <tbody>
+                    <form action="AssignPermission.php" method="post">
+                        <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                        <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                        <input type="hidden" name = "module"  value = "Press">
+
+                        <?php $counter=1; while($Permissions = $PressList->fetch_assoc()) {?>
+                            <tr>
+                                <td><?=$counter++;?></td>
+                                <td>
+                                    <div class = "d-flex justify-content-between align-item-center">
+                                        <div><?=$Permissions['title']?> </div>
+                                        <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                    </div>
+                                </td>  
+                                <td class="text-center">  
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                            
+                                        <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php }  ?>  
+                        <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                </tbody>
+            </table>
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingFive">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+      Archieve Department Access List
+      </button>
+    </h2>
+    <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-collapseFive" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body d-flex justify-content-center"> 
+        <div style = "width:70%" >  
+            <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search( this.id , 'archtable' )">
+            <table class= "table border"  id = "archtable" >
+                <thead>
+                    <tr class="table-info">
+                        <th >#</th>
+                        <th >Permissions</th>  
+                        <th class="text-center" tile = "assign role ">OPS</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <form action="AssignPermission.php" method="post">
+                        <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                        <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                        <input type="hidden" name = "module"  value = "Archieve">
+
+                        <?php $counter=1; while($Permissions = $ArchieveList->fetch_assoc()) {?>
+                            <tr>
+                                <td><?=$counter++;?></td>
+                                <td>
+                                    <div class = "d-flex justify-content-between align-item-center">
+                                        <div><?=$Permissions['title']?> </div>
+                                        <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                    </div>
+                                </td>  
+                                <td class="text-center">  
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                        
+                                        <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                        <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                        name = "permission_id[]">
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php }  ?>  
+                        <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                </tbody>
+            </table>
+            </form>
+        </div> <!-- END OF ARCHIEVE ACCESS LIST  -->
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingSix">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+        Production Department Access List
+      </button>
+    </h2>
+    <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-collapseSix" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body d-flex justify-content-center"> 
+        <div style = "width:70%" >  
+            <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search( this.id , 'ProductionTable' )">
+                 <table class= "table border"  id = "ProductionTable" >
+                    <thead>
+                        <tr class="table-info">
+                            <th >#</th>
+                            <th >Permissions</th>  
+                            <th class="text-center" tile = "assign role ">OPS</th>  
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <form action="AssignPermission.php" method="post">
+                            <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                            <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                            <input type="hidden" name = "module"  value = "Production">
+
+                            <?php $counter=1; while($Permissions = $ProductionList->fetch_assoc()) {?>
+                                <tr>
+                                    <td><?=$counter++;?></td>
+                                    <td>
+                                        <div class = "d-flex justify-content-between align-item-center">
+                                            <div><?=$Permissions['title']?> </div>
+                                            <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                        </div>
+                                    </td>  
+                                    <td class="text-center">  
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                              
+                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                             <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                              name = "permission_id[]">
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php }  ?>  
+                            <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                    </tbody>
+                </table>
+            </form>
+        </div> <!-- END OF PRODUCTION ACCESS LIST  -->
+        
+      </div>
+    </div>
+  </div>
+
+
+  <div class="accordion-item">
+        <h2 class="accordion-header" id="flush-headingSeven">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+                Home Option Access List
+            </button>
+        </h2>
+        <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-collapseSeven" data-bs-parent="#accordionFlushExample">
+            <div class="accordion-body d-flex justify-content-center"> 
+                <div style = "width:70%" >  
+                    <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search( this.id , 'home221' )">
+                    <table class= "table border"  id = "home221" >
+                        <thead>
+                            <tr class="table-info">
+                                <th >#</th>
+                                <th >Permissions</th>  
+                                <th class="text-center" tile = "assign role ">OPS</th>  
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <form action="AssignPermission.php" method="post">
+                            <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                            <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                            <input type="hidden" name = "module"  value = "Home">
+                            <?php $counter=1; while($Permissions = $HomeList->fetch_assoc()) {?>
+                                <tr>
+                                    <td><?=$counter++;?></td>
+                                    <td>
+                                        <div class = "d-flex justify-content-between align-item-center">
+                                            <div><?=$Permissions['title']?> </div>
+                                            <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                        </div>
+                                    </td>  
+                                    <td class="text-center">  
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            
+                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php }  ?>  
+                            <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                        </tbody>
+                    </table>
+                    </form>
+                </div> <!-- END OF HOMEPAGE ACCESS LIST  -->
+            </div>
+        </div>
+  </div>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingEight">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+        Warehouse Department Permissions List 
+      </button>
+    </h2>
+    <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-collapseEight" data-bs-parent="#accordionFlushExample">
+    <div class="accordion-body d-flex justify-content-center"> 
+        <div style = "width:70%" >  
+            <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything "  onkeyup="search(this.id ,'ProductionTable')">
+            <table class= "table border"  id = "JobTable" >
+                <thead>
+                    <tr class="table-info">
+                        <th >#</th>
+                        <th >Permissions</th>  
+                        <th class="text-center" tile = "assign role ">OPS</th>  
+                    </tr>
+                </thead>
+                <tbody>
+                    <form action="AssignPermission.php" method="post">
+                        <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                        <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                        <input type="hidden" name = "module"  value = "Warehouse">
+
+                        <?php $counter=1; while($Permissions = $WarehouseList->fetch_assoc()) {?>
+                            <tr>
+                                <td><?=$counter++;?></td>
+                                <td>
+                                    <div class = "d-flex justify-content-between align-item-center">
+                                        <div><?=$Permissions['title']?> </div>
+                                        <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                    </div>
+                                </td>  
+                                <td class="text-center">  
+                                    <div class="form-check form-switch d-flex justify-content-center">
+                                            
+                                        <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php }  ?>  
+                        <tr><td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td></tr>
+                </tbody>
+            </table>
+            </div>
+            </form>
+        </div>  <!-- END OF WHEREHOUSE ACCESS LIST  -->
+          
+      </div>
+    </div>
+  </div>
 </div>
 
-<form action="DeletePermission.php" method="post" class = "m-0 p-0"  >
-    <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
-    <input type="hidden" id = "permission_id1" name="permission_id" >
-    <input type="hidden" id = "title1" name="title"   >
-</form> 
- 
 <script>
     function search(InputId ,tableId)   {
         var input, filter, table, tr, td, i, txtValue;
@@ -145,34 +494,5 @@ else header('Location:ShowAccessList.php')
             }
         }
     }
-
-
-
-    function assign_permissions_to_roles(permission_id , title , id){
-        var switch1 = document.getElementById(id);
-
-        if(switch1.checked == true ) {
-            document.getElementById('permission_id').value = permission_id; 
-            document.getElementById('title').value = title; 
-            document.getElementById('permission_id').form.submit(); 
-        }
-        else {
-            document.getElementById('permission_id1').value = permission_id; 
-            document.getElementById('title1').value = title; 
-            document.getElementById('permission_id1').form.submit(); 
-        }
-    }
 </script>
-
-
-
-
- 
-  
 <?php  require_once '../App/partials/Footer.inc'; ?>
-
-
-
-
-
-          

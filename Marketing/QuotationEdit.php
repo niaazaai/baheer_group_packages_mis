@@ -564,8 +564,8 @@
 
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" id="DieExist">
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
-              <select class="form-select" name="DieExist" id="DieExist"  onchange = "CheckDiePriceInput(this.value);   >
-                <option selected value="<?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?>">  <?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?> </option>
+              <select class="form-select" name="DieExist" id="DieExist"  onchange = "CheckDiePriceInput(this.value);"   >
+                <option selected value="<?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?>" >  <?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?> </option>
                 <option value="New Die">New Die</option>
                 <option value="Die Exist" >Die Exist</option>
                 <option value="Personal Die" >Personal Die</option>
@@ -574,7 +574,7 @@
               </select>
           </div>
            
-          <div class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12">
+          <div id = "PolymerPriceCol" class="col-xxl-1 col-xl-1 col-lg-3 col-md-3 col-sm-12 col-xs-12">
             <label for="PolymerPrice" class="form-label">Polymer Price  </label>
             <input type="text" class="form-control" id="PolymerPrice" name="PolymerPrice"   value = "<?=$CTN['CTNPolimarPrice']?>"  required   />
           </div>
@@ -584,10 +584,10 @@
             <input class="form-control"  placeholder="Die Price" id = "DiePriceInput" name="DiePrice" value = "<?=$CTN['CTNDiePrice']?>"   type="text" onchange = "AddInputValues(this.name , this.value)" value = ""  />
           </div>
 
-          <div class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
+          <div  id = "NoFlipCol"  class="col-xxl-1 col-xl-1 col-lg-2 col-md-2 col-sm-12 col-xs-12">
 
                 <label    class="form-label" for="NoFlip"> Manual </label>
-                <select class="form-select" name="NoFlip" id="NoFlip" required onchange = "ShowNoFlip( this.value)" >
+                <select  class="form-select" name="NoFlip" id="NoFlip" required onchange = "ShowNoFlip( this.value)" >
                   
                   <option value="" disabled>Select Flip</option>
                   <option selected value="<?=$CTN['NoFlip']?>">
@@ -831,6 +831,18 @@
         value = RemoveComma(value) ;
       }  
     }
+
+    if (name == 'NoColor') {
+      if(value == 'No Print' || value == 'Polymer Exist' || value  == 'Personal Polymer' || value == 'Free Polymer') {
+        document.getElementById('NoFlipCol').style.display = "none"; 
+        document.getElementById('PolymerPriceCol').style.display = "none"; 
+      }
+      else if ( value == '1' || value == '2' || value == '3' ||value == '4' ) {
+            document.getElementById('NoFlipCol').style.display = ""; 
+            document.getElementById('PolymerPriceCol').style.display = ""; 
+      }
+    }
+
     
     value = Precision(value)
     InputValues[name] = value; 
@@ -1311,57 +1323,43 @@ function ChangeDieckle(value) {
     } // end of function 
 
 
+    function CheckCancelCommentLength(){
+      let CancelComment = document.getElementById('CancelComment');
+      document.getElementById('comment_length').innerHTML = CancelComment.value.length;
+      if(CancelComment.value.length >= 120 ) {
+        CancelComment.setAttribute('maxlength', 120); 
+      }
+    }
+    CheckCancelCommentLength(); 
 
+    function CheckDiePriceInput(value){
+      if(value == 'No Die' || value == 'Die Exist') {
+        document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
+        document.getElementById('DiePriceInput').value = 0 ; 
+        InputValues['DiePrice'] = 0
+      }//end of if block 
+      else {
+        document.getElementById('DiePriceInput').removeAttribute('disabled'); 
+      }
+    }// end of function 
  </script>
+
   <?php 
-    $CallAgain = [  
-    'PaperGrade'  => $CTN['GrdPrice'] , 
-    'CartonQTY' => $CTN['CTNQTY']  ,
-      'PaperLength' => $CTN['CTNLength'] , 
-       'PaperWidth' => $CTN['CTNWidth'] , 
-      'PaperHeight' => $CTN['CTNHeight'] ,  
-      'NoColor' => $CTN['polymer_info'] ,  
-      'DiePrice' => $CTN['CTNDiePrice'] ,  
-      'Tax' => $CTN['Tax']  ,
-       'ExchangeRate' => $CTN['PexchangeUSD'] , 
-       'DieExist' => $CTN['die_info'],  
-      $CTNType => $CTN['CTNType']];  
-    //  , 'Currency' => $CTN['CtnCurrency']  
-      $Exct = "<script>" ; 
-      $Exct .= "ShowPly($CTNType);"; 
-        foreach ($CallAgain as $key => $value) {
-          $Exct .= "AddInputValues('$key' ,  $value); "; 
-        }
+      $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
+        'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
+        'PaperHeight' => $CTN['CTNHeight'] ,  'NoColor' => $CTN['polymer_info'] ,  
+        'DiePrice' => $CTN['CTNDiePrice'] ,  
+        'Tax' => $CTN['Tax']  , 'ExchangeRate' => $CTN['PexchangeUSD'] , 'DieExist' => $CTN['die_info']]; 
+        $CTNType = $CTN['CTNType']; 
 
-      $Exct .= "ShowNoFlip(`{$CTN['NoFlip']}`); console.log(InputValues);  "; 
-      $Exct .= "CheckDiePriceInput(`{$CTN['die_info']}`)"; 
-      // $Exct .= "ChangeCurrencyType('". $CTN['CtnCurrency'] ."');"; 
-        
-      $Exct .= "</script>" ;
-      echo $Exct; 
- ?>
-<script>
-  function CheckCancelCommentLength(){
-    let CancelComment = document.getElementById('CancelComment');
-    document.getElementById('comment_length').innerHTML = CancelComment.value.length;
-    if(CancelComment.value.length >= 120 ) {
-      CancelComment.setAttribute('maxlength', 120); 
-    }
-  }
-  CheckCancelCommentLength(); 
-
-  function CheckDiePriceInput(value){
-    if(value == 'No Die' || value == 'Die Exist') {
-      document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
-      document.getElementById('DiePriceInput').value = 0 ; 
-      InputValues['DiePrice'] = 0
-    }//end of if block 
-    else {
-      document.getElementById('DiePriceInput').removeAttribute('disabled'); 
-    }
-  }// end of function 
-
-
-
-</script>
+        $Exct = "<script>" ; 
+        $Exct .= "ShowPly($CTNType);"; 
+          foreach ($CallAgain as $key => $value) {
+            $Exct .= "AddInputValues('$key' ,  `$value`); "; 
+          }
+        $Exct .= "ShowNoFlip(`{$CTN['NoFlip']}`); console.log(InputValues);  "; 
+        $Exct .= "CheckDiePriceInput(`{$CTN['die_info']}`)";
+        $Exct .= "</script>" ;
+        echo $Exct; 
+  ?>
 <?php require_once '../App/partials/Footer.inc'; ?> 

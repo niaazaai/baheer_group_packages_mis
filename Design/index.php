@@ -225,7 +225,7 @@
         <?php } ?> 
         <?php  if(in_array( $Gate['VIEW_DASHBAORD_DONE_CARD'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 ">
-            <a href="JobCenter.php" style = "text-decoration:none;">
+            <a href="JobCenter.php?ListType=JobUnderProcess"  style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #198754;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#198754">

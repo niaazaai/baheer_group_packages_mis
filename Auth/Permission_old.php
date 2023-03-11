@@ -12,7 +12,7 @@ function CheckPermission($permission_id , $role_id , $cont ){
 if(isset($_GET['role_id']) && !empty($_GET['role_id'])) {
 
     $role_id = $Controller->CleanInput($_GET['role_id']); 
-    $PermissionsList = $Controller->QueryData("SELECT  * FROM permission WHERE module = 'Finance' " , []);
+    $PermissionsList = $Controller->QueryData("SELECT  * FROM permission " , []);
    
     $AssignedPermissions = $Controller->QueryData("SELECT role.title as role_name , permission.title as permission_name,  role_permission.permission_id as pid 
     , role_permission.role_id as rid  , role.description as role_description    
@@ -61,59 +61,13 @@ else header('Location:ShowAccessList.php')
     </div>
 </div> 
 
-<div class ="m-3">
-<div class="row ">
-    <div class="col-lg-4 col-sm-12 col-md-4 ">
-        <div class="card border-primary mb-3"  >
-            <div class="card-header bg-transparent border-primary fw-bold">ALL Permissions List </div>
-            <div class="card-body text-primary">
-                <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'JobTable' )">
-                <table class= "table border"  id = "JobTable" >
-                    <thead>
-                            <tr class="table-info">
-                                <th >#</th>
-                                <th >Permissions</th>  
-                                <th class="text-center" tile = "assign role ">OPS</th>  
-                            </tr>
-                    </thead>
-                    <tbody>
-                        <form action="AssignPermission.php" method="post">
-                            <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
-                            <!-- <input type="hidden" id = "permission_id" name="permission_id" > -->
-                            <input type="hidden" id = "title" name="title">
-                            <input type="hidden" name = "module"  value = "<?=$Permissions['id']?>">
+<div class="row">
+    <div class="col-lg-6 col-sm-12 col-md-12 ">
 
-                            <?php $counter=1; while($Permissions = $PermissionsList->fetch_assoc()) {?>
-                                <tr>
-                                    <td><?=$counter++;?></td>
-                                    <td><?=$Permissions['title']?> <span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </td>  
-                                    <td class="text-center">  
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                              
-                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
-                                             <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
-                                             id="assign_switch_<?=$Permissions['id']?>" name = "permission_id[]">
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php }  ?>  
-                        
-                    </tbody>
-                </table>
-            </div>
-            <div class="card-footer bg-transparent border-primary text-end">
-                <button class ="btn btn-sm btn-outline-primary">Apply Permission </button>  
-            </div>
-            </form>
-        </div>
     </div>
     <div class="col-lg-6  col-sm-12 col-md-12">
 
-  
-     
-
     </div>
-</div>
 </div>
 
 <div class="row m-1 d-flex justify-content-center">
@@ -136,31 +90,29 @@ else header('Location:ShowAccessList.php')
                     <tbody>
                         <form action="AssignPermission.php" method="post">
                             <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
-                            <!-- <input type="hidden" id = "permission_id" name="permission_id" > -->
+                            <input type="hidden" id = "permission_id" name="permission_id" >
                             <input type="hidden" id = "title" name="title">
 
-                            <?php $counter=1; while($Permissions = $PermissionsList->fetch_assoc()) {?>
+                            <?php $counter=1; while($Permissions = $PermissionsList->fetch_assoc())  {?>
                                 <tr>
                                     <td><?=$counter++;?></td>
                                     <td><?=$Permissions['title']?></td>  
                                     <td><?=$Permissions['page']?></td>
                                     <td class="text-center">  
                                         <div class="form-check form-switch d-flex justify-content-center">
-                                            <!--   value = "<?=$Permissions['id']?>" -->
-                                            <input class="form-check-input" type="checkbox" <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
-                                             id="assign_switch_<?=$Permissions['id']?>" name = "permission_id[]">
+                                            <input class="form-check-input" type="checkbox" <?=CheckPermission( $Permissions['id']  ,   $_GET['role_id'] , $Controller);?> 
+                                             id="assign_switch_<?=$Permissions['id']?>" onclick="assign_permissions_to_roles(<?=$Permissions['id']?> , `<?=$title?>` , this.id );" >
                                         </div>
                                     </td>
                                 </tr>
                             <?php }  ?>  
-                        
+                        </form>
                     </tbody>
                 </table>
             </div>
             <div class="card-footer bg-transparent border-primary text-end">
                 <button class ="btn btn-sm btn-outline-primary">Apply Permission </button>  
             </div>
-            </form>
         </div>
 
     </div>
