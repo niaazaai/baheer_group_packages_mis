@@ -166,18 +166,16 @@ else $ListType = 'New Job';
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2 ">
                     <label for="Currency">Currency</label>
                 </div>
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2">
-          
+                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mt-2">
                     <select class="form-select" name="Currency" id="Currency"  onchange="this.form.submit(); " >
                         <option selected='selected'  value=" <?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?>"  selected="selected" > <?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?> </option>
                         <option value="AFN">AFN</option>
                         <option value="USD">USD</option>
                         <option value="PKR">PKR</option>
                     </select>
-            
                 </div>
 
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2">
+                <!-- <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2">
          
                     <select class="form-select" name="RExchangeCurrency" id="REC"  onchange= "SetValueToHiddenField(this.value); " >
                         <option disabled >  Exchange Currency</option>
@@ -186,7 +184,7 @@ else $ListType = 'New Job';
                         <option value="PKR">PKR</option>
                     </select>
             
-                </div>
+                </div> -->
 
             </div>
             </form>

@@ -7,20 +7,39 @@
     }
 
    
-    $NEWJOB=$Controller->QueryData('SELECT COUNT(CTNId) AS new_jobs FROM carton  WHERE CTNStatus="Design" OR  CTNStatus="Film"',[])->fetch_assoc()['new_jobs'];
+    // $NEWJOB=$Controller->QueryData('SELECT COUNT(CTNId) AS new_jobs FROM carton  WHERE CTNStatus="Design" OR  CTNStatus="Film"',[])->fetch_assoc()['new_jobs'];
+    $NEWJOB= $Controller->QueryData('SELECT COUNT(CTNId) AS new_jobs FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+     ON designinfo.CaId=carton.CTNId  where CTNStatus="Design"',[])->fetch_assoc()['new_jobs'];
  
 
-    $JobUnderProcess='SELECT DISTINCT COUNT(CTNId) AS JOBS FROM `carton` 
-        INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
-        INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
-        WHERE CTNStatus="DesignProcess" order by CTNOrderDate DESC';
-    $DataRows=$Controller->QueryData($JobUnderProcess,[]);
-    $Row=$DataRows->fetch_assoc();
+    // $JobUnderProcess='SELECT DISTINCT COUNT(CTNId) AS JOBS FROM `carton` 
+    //     INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+    //     INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+    //     WHERE CTNStatus="DesignProcess" order by CTNOrderDate DESC';
+    // $DataRows=$Controller->QueryData($JobUnderProcess,[]);
+    // $Row=$DataRows->fetch_assoc();
 
-    $SFA= $Controller->QueryData('SELECT COUNT(DesignId) AS SFA FROM designinfo WHERE DesignStatus="Sent For Approval"',[])->fetch_assoc()['SFA'];
-    $Step = $Controller->QueryData("SELECT COUNT(CaId) AS Process FROM designinfo WHERE DesignStatus='Processing'",[])->fetch_assoc()['Process'];
-    $Pending = $Controller->QueryData("SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'",[])->fetch_assoc()['Pending'];
-    $Done = $Controller->QueryData("SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'",[])->fetch_assoc()['Done'];
+    $JobUnderProcess= $Controller->QueryData('SELECT COUNT(CTNId) AS JOBS FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+     ON designinfo.CaId=carton.CTNId  where  CTNStatus="DesignProcess" ',[])->fetch_assoc()['JOBS'];
+
+
+    // $SFA= $Controller->QueryData('SELECT COUNT(DesignId) AS SFA FROM designinfo WHERE DesignStatus="Sent For Approval"',[])->fetch_assoc()['SFA'];
+    $SFA= $Controller->QueryData('SELECT COUNT(DesignId) AS SFA FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+    ON designinfo.CaId=carton.CTNId  where  CTNStatus="DesignProcess" AND DesignStatus="Sent For Approval"',[])->fetch_assoc()['SFA'];
+
+
+    // $Step = $Controller->QueryData("SELECT COUNT(CaId) AS Process FROM designinfo WHERE DesignStatus='Processing'",[])->fetch_assoc()['Process'];
+    $Step= $Controller->QueryData('SELECT COUNT(DesignId) AS Process FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+    ON designinfo.CaId=carton.CTNId  where  CTNStatus="DesignProcess" AND DesignStatus="Processing"',[])->fetch_assoc()['Process'];
+
+    // $Pending = $Controller->QueryData("SELECT COUNT(CaId) AS Pending FROM designinfo WHERE DesignStatus='Pending'",[])->fetch_assoc()['Pending'];
+    $Pending= $Controller->QueryData('SELECT COUNT(DesignId) AS Pending FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+    ON designinfo.CaId=carton.CTNId  where  CTNStatus="DesignProcess" AND DesignStatus="Pending"',[])->fetch_assoc()['Pending'];
+
+    // $Done = $Controller->QueryData("SELECT COUNT(CaId) AS Done FROM designinfo WHERE DesignStatus='Done'",[])->fetch_assoc()['Done'];
+    $Done= $Controller->QueryData('SELECT COUNT(DesignId) AS Done FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo
+    ON designinfo.CaId=carton.CTNId  where  CTNStatus="DesignProcess" AND DesignStatus="Done"',[])->fetch_assoc()['Done'];
+    
     $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE CTNStatus="Film" order by CTNOrderDate DESC',[])->fetch_assoc()['film'];
 
     $FCEM = $Controller->QueryData("SELECT 
@@ -162,10 +181,10 @@
             </a>
         </div> <!-- END OF COL-LG-2 --> 
         <?php } ?> 
-          
+         
         <?php  if(in_array( $Gate['VIEW_DASHBAORD_SFA_CARD'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-sm-3">
-            <a href="JobCenter.php" style = "text-decoration:none;">
+            <a href="JobCenter.php?ListType=JobUnderProcess&Case=Sent For Approval" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #ffc107;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#ffc107">
@@ -185,7 +204,7 @@
 
         <?php  if(in_array( $Gate['VIEW_DASHBAORD_PROCESS_CARD'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-md-3">
-            <a href="JobCenter.php" style = "text-decoration:none;">
+            <a href="JobCenter.php?ListType=JobUnderProcess&Case=Processing" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #FA05FF;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#FA05FF">
@@ -206,7 +225,7 @@
 
         <?php  if(in_array( $Gate['VIEW_DASHBAORD_PENDED_CARD'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 mb-sm-3 ">
-            <a href="JobCenter.php" style = "text-decoration:none;">
+            <a href="JobCenter.php?ListType=JobUnderProcess&Case=Pending" style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #FF0000;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#FF0000">
@@ -225,7 +244,7 @@
         <?php } ?> 
         <?php  if(in_array( $Gate['VIEW_DASHBAORD_DONE_CARD'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-4 col-lg-4 col-xl-2 col-xs-12 ">
-            <a href="JobCenter.php?ListType=JobUnderProcess"  style = "text-decoration:none;">
+            <a href="JobCenter.php?ListType=JobUnderProcess&Case=Done"  style = "text-decoration:none;">
                 <div class="card shadow-lg" style="border:2px solid #198754;">
                     <div class="card-body d-flex justify-content-between align-items-center" >
                         <div  style= "color:#198754">
@@ -344,7 +363,7 @@
     const data = {
         labels: xValues,
         datasets: [{
-        label: 'Film Generated In Each Month',
+        label: 'Film Report',
         data: yValues,
         backgroundColor: [
             'rgba(255, 99, 132 )',

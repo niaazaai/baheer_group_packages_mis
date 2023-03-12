@@ -795,7 +795,7 @@ if(isset($_POST['Update']))
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12 fw-bold">
                     <label for="DesignStatus">Design Status    </label>
-                    <select name="DesignStatus" id="DesignStatus" class="form-select" <?php if($show['DesignStatus'] == 'Design Exist'){echo 'disabled';}?>>
+                    <select name="DesignStatus" id="DesignStatus" class="form-select"  >
                         <option > Select Status</option> 
                         <?php 
                             if(isset($_GET['ListType']))
@@ -847,7 +847,7 @@ if(isset($_POST['Update']))
     
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 fw-bold">
                     <label for="">Design Code  </label>
-                    <input type="text" name="DesignCode" class="form-control" onblur="this.value=removeSpaces(this.value);" value=" <?php if(isset($Rows['DesignCode1'])) {echo $Rows['DesignCode1'];}else{echo'';}?>"<?php if($Rows['DesignStatus'] == 'Design Exist'){echo 'disabled';}elseif($Rows['DesignCode1']!=''){echo 'readonly';}else{echo '';}?>>
+                    <input type="text" name="DesignCode" class="form-control" onblur="this.value=removeSpaces(this.value);" value=" " >
                 </div>
                 <?php 
                     if(isset($_GET['ListType']))
@@ -870,7 +870,7 @@ if(isset($_POST['Update']))
             
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 mt-1 fw-bold">
                     <label for="formFile" class="form-label"></label>
-                    <input class="form-control" type="file" id="formFile" name="DesignImage" <?php if($Rows['DesignStatus'] == 'Design Exist'){ echo 'readonly'; } ?>>
+                    <input class="form-control" type="file" id="formFile" name="DesignImage"  >
                 </div>
 
             

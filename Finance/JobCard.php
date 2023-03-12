@@ -65,8 +65,6 @@
     </div>
 </div>
 
-
-
 <div class="card m-3 shadow ">
     <div class="card-body">
         <p class="fs-5 fw-bold pe-3">
@@ -91,7 +89,7 @@
                 <td><?=$Rows['CustId']?></td>
                 <td><?=$Rows['CTNId']?></td>
                 <td><?=$Rows['JobNo']?></td>
-                <td><?=$Rows['CustName']."&nbsp;&nbsp;<span class='badge bg-warning'> ".$Rows['CtnCurrency']?></span></td> 
+                <td><?=$Rows['CustName']?></span></td> 
                 <td><?=$Rows['ProductName']?></td>
                 <td><?=$Rows['CustAddress']?></td>
                 <td><?=$Rows['CTNOrderDate']?></td>
@@ -110,7 +108,7 @@
             </tr>
             <tr>
                 <td><?=$Rows['CTNQTY']?></td>
-                <td><?=$Rows['CTNPrice']?></td> 
+                <td><?=$Rows['CTNPrice'] ."&nbsp;&nbsp;<span class='badge bg-warning'> ".$Rows['CtnCurrency']?></td> 
                 <td><?=$Rows['CTNTotalPrice']?></td>
                 <td><?=$Rows['CTNPolimarPrice']?></td>
                 <td><?=$Rows['CTNDiePrice']?></td>

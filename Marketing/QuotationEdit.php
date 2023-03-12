@@ -1,11 +1,7 @@
 <?php    require_once '../App/partials/Header.inc';  ?>
 <?php   require_once '../App/partials/Menu/MarketingMenu.inc'; ?>  
 <?php
-    // Authorization Code 
-    $RowCount =  $Controller->QueryData("SELECT * FROM employeet WHERE EUserName = ?" , [$_SESSION['user']] );
-    $r1 = $RowCount->fetch_row(); 
-    if ($r1[0]>5 && $r1[14]!='Marketing' && $r1[0]!=92 && $r1[0]!=63  && $r1[0]==20 && $r1[0]==34)  header("Location:index.php"); // MUST REDIRECT TO CUSTOMER DASHBOARD INSTEAD OF INDEX 
-
+ 
     // CustId is Sout 
     if(isset($_POST['CTNId']) && !empty($_POST['CTNId'])){
       $CTNId=$_POST['CTNId'];
@@ -351,9 +347,10 @@
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12"   >
         <label for="CustomerName" class="form-label">Last Job No <span class="text-danger"> * </span></label>
           <div class="custom-search" >
+            <!-- $Page != 'IndividualQuotation' &&  -->
             <input type="text" class="custom-search-input form-control" value = "<?=$LastJobNo[3];?>"    id="CustomerName"  name="CustomerName1" <?=($Page == 'IndividualQuotation'  ||  $Page == 'CustomerProfile') ? ' disabled' : '' ;   ?>   >
-            <?php if($Page != 'IndividualQuotation' && $Page != 'CustomerProfile') { ?>  
-              <a class="custom-search-botton text-dark" required readonly onclick = "CopyValueToJobNo(<?=$LastJobNo[3];?>)"  > 
+            <?php if($Page != 'CustomerProfile') { ?>  
+              <a class="custom-search-botton text-dark" required readonly onclick = "CopyValueToJobNo(`<?=$LastJobNo[3];?>`)"  > 
                 <svg  class = "quotation-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
                   <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1z"/>
                 </svg>
@@ -363,9 +360,10 @@
         </div>
 
 
+        <!-- <?=($Page == 'IndividualQuotation') ? 'disabled' : '' ;   ?>   -->
         <div class="col-xxl-2  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
           <label for="JobNo" class="form-label">Job No <span class="text-danger"> * </span> </label>
-          <input class="form-control " <?=($Page == 'IndividualQuotation') ? 'disabled' : '' ;   ?>  
+          <input class="form-control " 
             style = "<?=($Page == 'CustomerOrderPage') ? ' border:2px solid red; ' : '' ;   ?>"  id="JobNo" name="JobNo"   
             value="<?=($Page == 'CustomerProfile') ? 'NULL' : $CTN['JobNo'] ; ?>" type="text"  placeholder="NULL"   />
         </div>
@@ -553,7 +551,6 @@
                 <option selected value="<?=isset($CTN['polymer_info']) ? $CTN['polymer_info'] : '';  ?>">  <?=isset($CTN['polymer_info']) ? $CTN['polymer_info'] : '';  ?> </option>
                 <option value="Polymer Exist" >Polymer Exist</option>
                 <option value="No Print" >No Print</option>
-                <option value="Personal Polymer" >Personal Polymer</option>
                 <option value="Free Polymer" >Free Polymer </option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -562,7 +559,7 @@
               </select>
           </div>
 
-          <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" id="DieExist">
+          <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" id="DieExist1">
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
               <select class="form-select" name="DieExist" id="DieExist"  onchange = "CheckDiePriceInput(this.value);"   >
                 <option selected value="<?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?>" >  <?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?> </option>
@@ -703,7 +700,7 @@
                 <?php } elseif( $Page == 'CancelQuotation') { // DONE ?>
                   <button type="submit"  id="COP_EditOnly"  name="COP_EditOnly" class="btn btn-outline-success fw-bold" style = "max-width:180px;" onclick = "alert('Are you sure you want to process this again?');">Process Again</button>
                 <?php } elseif( $Page == 'IndividualQuotation') { // DONE || $Page == 'CustomerProductList'   ?>
-                <button type="submit"  id="EditButtonAndPrint"  name="EditButtonAndPrint" class="btn btn-outline-primary fw-bold " style = "max-width:180px;"    >Update & Print</button>
+                <!-- <button type="submit"  id="EditButtonAndPrint"  name="EditButtonAndPrint" class="btn btn-outline-primary fw-bold " style = "max-width:180px;"    >Update & Print</button> -->
                 <button type="submit"  id="EditOnly"  name="EditOnly" class="btn btn-outline-primary fw-bold" style = "max-width:180px;"    >Update</button>
                 <a  data-bs-toggle="modal" data-bs-target="#exampleModal"    class="btn btn-outline-danger border-danger  fw-bold " style = "max-width:180px;"   >Cancel Quote</a>
               <?php } elseif($Page == 'CustomerProfile') {  ?>
@@ -711,13 +708,9 @@
                 <button type="submit"  id="RorderToDesign"  name="RorderToDesign" class="btn btn-outline-primary fw-bold   " style = "max-width:180px;"  >Send To Design</button>
                 <button type="submit"  id="Rorder"  name="Rorder" class="btn btn-outline-primary fw-bold " style = "max-width:180px;"   >Reorder</button>
               <?php }  ?>
-
-
           </div>
         </div>
-    
         </div>
-
       </div>
       <!-- SEVENTH  ROW  -->
 
@@ -765,7 +758,6 @@
   function RemoveComma(x) {
     return  x.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, "")
   }
-  
 
   function AddComma(value1 , id ){
       let x = 0 ; 
@@ -833,9 +825,12 @@
     }
 
     if (name == 'NoColor') {
-      if(value == 'No Print' || value == 'Polymer Exist' || value  == 'Personal Polymer' || value == 'Free Polymer') {
+      if(value == 'No Print' || value == 'Polymer Exist'  || value == 'Free Polymer') {
         document.getElementById('NoFlipCol').style.display = "none"; 
         document.getElementById('PolymerPriceCol').style.display = "none"; 
+        document.getElementById('NoFilpArea').style.display = "none"; 
+        document.getElementById('PolymerPrice').value = 0.0; 
+        value = 0; 
       }
       else if ( value == '1' || value == '2' || value == '3' ||value == '4' ) {
             document.getElementById('NoFlipCol').style.display = ""; 
@@ -926,12 +921,11 @@
 
     if(NoFlip) {
       PolymerHeight = Number(document.getElementById('NoFlipHeight').value);
-      console.log('IF:::> ' + PolymerHeight + ' - ' + ColorNumber ); 
-
+      // console.log('IF:::> ' + PolymerHeight + ' - ' + ColorNumber ); 
     }
     else {
       PolymerHeight = UserWidth + UserHeight;
-      console.log('ELSE:::> ' + PolymerHeight + ' - ' + ColorNumber); 
+      // console.log('ELSE:::> ' + PolymerHeight + ' - ' + ColorNumber); 
     }
 
     Height = UserWidth + UserHeight;
@@ -992,7 +986,7 @@
     // this part is to emptying polymer price when there no color selected 
     let NoColor = document.getElementById('NoColor');
     let smile = NoColor.options[NoColor.selectedIndex].value
-    if( smile == '0') {
+    if(smile == 'No Print' || smile == 'Polymer Exist'  || smile == 'Free Polymer') {
       document.getElementById('PolymerPrice').value = 0;
       PolymerPrice = 0 ; 
     }  
@@ -1091,7 +1085,9 @@
     else if(NoFlip == 'WF') Height1 = UserHeight1; 
     else if(NoFlip == 'FF') Height1 = UserWidth1 + UserHeight1; 
 
+
     document.getElementById('NoFilpArea').style.display = '';
+    
     document.getElementById('NoFlipLength').value  =    (UserWidth1 + UserLength1) * 2  + 50 ; 
     document.getElementById('NoFlipHeight').value  =  Height1
 
@@ -1128,11 +1124,30 @@
       return !str.trim().length;
   }
 
-  function CopyValueToJobNo(value){
-    let JobNumber = document.getElementById('JobNo') ; 
-    if(isEmpty(JobNumber.value)) JobNumber.value = value + 1 ;
-    else JobNumber.value = '' ;
+  // OLD FUNCTION NEED TO DELETE A TIME AFTER DEPLOYMENT 
+  // function CopyValueToJobNo(value){
+  //   let JobNumber = document.getElementById('JobNo') ; 
+  //   if(isEmpty(JobNumber.value)) JobNumber.value = value + 1 ;
+  //   else JobNumber.value = '' ;
+  // }
+
+  function pad(num, size) {
+      var s = "000" + num;
+      return s.substr(s.length-size);
   }
+    
+  function CopyValueToJobNo(value)
+  {
+    let JobNumber = document.getElementById('JobNo') ; 
+    let LastJobNo= document.getElementById('CustomerName').value; 
+    let SplitString = LastJobNo.substr(0, 3); 
+    let SplitDigit = LastJobNo.substr(3); 
+    let x = Number(SplitDigit) + 1 ; 
+    let NewData =JobNumber.value = pad( x,5);
+    JobNumber.value = SplitString.concat(NewData); 
+  }
+
+
  
   function HideJobType(){
     let jobtype =  document.getElementById('JobTypeRow') ;
@@ -1250,30 +1265,7 @@ function ChangeDieckle(value) {
 
 }
 
-  function removeDuplicateOptions(s, comparitor) {
-      if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
-      var c, i, o=s.options, sorter={};
-      if(!comparitor || typeof comparitor !== 'function') {
-        comparitor = function(o) { return o.value; };//by default we comare option values.
-      }
-      for(i=0; i<o.length; i++) {
-        c = comparitor(o[i]);
-        if(sorter[c]) {
-          s.removeChild(o[i]);
-          i--;
-        }
-        else { sorter[c] = true; }
-      }
-      return true;
-    }
-    let SelectID = ['CartonUnit' , 'CtnCurrency1' , 'Tax' , 'NoColor1' , 'FlutType' ,    'CartonType' , 'NoFlip']
  
-
-    // removeDuplicateOptions( document.getElementById('CartonUnit'));
-          
-    for (let index = 0; index <  SelectID.length; index++) {
-      removeDuplicateOptions(document.getElementById(SelectID[index]));
-    }
 
     function collectionContains(collection, searchText) {
         for (var i = 0; i < collection.length; i++) {
@@ -1342,8 +1334,26 @@ function ChangeDieckle(value) {
         document.getElementById('DiePriceInput').removeAttribute('disabled'); 
       }
     }// end of function 
- </script>
 
+
+    function removeDuplicateOptions(s, comparitor) {
+      if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
+      var c, i, o=s.options, sorter={};
+      if(!comparitor || typeof comparitor !== 'function') {
+        comparitor = function(o) { return o.value; };//by default we comare option values.
+      }
+      for(i=0; i<o.length; i++) {
+        c = comparitor(o[i]);
+        if(sorter[c]) {
+          s.removeChild(o[i]);
+          i--;
+        }
+        else { sorter[c] = true; }
+      }
+      return true;
+    }
+
+  </script>
   <?php 
       $CallAgain = [   'PaperGrade'  => $CTN['GrdPrice'] , 'CartonQTY' => $CTN['CTNQTY']  ,
         'PaperLength' => $CTN['CTNLength'] ,  'PaperWidth' => $CTN['CTNWidth'] , 
@@ -1362,4 +1372,12 @@ function ChangeDieckle(value) {
         $Exct .= "</script>" ;
         echo $Exct; 
   ?>
+<script>
+  let SelectID = ['CartonUnit' , 'CtnCurrency1' , 'Tax' , 'NoColor1' , 'NoColor' ,'DieExist' ,'FlutType' ,'CartonType' , 'NoFlip']
+    for (let index = 0; index <  SelectID.length; index++) {
+      removeDuplicateOptions(document.getElementById(SelectID[index]));
+  }
+</script>
+  
+
 <?php require_once '../App/partials/Footer.inc'; ?> 

@@ -25,24 +25,71 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
     }
     else if($ListType=='JobUnderProcess')
     {
-        $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
-        ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
-                                `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
-        designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
-        ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
-        where CTNStatus="DesignProcess" order by CTNOrderDate DESC';
+      if(isset($_GET['Case']) && !empty($_GET['Case']))
+      {  
+          if($_GET['Case']=='Sent For Approval')
+          {
+              $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
+              ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
+                                      `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
+              designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
+              ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+              where CTNStatus="DesignProcess" AND DesignStatus="Sent For Approval"  order by CTNOrderDate DESC';
+          }
+          elseif($_GET['Case']=='Processing'  )
+          {
+            $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
+            ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
+                                    `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
+            designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
+            ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+            where CTNStatus="DesignProcess" AND DesignStatus="Processing"  order by CTNOrderDate DESC';
+          }
+          elseif($_GET['Case']=='Pending'  )
+          {
+            $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
+            ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
+                                    `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
+            designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
+            ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+            where CTNStatus="DesignProcess" AND DesignStatus="Pending"  order by CTNOrderDate DESC';
+          }
+          elseif($_GET['Case']=='Done' )
+          {
+            $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
+            ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
+                                    `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
+            designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
+            ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+            where CTNStatus="DesignProcess" AND DesignStatus="Done"  order by CTNOrderDate DESC';
+          } 
+        
+        }
+        else
+        { 
+            $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
+            ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`, CFluteType,  
+                                    `Ctnp5`, `Ctnp6`, `Ctnp7` ,Note, offesetp,	 designinfo.Alarmdatetime,CURRENT_TIMESTAMP,
+            designinfo.DesignCode1,designinfo.DesignImage,designinfo.DesignerName1 ,designinfo.DesignStartTime ,carton.NoFlip , designer_id  FROM `carton` INNER JOIN ppcustomer 
+            ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+            where CTNStatus="DesignProcess"  order by CTNOrderDate DESC';
+        }
+       
     } 
+    
 }
 else
 {
     $ListType = 'NewJob'; 
-    $SQL='SELECT DISTINCT `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ), " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`,
-    ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, `Ctnp1`, `Ctnp2`, `Ctnp3`, `Ctnp4`,  CFluteType, 
-                                `Ctnp5`, `Ctnp6`, `Ctnp7` ,offesetp,	 designinfo.Alarmdatetime,designinfo.DesignStatus, designinfo.DesignImage,CURRENT_TIMESTAMP,
+    $SQL='SELECT DISTINCT CTNId , ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , " x " , FORMAT ( CTNWidth / 10 , 1 ) , " x ", FORMAT(CTNHeight/ 10,1) ) AS Size ,CTNOrderDate, CTNStatus, CTNQTY, ProductName,
+    ppcustomer.CustMobile, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note,Ctnp1,Ctnp2,Ctnp3,Ctnp4,CFluteType, 
+                                Ctnp5,Ctnp6,Ctnp7 ,offesetp,	 designinfo.Alarmdatetime, designinfo.DesignStatus, designinfo.DesignImage, CURRENT_TIMESTAMP,
     designinfo.DesignCode1 ,designinfo.DesignerName1 ,designinfo.DesignStartTime,carton.NoFlip , designer_id   FROM `carton` INNER JOIN ppcustomer 
     ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  where CTNStatus="Design" order by CTNOrderDate DESC';
 }
+ 
 $DataRows=$Controller->QueryData($SQL,[]);
+
 $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE CTNStatus="Film" order by CTNOrderDate DESC',[])->fetch_assoc()['film'];
 
 ?>  
