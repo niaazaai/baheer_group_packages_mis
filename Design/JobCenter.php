@@ -232,10 +232,10 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
                 }
             while($Rows=$DataRows->fetch_assoc()) {    
               
-                if( isset($_REQUEST['ListType']) && ( $_REQUEST['ListType']=='JobUnderProcess')) {
-                  if($Rows['DesignerName1'] == $DesignerName){}
-                  else {  if($DesignerName != '-1')  continue;   }
-                }
+                // if( isset($_REQUEST['ListType']) && ( $_REQUEST['ListType']=='JobUnderProcess')) {
+                //   if($Rows['DesignerName1'] == $DesignerName){}
+                //   else {  if($DesignerName != '-1')  continue;   }
+                // }
               ?>
                 <tr>
                   <td><?=$Count?> </td>

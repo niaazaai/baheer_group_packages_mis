@@ -47,9 +47,17 @@ if(isset($_GET['CTNId']) && !empty($_GET['CTNId']) && isset($_GET['ButtonType'] 
         }
         else {
             // put it back to recive amount 
-            $Controller->QueryData('UPDATE carton SET CTNStatus = "Film" WHERE CTNId=?', [$CTNId]);
-            $Department = 'Design'; 
-            $alert_comment = 'New Film with JobNo (' . $CARTON['JobNo'] . ') Arrived'; 
+            // we have to check the design info table for checking than pass it
+            $Check=$Controller->QueryData("SELECT Re_OrderStatus FROM designinfo INNER JOIN carton ON carton.CTNId=designinfo.CaId WHERE CTNId = ? AND Re_OrderStatus='Yes'",[$CTNId]);
+            if($Check->num_rows > 0)  {
+                $Controller->QueryData('UPDATE carton SET CTNStatus = "Archive" WHERE CTNId=?', [$CTNId]);
+            }
+            else
+            {
+                $Controller->QueryData('UPDATE carton SET CTNStatus = "Film" WHERE CTNId=?', [$CTNId]);
+                $Department = 'Design'; 
+                $alert_comment = 'New Film with JobNo (' . $CARTON['JobNo'] . ') Arrived'; 
+            } 
             
         }
 

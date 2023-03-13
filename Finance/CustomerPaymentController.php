@@ -90,9 +90,19 @@
                    if(trim($OLD_PAYMENT['offesetp']) == 'Yes' ) {
                         $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? , CTNStatus = "Printing"  WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
                     }
-                    else {
-                        // put it back to recive amount 
-                        $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? , CTNStatus = "Film" WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
+                    else 
+                    {
+                        $Check=$this->Controller->QueryData("SELECT Re_OrderStatus FROM designinfo INNER JOIN carton ON carton.CTNId=designinfo.CaId WHERE CTNId = ? AND Re_OrderStatus='Yes'",[$PAYMENT['CTNID'][$index]]);
+                        if($Check->num_rows > 0)
+                        {
+                            $this->Controller->QueryData('UPDATE carton SET CTNStatus = "Archive" WHERE CTNId=?', [$PAYMENT['CTNID'][$index]]);
+                        }
+                        else
+                        {
+                             // put it back to recive amount 
+                            $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? , CTNStatus = "Film" WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);
+                        }
+                       
                     }
                 }
                 $this->Controller->QueryData('UPDATE carton SET ReceivedAmount = ? WHERE CTNId=?' ,  [ $AMOUNT , $PAYMENT['CTNID'][$index] ]);

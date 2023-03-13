@@ -73,9 +73,7 @@ date_default_timezone_set('Asia/Kabul');
             }
         } // end of foreach 
     }
-    
- 
-                        ?>
+   ?>
 
 <?php if(isset($_GET['msg']) && !empty($_GET['msg']))  {
           echo' <div class="alert alert-'. $_GET['class'] .' alert-dismissible fade show m-3" role="alert">
@@ -147,6 +145,6 @@ date_default_timezone_set('Asia/Kabul');
             </div>
         </div>
     </div>
-
-    <?php } ?>
+    
+    <?php } } ?>
 <?php  require_once '../App/partials/Footer.inc'; ?>

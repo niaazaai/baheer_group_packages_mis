@@ -347,9 +347,9 @@
         <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12"   >
         <label for="CustomerName" class="form-label">Last Job No <span class="text-danger"> * </span></label>
           <div class="custom-search" >
-            <!-- $Page != 'IndividualQuotation' &&  -->
+            <!--   $Page != 'IndividualQuotation' &&-->
             <input type="text" class="custom-search-input form-control" value = "<?=$LastJobNo[3];?>"    id="CustomerName"  name="CustomerName1" <?=($Page == 'IndividualQuotation'  ||  $Page == 'CustomerProfile') ? ' disabled' : '' ;   ?>   >
-            <?php if($Page != 'CustomerProfile') { ?>  
+            <?php if(  $Page != 'CustomerProfile') { ?>  
               <a class="custom-search-botton text-dark" required readonly onclick = "CopyValueToJobNo(`<?=$LastJobNo[3];?>`)"  > 
                 <svg  class = "quotation-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
                   <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1z"/>
@@ -359,8 +359,7 @@
           </div>
         </div>
 
-
-        <!-- <?=($Page == 'IndividualQuotation') ? 'disabled' : '' ;   ?>   -->
+<!-- <?=($Page == 'IndividualQuotation') ? 'disabled' : '' ;   ?> -->
         <div class="col-xxl-2  col-xl-2 col-lg-2 col-md-2 col-sm-12 col-xs-12">
           <label for="JobNo" class="form-label">Job No <span class="text-danger"> * </span> </label>
           <input class="form-control " 
@@ -700,7 +699,7 @@
                 <?php } elseif( $Page == 'CancelQuotation') { // DONE ?>
                   <button type="submit"  id="COP_EditOnly"  name="COP_EditOnly" class="btn btn-outline-success fw-bold" style = "max-width:180px;" onclick = "alert('Are you sure you want to process this again?');">Process Again</button>
                 <?php } elseif( $Page == 'IndividualQuotation') { // DONE || $Page == 'CustomerProductList'   ?>
-                <!-- <button type="submit"  id="EditButtonAndPrint"  name="EditButtonAndPrint" class="btn btn-outline-primary fw-bold " style = "max-width:180px;"    >Update & Print</button> -->
+                <button type="submit"  id="SentDirectlyToFinance"  name="SentDirectlyToFinance" class="btn btn-outline-primary fw-bold " style = "max-width:180px;">Sent To Finance</button>
                 <button type="submit"  id="EditOnly"  name="EditOnly" class="btn btn-outline-primary fw-bold" style = "max-width:180px;"    >Update</button>
                 <a  data-bs-toggle="modal" data-bs-target="#exampleModal"    class="btn btn-outline-danger border-danger  fw-bold " style = "max-width:180px;"   >Cancel Quote</a>
               <?php } elseif($Page == 'CustomerProfile') {  ?>
@@ -713,7 +712,7 @@
         </div>
       </div>
       <!-- SEVENTH  ROW  -->
-
+      
       <!-- Modal -->
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -1136,8 +1135,7 @@
       return s.substr(s.length-size);
   }
     
-  function CopyValueToJobNo(value)
-  {
+  function CopyValueToJobNo(value) {
     let JobNumber = document.getElementById('JobNo') ; 
     let LastJobNo= document.getElementById('CustomerName').value; 
     let SplitString = LastJobNo.substr(0, 3); 
@@ -1146,8 +1144,6 @@
     let NewData =JobNumber.value = pad( x,5);
     JobNumber.value = SplitString.concat(NewData); 
   }
-
-
  
   function HideJobType(){
     let jobtype =  document.getElementById('JobTypeRow') ;
@@ -1157,7 +1153,6 @@
     else {
       jobtype.style.display = 'none';  document.getElementById('jobTypeHr').style.display = 'none'; 
     }
-
   }
 
   function CalculatePaperWeight(L , W , H , PaperWeight , CTNQTY ){
@@ -1174,8 +1169,6 @@
     let PaperWeightListHTML = ''; 
     let PaperWeightollectedListHTML 
     let PWTLH = ''; 
-   
-
   
     // this block is used to hide all unwanted paper weight 
     const collection = document.getElementsByClassName("_Paper_");
@@ -1196,7 +1189,6 @@
 
       PaperWeightListHTML += '<div class="input-group my-2"> <input type="text" class = "form-control " style = "border-right:none;" value = "L' + counter + " - " + RG.exec(property) +'"readonly>';
       PaperWeightListHTML +=  '<input type="text" class = "form-control" value="'+ Precision(RequiredPaperKG/1000 ,2 ) + ' TON" readonly > </div>';
-
 
       var _paper = property.replace(/[^A-Za-z]/g, '');
 
@@ -1248,9 +1240,7 @@
     // PaperWeightListHTML += '<strong>' + PaperTotalWeightTon + ' TON </strong></span> </li>' ;
     // PaperWeightollectedList  
     document.getElementById('PaperWeightList').innerHTML = PaperWeightListHTML ; 
-
     // document.getElementById('PaperWeightollectedList').innerHTML = PaperWeightollectedList ; 
-
     // SingleCartonWeight =  Number(Precision( PaperTotalGSM * SheetArea) ) ; 
     // TrayArea = Number(Precision(L * W * 0.000001 )); 
     // TrayWeight = Number(Precision(TrayArea * PaperTotalGSM )); 
@@ -1258,100 +1248,97 @@
     document.getElementById('DieckleInput').value = Dieckle ; 
   }// END OF calculate paper weight 
 
-function ChangeDieckle(value) {
- let W =  document.getElementById('PaperWidth').value-0;
- let H =  document.getElementById('PaperHeight').value-0;
- document.getElementById('DieckleInput').value = ( W+H ) * value ; 
+  function ChangeDieckle(value) {
+    let W =  document.getElementById('PaperWidth').value-0;
+    let H =  document.getElementById('PaperHeight').value-0;
+    document.getElementById('DieckleInput').value = ( W+H ) * value ; 
+  }
 
-}
-
- 
-
-    function collectionContains(collection, searchText) {
-        for (var i = 0; i < collection.length; i++) {
-            if( collection[i].innerText.toLowerCase().indexOf(searchText) > -1 ) {
-                return true;
-            }
-        }
-        return false;
-    } 
-
-    function UpdateToNewPrice(){
-      let ex; 
-        if(document.getElementById('NewPrice').checked)  {
-            var PaperName = document.getElementsByName('PaperName') ; 
-            for (let index = 1; index <= 7 ; index++) {
-                Array.from(PaperName).forEach(function(element) {
-                    if(element.id.trim()  === document.getElementById('PaperName_'+index).value.trim()  ) {
-                      ChangePrice("PaperLayerPrice_"+index , element.value ); 
-                    }
-                });
-                ex = document.getElementById('NewExchangeRate').value ; 
-            }
-        }  
-        else {
-          ex =  document.getElementById('ExchangeRate').value ;   
-          let CartonType = document.getElementById('CartonType');    
-          CartonType =  CartonType.options[CartonType.selectedIndex].value;
-          for (let index = 1; index <= CartonType ; index++) { 
-            let element = document.getElementById('PaperLayerPrice_'+ index);  
-            ChangePrice("PaperLayerPrice_"+index , element.options[element.selectedIndex].value ); 
+  function collectionContains(collection, searchText) {
+      for (var i = 0; i < collection.length; i++) {
+          if( collection[i].innerText.toLowerCase().indexOf(searchText) > -1 ) {
+              return true;
           }
-        } 
-        AddInputValues('ExchangeRate' , ex ); 
-    }
+      }
+      return false;
+  } 
+
+  function UpdateToNewPrice(){
+    let ex; 
+      if(document.getElementById('NewPrice').checked)  {
+          var PaperName = document.getElementsByName('PaperName') ; 
+          for (let index = 1; index <= 7 ; index++) {
+              Array.from(PaperName).forEach(function(element) {
+                  if(element.id.trim()  === document.getElementById('PaperName_'+index).value.trim()  ) {
+                    ChangePrice("PaperLayerPrice_"+index , element.value ); 
+                  }
+              });
+              ex = document.getElementById('NewExchangeRate').value ; 
+          }
+      }  
+      else {
+        ex =  document.getElementById('ExchangeRate').value ;   
+        let CartonType = document.getElementById('CartonType');    
+        CartonType =  CartonType.options[CartonType.selectedIndex].value;
+        for (let index = 1; index <= CartonType ; index++) { 
+          let element = document.getElementById('PaperLayerPrice_'+ index);  
+          ChangePrice("PaperLayerPrice_"+index , element.options[element.selectedIndex].value ); 
+        }
+      } 
+      AddInputValues('ExchangeRate' , ex ); 
+  }
 
     
-    function CheckFlexoOffset(){
-      let flexo = document.getElementById('flexop'); 
-      let offset = document.getElementById('offesetp'); 
+  function CheckFlexoOffset(){
+    let flexo = document.getElementById('flexop'); 
+    let offset = document.getElementById('offesetp'); 
 
-      if(flexo.checked == true) {
-        offset.checked = false; 
-      }
-      else if (offset.checked == true) {
-        flexo.checked = false; 
-      }
-    } // end of function 
-
-
-    function CheckCancelCommentLength(){
-      let CancelComment = document.getElementById('CancelComment');
-      document.getElementById('comment_length').innerHTML = CancelComment.value.length;
-      if(CancelComment.value.length >= 120 ) {
-        CancelComment.setAttribute('maxlength', 120); 
-      }
+    if(flexo.checked == true) {
+      offset.checked = false; 
     }
-    CheckCancelCommentLength(); 
-
-    function CheckDiePriceInput(value){
-      if(value == 'No Die' || value == 'Die Exist') {
-        document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
-        document.getElementById('DiePriceInput').value = 0 ; 
-        InputValues['DiePrice'] = 0
-      }//end of if block 
-      else {
-        document.getElementById('DiePriceInput').removeAttribute('disabled'); 
-      }
-    }// end of function 
-
-
-    function removeDuplicateOptions(s, comparitor) {
-      if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
-      var c, i, o=s.options, sorter={};
-      if(!comparitor || typeof comparitor !== 'function') {
-        comparitor = function(o) { return o.value; };//by default we comare option values.
-      }
-      for(i=0; i<o.length; i++) {
-        c = comparitor(o[i]);
-        if(sorter[c]) {
-          s.removeChild(o[i]);
-          i--;
-        }
-        else { sorter[c] = true; }
-      }
-      return true;
+    else if (offset.checked == true) {
+      flexo.checked = false; 
     }
+  } // end of function 
+
+
+  function CheckCancelCommentLength(){
+    let CancelComment = document.getElementById('CancelComment');
+    document.getElementById('comment_length').innerHTML = CancelComment.value.length;
+    if(CancelComment.value.length >= 120 ) {
+      CancelComment.setAttribute('maxlength', 120); 
+    }
+  }
+  CheckCancelCommentLength(); 
+
+  function CheckDiePriceInput(value){
+    if(value == 'No Die' || value == 'Die Exist') {
+      document.getElementById('DiePriceInput').setAttribute('disabled' , 'disabled'); 
+      document.getElementById('DiePriceInput').value = 0 ; 
+      InputValues['DiePrice'] = 0
+    }//end of if block 
+    else {
+      document.getElementById('DiePriceInput').removeAttribute('disabled'); 
+    }
+  }// end of function 
+
+
+  function removeDuplicateOptions(s, comparitor) {
+    if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
+    var c, i, o=s.options, sorter={};
+    if(!comparitor || typeof comparitor !== 'function') {
+      comparitor = function(o) { return o.value; };//by default we comare option values.
+    }
+    for(i=0; i<o.length; i++) {
+      c = comparitor(o[i]);
+      if(sorter[c]) {
+        s.removeChild(o[i]);
+        i--;
+      }
+      else { sorter[c] = true; }
+    }
+    return true;
+  }
 
   </script>
   <?php 
@@ -1378,6 +1365,4 @@ function ChangeDieckle(value) {
       removeDuplicateOptions(document.getElementById(SelectID[index]));
   }
 </script>
-  
-
 <?php require_once '../App/partials/Footer.inc'; ?> 

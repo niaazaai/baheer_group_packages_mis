@@ -25,7 +25,7 @@
                 $QuotationRows = $this->Controller->QueryData("UPDATE ppcustomer SET CusStatus = ? , PPCondition = ? WHERE CustId = ?" , 
                 ['Active' , 'Working' , $request['CustomerId'] ]); 
             }
-   
+
             if(isset($request['CartonQTY'] )   ) {
                 $request['CartonQTY'] = str_replace(",","", $request['CartonQTY']); 
             }
@@ -34,9 +34,9 @@
             }
             
             if($request['JobNo'] == 'NULL' && (isset($request['RorderAndPrint']) || isset($request['Rorder']) ) )   $Status = 'New';              
-            else if($request['JobNo'] != 'NULL' && (isset($request['RorderAndPrint']) || isset($request['Rorder']) ))  $Status = 'New';    
+            else if($request['JobNo'] != 'NULL' && (isset($request['RorderAndPrint']) || isset($request['Rorder']) ))  $Status = 'FNew';    
             else if($request['JobNo'] == 'NULL' && isset($request['RorderToDesign'])) $Status = 'Design';              
-            else if($request['JobNo'] != 'NULL' && isset($request['RorderToDesign'])) header("Location:QuotationEdit.php?CTNId=". $request['CTNId'] ."msg='Please Remove Job Number'&Page=". $_POST['Page']  );                    
+            else if($request['JobNo'] != 'NULL' && isset($request['RorderToDesign'])) {  header("Location:QuotationEdit.php?CTNId=". $request['CTNId'] ."&msg='Please Remove Job Number'&Page=". $_POST['Page']  );  }                   
             // else { header("Location:Quotation.php?CustId=". $request['CustomerId'] ." &CTNId=". $request['CTNId'] ."&msg='JobNo is not set correctly'&Page=". $_POST['Page']  );}
 
             // this part is used for design notification
@@ -126,8 +126,43 @@
                 elseif(isset($_POST['SendToDesign'])  || isset($_POST['SaveOnly'])  ) {
                     header("Location:IndividualQuotation.php");
                 }
-                elseif(isset($_POST['Rorder']) || isset($_POST['RorderToDesign'])  ){
+                elseif(isset($_POST['Rorder']) || isset($_POST['RorderToDesign']) || isset($_POST['RorderAndPrint'])   ){
 
+                    $LID = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
+                    $SelectDesigninfo= $this->Controller->QueryData("SELECT * FROM designinfo WHERE CaId=?",[ $_POST['CTNId']]);
+                    $DataRows=$SelectDesigninfo->fetch_assoc();
+                    
+                    // var_dump($DataRows); 
+                    // echo $_POST['CTNId'] ; 
+                    // echo "<br>"; 
+                    // echo $LID ; 
+
+                    // die(); 
+
+
+                    if($SelectDesigninfo->num_rows > 0)
+                    {
+                        $Insert=$this->Controller->QueryData("INSERT INTO designinfo (
+                                DesignName1, DesignerName1, DesignStatus, DesignImage, CaId,  DesignCode1,   DesignDep, OriginalFile, design_type,  designer_id, Re_OrderStatus
+                            ) 
+                            VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                            [   
+                                $DataRows['DesignName1'],
+                                $DataRows['DesignerName1'],
+                                $DataRows['DesignStatus'],
+                                $DataRows['DesignImage'],
+                                $LID,
+                                $DataRows['DesignCode1'],
+                                $DataRows['DesignDep'],
+                                $DataRows['OriginalFile'],
+                                $DataRows['design_type'],
+                                $DataRows['designer_id'],
+                                'Yes'
+                            ]);
+                            if(!$Insert) die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Record not inserted successfully</h1>"); 
+                    }
+                    else  die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Design information does exist, please contact system admin</h1>");
+ 
                     if($request['JobNo'] == 'NULL')  header("Location:IndividualQuotation.php?CustId=".$request['CustomerId']);
                     else header("Location:CustomerProfile.php?id=".$request['CustomerId']);
                     
@@ -141,19 +176,6 @@
                 header("Location:Quotation.php?CustId=". $request['CustomerId'] ."&msg=Error Occured While Saving Quotation");
             }
         } // END OF SAVE METHOD 
-
-
-        
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -197,11 +219,14 @@
             
             if(!isset($request['JobNo'] ) &&  empty($request['JobNo']) ) {
                 $request['JobNo'] = "NULL";
+
+                if(isset($_POST['SentDirectlyToFinance'])) {
+                    $Status = 'New'; 
+                }
             } 
 
             if($request['JobNo'] != 'NULL'){
                 $QuotationRows = $this->Controller->QueryData("UPDATE ppcustomer SET CusStatus=? , PPCondition=? WHERE CustId = ?" , ['Active' , 'Working' , $request['CustomerId'] ]); 
-                // $Status = 'FNew'; 
             }
             //  else $Status = 'Order';
             
@@ -211,6 +236,7 @@
             if(trim($_POST['Page']) == 'JobList') {
                  $Status = $request['CTNStatus']; 
             }
+            
 
             if($_POST['Page'] == 'CustomerOrderPage') {  
                 // the edit comes from order page then if it is not job then it should be in the order page else send it to finance for payment 
@@ -273,18 +299,14 @@
             
 
             if($QuotationRows) {
-                    if(isset($_POST['EditButtonAndPrint'])) {
-                        header("Location:QuotationPrint.php?CTNId=". $request['CTNId']);
-                    }
+                    if(isset($_POST['SentDirectlyToFinance'])) {
+                        header("Location:IndividualQuotation.php");
+                    } 
                     else if(isset($_POST['EditToDesign']) || isset($_POST['EditOnly'])) {
                         header("Location:IndividualQuotation.php");
                     }
                     elseif( isset($_POST['COP_EditOnly']) ){
-
-
-
                         header("Location:". $_POST['Page']. ".php");
-                         
                     }
                    elseif( isset($_POST['CancelQuote']) ) {
                     header("Location:CancelQuotation.php");
@@ -310,7 +332,7 @@
         if(isset($_POST['Page'] ) && !empty($_POST['Page']) ) {
 
             if($_POST['Page'] == 'IndividualQuotation' ) { // || $_POST['Page'] == 'CustomerProductList' 
-                if(isset($_POST['EditButtonAndPrint']) ||  isset($_POST['EditOnly']) ) $QUOTATION->EditQuotation( $_POST);
+                if(isset($_POST['SentDirectlyToFinance']) ||  isset($_POST['EditOnly']) ) $QUOTATION->EditQuotation( $_POST , 'FNew');
                 if(isset($_POST['EditToDesign'])  ) $QUOTATION->EditQuotation($_POST , 'Design' );
                 if(isset($_POST['CancelQuote'])) $QUOTATION->EditQuotation($_POST , 'Cancel' );
             } 
@@ -333,6 +355,7 @@
         if(isset($_POST['SaveButton']) || isset($_POST['SaveOnly'])) $QUOTATION->CreateQuotation($_POST);  
         if(isset($_POST['SendToDesign'])  ) $QUOTATION->CreateQuotation($_POST , 'Design' );
 
+        // EditButtonAndPrint SentDirectlyToFinance
         
        
     } 
