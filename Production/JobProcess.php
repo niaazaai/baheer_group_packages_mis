@@ -976,7 +976,7 @@
     </div>
 
     <div >
-        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+        <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
 
     </div><!-- end of card-body -->
@@ -1125,7 +1125,7 @@
     </div>
 
     <div >
-        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+        <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
 
     </div><!-- end of card-body -->
@@ -1275,7 +1275,7 @@
     </div>
 
     <div >
-        <img src="../Assets/DesignImages/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
+        <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">
     </div> 
 
     </div><!-- end of card-body -->
