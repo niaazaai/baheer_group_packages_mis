@@ -186,6 +186,8 @@ else if( filter_has_var(INPUT_POST, 'FieldType')  || filter_has_var(INPUT_POST, 
                                             <select class="form-select d-block" name="FieldType"  style = "max-width: 30%;">
                                                 <option disabled >Select a Field </option>  
                                                 <!-- <option value="CPid"> Polymer Id </option> -->
+                                                <option value="Psize">Size</option>
+                                                <option value="DesignCode">Design Code</option>
                                                 <option value="CPNumber"> Polymer No</option>
                                                 <option value="ProductName"> Product Name</option>
                                             </select>
@@ -294,6 +296,8 @@ else if( filter_has_var(INPUT_POST, 'FieldType')  || filter_has_var(INPUT_POST, 
                                                     <option disabled >Select a Field </option>  
                                                     <!-- <option value="CDieId"> Die Id</option> -->
                                                     <option value="DieCode">Die Code</option>
+                                                    <option value="CDSize">Size</option>
+                                                    <option value="CDDesignCode">Design Code</option>
                                                     <option value="CDProductName">Product Name</option>
                                                 </select>
                                                 <input type="text" name = "SearchTerm"  aria-label="Write Search Term" class= "form-control" required  >  
@@ -323,7 +327,7 @@ else if( filter_has_var(INPUT_POST, 'FieldType')  || filter_has_var(INPUT_POST, 
                                                         <th title="Porperty Of">P.OF</th>
                                                         <th title="Current Location">C.Location</th>
                                                         <th title="Sample Code">S.Code</th>
-                                                        <!-- <th title="Design Code">D.Code</th> -->
+                                                        <th title="Design Code">D.Code</th>
                                                         <th title="Scatch">Scatch</th>
                                                         <th>App</th>
                                                         <th title="Die Type">Die.T</th>
@@ -360,8 +364,8 @@ else if( filter_has_var(INPUT_POST, 'FieldType')  || filter_has_var(INPUT_POST, 
                                                             <td><?=$Row['CDOwner'] ?></td>
                                                             <td><?=$Row['CDLocation'] ?></td>
                                                             <td><?=$Row['CDSampleNo'] ?></td>
-                                                            <!-- <td><?=$Row['CDDesignCode'] ?></td> -->
-                                                            <td class = " align-item-center    " >
+                                                            <td><?=$Row['CDDesignCode'] ?></td>
+                                                            <td class = " align-item-center ">
                                                                 <?php if(isset($Row['DieCode']) && !empty($Row['DieCode']) )  { ?>
                                                                 <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
                                                                 href="ShowDesignImage.php?Scatch=<?=$Row['Scatch']?>&ProductName=<?= $Row['CDProductName']?>" >

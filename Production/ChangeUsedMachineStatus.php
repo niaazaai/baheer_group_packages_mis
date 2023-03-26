@@ -76,6 +76,13 @@ isset($_REQUEST['cycle_id']) &&  !empty($_REQUEST['cycle_id'])  ) {
     }
 
     if($flag)  { 
+
+        // this line will automatically called polymer department by changing carton track status to complete so that the archieve department return the polymer back. 
+        $machine_name = $Controller->QueryData('SELECT machine_name FROM machine WHERE machine_id = ?' , [$machine_id])->fetch_assoc()['machine_name']; 
+        if($machine_name == "Flexo #1" || $machine_name == "Flexo #2" || $machine_name == "Flexo #3") {
+            $UpdateCarton=$Controller->QueryData("UPDATE carton SET Track='Completed' WHERE CTNId = ? ",[$_REQUEST['CTNId'][0]]);
+        }
+
         header('Location:JobProcess.php?CTNId='. $_REQUEST['CTNId'][0] .'&CYCLE_ID='.$_REQUEST['cycle_id'][0] . '&machine_id=' . $machine_id .'&double_job='.$double_job   );
         // header('Location:JobUnderProcess.php');
     }

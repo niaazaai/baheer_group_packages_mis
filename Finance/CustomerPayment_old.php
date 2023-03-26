@@ -3,10 +3,10 @@
 require_once '../App/partials/Header.inc';  
 require_once '../App/partials/Menu/MarketingMenu.inc'; 
 
-// $Gate = require_once  $ROOT_DIR . '/Auth/Gates/FINANCE_DEPT';
-// if(!in_array( $Gate['VIEW_CUSTOMER_PAYMENT_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
-//     header("Location:index.php?msg=You are not authorized to access customer page page!" );
-// }
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/FINANCE_DEPT';
+if(!in_array( $Gate['VIEW_CUSTOMER_PAYMENT_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access customer page page!" );
+}
 
 $currency = ''; 
 $CustId = 0; 
@@ -34,7 +34,7 @@ if((isset($_GET['CTNId']) && !empty('CTNId') ) && ( isset($_GET['CustId']) && !e
     }
 
 
-    $ChechifPaid=$Controller->QueryData("SELECT CTNId , FinalTotal , ReceivedAmount   ,ProductName , PexchangeUSD
+    $ChechifPaid=$Controller->QueryData("SELECT CTNId , FinalTotal , ReceivedAmount   ,ProductName
     FROM carton  WHERE CTNId = ? AND CtnCurrency = ? AND JobNo!='NULL'  ",[$CTNId,    $currency]);
     $ChechifPaid1 = $ChechifPaid->fetch_assoc() ; 
     if($ChechifPaid1['FinalTotal'] == $ChechifPaid1['ReceivedAmount']  ) {
@@ -54,7 +54,12 @@ if((isset($_GET['CTNId']) && !empty('CTNId') ) && ( isset($_GET['CustId']) && !e
  
 if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) $ListType=$_REQUEST['ListType'];
 else $ListType = 'New Job';
+
+
+
 ?>
+
+ 
 <style>
     .effect:hover {
         background-color:#ffff66;
@@ -72,7 +77,13 @@ else $ListType = 'New Job';
         border:2px solid red ;
     }
 
+
+    
+
 </style>
+
+
+
 
 <div class="card m-3 shadow">
     <div class="card-body d-flex justify-content-between  align-middle   ">
@@ -101,6 +112,8 @@ else $ListType = 'New Job';
 
     </div>
 </div> 
+ 
+
 
 <!-- <div class="card m-3 ">
     <div class="card-body d-flex justify-content-between">
@@ -162,7 +175,7 @@ else $ListType = 'New Job';
                     </select>
                 </div>
 
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2" style= "display:none;">
+                <!-- <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mt-2">
          
                     <select class="form-select" name="RExchangeCurrency" id="REC"  onchange= "SetValueToHiddenField(this.value); " >
                         <option disabled >  Exchange Currency</option>
@@ -171,7 +184,7 @@ else $ListType = 'New Job';
                         <option value="PKR">PKR</option>
                     </select>
             
-                </div>
+                </div> -->
 
             </div>
             </form>
@@ -184,7 +197,7 @@ else $ListType = 'New Job';
             <input type="hidden" name="ListType" id = "ListType"  value = "<?=$ListType  ?>">
             
 
-        <div class="row  ">
+            <div class="row  ">
 
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                 <label for="PaymentMethod">Payment Method</label>
@@ -237,12 +250,7 @@ else $ListType = 'New Job';
                 <label for="ExchangeRate">Exchange Rate</label>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mt-2">
-                <div class = "d-flex justify-content-between">
-                    <input type="text" name="CurrentExchangeRate" id="CurrentExchangeRate"
-                     onchange = "ApplyCurrentExchangeRate(this.value); " readonly = "readonly" class="form-control">
-                    <input type="text" name="ExchangeRate" disabled id="ExchangeRate" class="form-control ms-2">
-                    <input type="text" name="GLAmount" disabled id="GLAmount" class="form-control ms-2">
-                </div>
+                <input type="text" name="ExchangeRate" id="ExchangeRate" class="form-control">
             </div>
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 ">
                 <label for="ReferenceNo">Reference No</label>   
@@ -265,6 +273,7 @@ else $ListType = 'New Job';
     </div>
 </div>
 
+
 <div class="card m-3   ">
     <div class="card-body">
         <div class="table-responsive ">
@@ -283,31 +292,38 @@ else $ListType = 'New Job';
                 <tbody>
                 <?php
                     $TotalAmount=0; $TotalAmountDue=0; $TotalApplied=0; $AmountRecovered=0;
-                     
+                    $ExchangeRateAverage = 0 ; 
+                    $ExchangeRateCount = 1 ; 
                     if (isset($Query)) {
                         while ($Fire=$Query->fetch_assoc()) {
-                            $AmountDue=$Fire['FinalTotal'] - $Fire['ReceivedAmount'];  ?>
+                            $AmountDue=$Fire['FinalTotal'] - $Fire['ReceivedAmount'];
+                            $ExchangeRateAverage += $Fire['PexchangeUSD']  ;
+                            $ExchangeRateCount++; ?>
 
                             <tr>
                             <input type="hidden" id="EX_<?=$Fire['CTNId']?>" name="EX_<?=$Fire['CTNId']?>" value = "<?=$Fire['PexchangeUSD']?>" >
                             <input type="hidden" name="CTNId_<?=$Fire['CTNId']?>" value = "<?=$Fire['CTNId']?>" >
 
                             <td class='text-center'>
-                                <input type='checkbox' <?php if(isset($_GET['CTNId'])) if( $_GET['CTNId'] == $Fire['CTNId'] ) echo 'checked'; ?> 
-                                id='Check_<?=$Fire['CTNId']?>' class='form-check-input fs-3' 
-                                onclick="Calculate('Payment_<?=$Fire['CTNId']?>' , 'Due_<?=$Fire['CTNId']?>' , true , 'Check_<?=$Fire['CTNId']?>' )"  > 
+                                <input 
+                                    type='checkbox' <?php if(isset($_GET['CTNId'])) if( $_GET['CTNId'] == $Fire['CTNId'] ) echo 'checked'; ?> 
+                                    id='Check_<?=$Fire['CTNId']?>' class='form-check-input fs-3' 
+                                    onclick="Calculate('Payment_<?=$Fire['CTNId']?>' , 'Due_<?=$Fire['CTNId']?>' , true , 'Check_<?=$Fire['CTNId']?>' )"  > 
+                              
                             </td> 
                             
                             <?php
+                            
                                 echo "<td>".$Fire['CTNOrderDate']."</td>";
-                                echo "<td>".$Fire['CTNId']."</td>";
-                                echo "<td> <a target='_blank' style = 'text-decoration:none;' title='Check Job Card' class = 'effect' href='JobCard.php?CTNId=".$Fire['CTNId']."&ListType=New Job'> ".$Fire['ProductName']."(".$Fire['CTNLength']."X".$Fire['CTNWidth']."X".$Fire['CTNHeight'].")"."</a></td>";
-                                echo "<td class='text-end'> ".  number_format($Fire['FinalTotal'],2)." <span class = 'badge me-1' id = 'Average_".$Fire['CTNId']."' style = 'background-color:#fd7e14;'> @ " . $Fire['PexchangeUSD'] . "</span></td>"; ?>
+                                echo "<td>".$Fire['CTNId'].   "</td>";
+                                echo "<td> <a target='_blank' style = 'text-decoration:none;' title='Check Job Card' class = 'effect' href='JobCard.php?CTNId=".  $Fire['CTNId']  ."&ListType=New Job '> ".$Fire['ProductName']."(".$Fire['CTNLength']."X".$Fire['CTNWidth']."X".$Fire['CTNHeight'].")"."</a></td>";
+                                echo "<td class='text-end'>".number_format($Fire['FinalTotal'],2)."</td>"; ?>
                                 <td class='text-end' id='Due_<?=$Fire['CTNId']?>'> <?=$AmountDue;?> </td> 
                                 <td class='text-end' id='payment' style = "width:150px;" > 
                                     <input type="float" name="Payment_<?=$Fire['CTNId']?>" id = "Payment_<?=$Fire['CTNId']?>"  class = "form-control"
                                         style = "border:3px solid black;" onchange = "Calculate( 'Payment_<?=$Fire['CTNId']?>' , 'Due_<?=$Fire['CTNId']?>' , false  );"   >
                                 </td>
+
                             <?php
                             echo "</tr>";
                                 $TotalAmount=$TotalAmount+$Fire['FinalTotal'];
@@ -317,6 +333,7 @@ else $ListType = 'New Job';
                     }
                     // else {
                     //     echo "<tr> <td colspan = '7' class ='text-center text-danger fw-bold'>NO RECORD FOUND</td></tr>";
+
                     // }
                     
                         echo "<tr>";
@@ -325,8 +342,17 @@ else $ListType = 'New Job';
                         echo "<td class='fw-bold text-end' id = 'TotalAmountDue'  >". number_format($TotalAmountDue, 2 ) ."</td>";
                     ?>
                         <td class='fw-bold text-end' id = "TOTAL_DUE_SHOW" >  </td>
+                    <?php 
+                          
+                 
+                ?>
                 </tbody>
-                    <input type="hidden" name="TOTAL_DUE" id = "TOTAL_DUE" value = "" >
+
+                <?php  $ERA = $ExchangeRateAverage / $ExchangeRateCount  ; ?>
+
+                <input type="hidden" id = "ExchangeRateAverage" value = "<?=$ERA?>"  >
+                <input type="hidden" name="TOTAL_DUE" id = "TOTAL_DUE" value = "" >
+
             </table>
         </div>
     </div>
@@ -367,260 +393,239 @@ else $ListType = 'New Job';
 <script>
  
 
-    function AddPrecision(x , y = 2 ) {
-    return Number.parseFloat(x).toFixed(y);
-    }
+function AddPrecision(x , y = 2 ) {
+  return Number.parseFloat(x).toFixed(y);
+}
 
-    function RemoveComma(x) {
-        return  x.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, "")
-    }
+function RemoveComma(x) {
+    return  x.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, "")
+}
 
-    function AddComma(value1 , id ){
-        let x = 0 ; 
-        x = value1.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
-        document.getElementById(id).value  = x ; 
-    }
+function AddComma(value1 , id ){
+    let x = 0 ; 
+    x = value1.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
+    document.getElementById(id).value  = x ; 
+}
 
-    function removeDuplicateOptions(s, comparitor) {
-            if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
-            var c, i, o=s.options, sorter={};
-            if(!comparitor || typeof comparitor !== 'function') {
-                comparitor = function(o) { return o.value; };//by default we comare option values.
+document.getElementById('ExchangeRate').value = AddPrecision(document.getElementById('ExchangeRateAverage').value) ; 
+document.getElementById('TopTotalAmountDue').innerHTML =  (document.getElementById('TotalAmountDue').innerHTML);
+
+
+function removeDuplicateOptions(s, comparitor) {
+        if(s.tagName.toUpperCase() !== 'SELECT') { return false; }
+        var c, i, o=s.options, sorter={};
+        if(!comparitor || typeof comparitor !== 'function') {
+            comparitor = function(o) { return o.value; };//by default we comare option values.
+        }
+        for(i=0; i<o.length; i++) {
+            c = comparitor(o[i]);
+            if(sorter[c]) {
+            s.removeChild(o[i]);
+            i--;
             }
-            for(i=0; i<o.length; i++) {
-                c = comparitor(o[i]);
-                if(sorter[c]) {
-                s.removeChild(o[i]);
-                i--;
-                }
-                else { sorter[c] = true; }
-            }
-        return true;
-    }
+            else { sorter[c] = true; }
+        }
+      return true;
+}
 
-    removeDuplicateOptions(document.getElementById('Currency') );
-    Update();
+removeDuplicateOptions(document.getElementById('Currency') );
+Update();
 
-    function Update(){
-        var Currency = document.getElementById("Currency").value;
+function Update(){
+    var Currency = document.getElementById("Currency").value;
 
-        var select = document.getElementById("ARAccount");
-        var option = document.createElement("option");
-        if(Currency.trim() == 'AFN') 
-        {
+    var select = document.getElementById("ARAccount");
+    var option = document.createElement("option");
+    if(Currency.trim() == 'AFN') 
+    {
             option.value = 'Account-Receiveble-AFN';
             option.text = 'Account-Receiveble-AFN';
             option.selected = 'selected';
             select.appendChild(option);
-        }
-        else if(Currency.trim() == 'USD') 
-        {
+    }
+    else if(Currency.trim() == 'USD') 
+    {
             option.value = 'Account-Receiveble-USD';
             option.text = 'Account-Receiveble-USD';
             option.selected = 'selected';
             select.appendChild(option);
-        } 
-        else if(Currency.trim() == 'PKR') 
-        {
+    } 
+    else if(Currency.trim() == 'PKR') 
+    {
             option.value = 'Account-Receiveble-PKR';
             option.text = 'Account-Receiveble-PKR';
             option.selected = 'selected';
             select.appendChild(option);
+    }
+}
+
+function SetValueToHiddenField(valu1e){
+    document.getElementById('OrignalCurrency').value =  document.getElementById("Currency").value;  
+    document.getElementById('RExchangeCurrency').value = valu1e; 
+}
+
+
+var TOTAL_DUE =  {}; 
+var EX_RATE =  {}; 
+
+
+// this block is for sum each payment amount and if the currency was other than usd it exchange it to usd dollar and shows it in the page 
+function SUM_TOTAL_DUE(){
+
+    var total = 0 ; 
+    var total_usd = 0 ; 
+    let currency = document.getElementById('Currency').value;
+    let currency1 = '' ;
+
+    for (var key in TOTAL_DUE) {
+        // console.log("key " + key + " has value " + TOTAL_DUE[key]);
+        total += TOTAL_DUE[key]; 
+        var key_number_part = key.replace(/\D/g,'');
+        if(currency.trim() != 'USD') {
+            let a  =  TOTAL_DUE[key] / EX_RATE['EX_'+key_number_part]  ;   
+            total_usd += a; 
+            currency1 = 'USD'; 
+        }
+        else { 
+            total_usd += total
+            currency = currency1; 
         }
     }
+    // this block will swho exchanged amount in Amount Received td below the page 
+    document.getElementById('AmountReceived').innerText =  AddPrecision(total_usd)  +' ' + currency1; 
+    return Number(AddPrecision(total)); 
+}
 
-    function SetValueToHiddenField(valu1e){
-        document.getElementById('OrignalCurrency').value =  document.getElementById("Currency").value;  
-        document.getElementById('RExchangeCurrency').value = valu1e; 
-    }
 
 
-    var TOTAL_DUE =  {}; 
-    var EX_RATE =  {}; 
+function Calculate(ManualPayment1 ,  DueId ,  CheckboxClicked = false , CheckBoxId=null ) {
     
+    var TOTAL = 0 ; 
+    var ManualPayment = document.getElementById(ManualPayment1); 
+    var PaymentTotalAmount = document.getElementById('PaymentAmount'); 
+    var num = DueId.replace(/\D/g,'');
 
-    // this block is for sum each payment amount and if the currency was other than usd it exchange it to usd dollar and shows it in the page 
-    function SUM_TOTAL_DUE(){
+    // console.log(num , DueId , CheckboxClicked  , CheckBoxId);
 
-        var total = 0 ; 
-        var total_usd = 0 ; 
-        let currency = document.getElementById('Currency').value;
-        let currency1 = '' ;
+    var CheckBox; 
+    if(CheckBoxId != null ) CheckBox = document.getElementById(CheckBoxId); 
 
-        for (var key in TOTAL_DUE) {
-            // console.log("key " + key + " has value " + TOTAL_DUE[key]);
-            total += TOTAL_DUE[key]; 
-            var key_number_part = key.replace(/\D/g,'');
-            if(currency.trim() != 'USD') {
-                let a  =  TOTAL_DUE[key] / EX_RATE['EX_'+key_number_part]  ;   
-                total_usd += a; 
-                currency1 = 'USD'; 
-            }
-            else { 
-                total_usd += total
-                currency = currency1; 
-            }
-        }
-        // this block will swho exchanged amount in Amount Received td below the page 
-        document.getElementById('AmountReceived').innerText =  AddPrecision(total_usd)  +' ' + currency1; 
-        return Number(AddPrecision(total)); 
-    }
+    var DueAmount  =   document.getElementById(DueId).innerText ;
 
-
-
-    function Calculate(ManualPayment1 ,  DueId ,  CheckboxClicked = false , CheckBoxId=null ) {
-        
-        var TOTAL = 0 ; 
-        var ManualPayment = document.getElementById(ManualPayment1); 
-        var PaymentTotalAmount = document.getElementById('PaymentAmount'); 
-        var num = DueId.replace(/\D/g,'');
-
-        var CheckBox; 
-        if(CheckBoxId != null ) CheckBox = document.getElementById(CheckBoxId); 
-
-        var DueAmount  =   document.getElementById(DueId).innerText ;
-
-        if (CheckboxClicked) { 
-            if(CheckBox.checked) {
-                // DueAmount = Number(RemoveComma(DueAmount)); 
-                TOTAL_DUE[DueId] = Number(AddPrecision(DueAmount, 2));
-                EX_RATE['EX_'+num] = Number(document.getElementById('EX_'+num).value);
-                ManualPayment.value = Number(AddPrecision(DueAmount, 2));
-                ManualPayment.style =   "border:4px solid #3EC70B;font-weight:bold;";
-            } 
-            else {
-                delete  TOTAL_DUE[DueId]; 
-                delete EX_RATE['EX_'+num];
-                ManualPayment.value = 0; 
-                ManualPayment.style =   "border:4px solid black;font-weight:bold;";
-            }
-        }
-        else {
-            TOTAL_DUE[DueId] = Number(ManualPayment.value)  
+    if (CheckboxClicked) { 
+        if(CheckBox.checked) {
+            // DueAmount = Number(RemoveComma(DueAmount)); 
+            TOTAL_DUE[DueId] = Number(AddPrecision(DueAmount, 2));
             EX_RATE['EX_'+num] = Number(document.getElementById('EX_'+num).value);
-        
-            CheckBox = document.getElementById("Check_" + num); 
-            if(CheckBox.checked) {
-                ManualPayment.style = "border:4px solid #FFCC1D;font-weight:bold;";
-            }
-            else {
-                CheckBox.checked = true; 
-                ManualPayment.style = "border:4px solid #3EC70B;font-weight:bold;" ;
-            }
-        }
-        UpdateAveragePrice(EX_RATE);
-        let checkkk = CheckPaymentValue(ManualPayment1 , DueId ) ; 
-
-        if(checkkk) {
-            return ; 
-        } 
-        TOTAL = SUM_TOTAL_DUE();
-        PaymentTotalAmount.value = Number(AddPrecision(TOTAL , 2 ))  ;
-        document.getElementById('AppliedAmount').innerText = Number(AddPrecision(TOTAL , 2 )) ;
-
-    }
-
-    // this function is used to calculate average exchange rate when the user select the jobs for payment
-    function UpdateAveragePrice(EX_RATE){
-        var total_rate = 0 ; 
-        for (key in EX_RATE) total_rate += EX_RATE[key]; 
-        total = total_rate / Object.keys(EX_RATE).length ; 
-        document.getElementById('ExchangeRate').value = AddPrecision(total); 
-        document.getElementById('CurrentExchangeRate').removeAttribute('readonly'); 
-    }
-
-    // this function is find gain and loss 
-    function ApplyCurrentExchangeRate(CurrentExchangeRate){
-
-        let AverageExchangeRate = Number (document.getElementById('ExchangeRate').value); 
-        let PaymentAmount = Number ( AddPrecision(document.getElementById('PaymentAmount').value)); 
-        let PaymentGainLoss = 0; 
-
-        AveragePayment = AddPrecision(PaymentAmount / AverageExchangeRate) ; 
-        CurrentPayment = AddPrecision(PaymentAmount / CurrentExchangeRate) ; 
-        PaymentGainLoss = AddPrecision( CurrentPayment - AveragePayment );
-      
-        let remained_amount = 0;
-        if( Number(CurrentExchangeRate) < Number(AverageExchangeRate) )   {
-            remained_amount = "Gain: " + PaymentGainLoss + " $"; 
-            document.getElementById('GLAmount').style.border = "2px solid #3EC70B"; 
-            document.getElementById('GLAmount').style.backgroundColor = "#3EC70B";
-            document.getElementById('GLAmount').style.color = "#FFF";  
-            document.getElementById('GLAmount').style.fontWeight = "bold"; 
-        }
-        else if( Number(CurrentExchangeRate) > Number(AverageExchangeRate) )  {
-            remained_amount = "Loss: " +  PaymentGainLoss + " $";
-            document.getElementById('GLAmount').style.border = "2px solid #EB5353"; 
-            document.getElementById('GLAmount').style.backgroundColor = "#EB5353";
-            document.getElementById('GLAmount').style.color = "#FFF"; 
-            document.getElementById('GLAmount').style.fontWeight = "bold"; 
+            ManualPayment.value = Number(AddPrecision(DueAmount, 2));
+            ManualPayment.style =   "border:4px solid #3EC70B;font-weight:bold;";
         } 
         else {
-            remained_amount = 'No Gain or Loss'  ; 
-            document.getElementById('GLAmount').style.backgroundColor = "";
-        } 
-        document.getElementById('GLAmount').value = remained_amount; 
-    }
-
-    // this block is used to check if the input amount is bigger then due amount
-    function CheckPaymentValue(id , DueId){
-        let ManualPayment = document.getElementById(id); 
-        let Due = document.getElementById(DueId); 
-        let MP = Number(AddPrecision(ManualPayment.value, 2)); 
-        let DA = Number(AddPrecision(Due.innerText, 2)); 
-        
-        if( MP > DA  ) {
-            alert('You may not apply more than the amount due !'); 
-            ManualPayment.value = DA ;
-            document.getElementById('PaymentAmount').value = DA;  
-            document.getElementById('AppliedAmount').innerText = DA;  
-            return true; 
+            delete  TOTAL_DUE[DueId]; 
+            delete EX_RATE['EX_'+num];
+            ManualPayment.value = 0; 
+            ManualPayment.style =   "border:4px solid black;font-weight:bold;";
         }
-        return false; 
+    }
+    else {
+        
+        TOTAL_DUE[DueId] = Number(ManualPayment.value)  
+        EX_RATE['EX_'+num] = Number(document.getElementById('EX_'+num).value);
+    
+        CheckBox = document.getElementById("Check_" + num); 
+        if(CheckBox.checked) ManualPayment.style = "border:4px solid #FFCC1D;font-weight:bold;";
+        else {
+            CheckBox.checked = true; 
+            ManualPayment.style = "border:4px solid #3EC70B;font-weight:bold;" ;
+        }
+
     }
 
-    function PutTheValueInTheBox(inner , id) {
-        console.log(id) ;   console.log(inner) ;
-        document.getElementById('customer').value = inner;
-        document.getElementById('livesearch').style.display = 'none';
-        document.getElementById('CustId').value = id; 
-        document.getElementById('CustId1').value = id; 
-        document.getElementById('Currency').classList = 'form-select make-red';
-        setTimeout(() => { document.getElementById('Currency').classList = 'form-select';  }, 3000);
-    }
+    let checkkk = CheckPaymentValue(ManualPayment1 , DueId ) ; 
+
+    if(checkkk) {
+        return ; 
+    } 
+
+
+    TOTAL = SUM_TOTAL_DUE();
+    PaymentTotalAmount.value = Number(AddPrecision(TOTAL , 2 ))  ;
+    document.getElementById('AppliedAmount').innerText = Number(AddPrecision(TOTAL , 2 )) ;
+
     
-    function AJAXSearch(str) {
-        document.getElementById('livesearch').style.display = '';
-        if (str.length == 0) {
-        return false;
-        } else {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200)  
-            {
+}
+
+// this block is used to check if the input amount is bigger then due amount
+function CheckPaymentValue(id , DueId){
+    let ManualPayment = document.getElementById(id); 
+    let Due = document.getElementById(DueId); 
+    let MP = Number(AddPrecision(ManualPayment.value, 2)); 
+    let DA = Number(AddPrecision(Due.innerText, 2)); 
+    
+    if( MP > DA  ) {
+        alert('You may not apply more than the amount due !'); 
+        ManualPayment.value = DA ;
+        document.getElementById('PaymentAmount').value = DA;  
+        document.getElementById('AppliedAmount').innerText = DA;  
+        return true; 
+    }
+
+    return false; 
+}
+
+
+
+
+
+
+function PutTheValueInTheBox(inner , id) {
+    console.log(id) ;   console.log(inner) ;
+    document.getElementById('customer').value = inner;
+    document.getElementById('livesearch').style.display = 'none';
+    document.getElementById('CustId').value = id; 
+    document.getElementById('CustId1').value = id; 
+    document.getElementById('Currency').classList = 'form-select make-red';
+    setTimeout(() => { document.getElementById('Currency').classList = 'form-select';  }, 3000);
+
+}
+  
+function AJAXSearch(str) {
+      document.getElementById('livesearch').style.display = '';
+    if (str.length == 0) {
+      return false;
+    } else {
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200)  
+          {
                 var response = JSON.parse(this.responseText);
                 var html = ''; 
                     if(response !=  '-1')
                     {
-                        for(var count = 0; count < response.length; count++) 
-                        {
-                                    html += '<a href="#" onclick = "PutTheValueInTheBox( `' + response[count].CustName + '`   , ' + response[count].CustId + ')"  class="list-group-item list-group-item-action" aria-current="true">' ; 
-                                    html += response[count].CustName; 
-                                    html += '   </a>';
-                        }
+                      for(var count = 0; count < response.length; count++) 
+                      {
+                                  html += '<a href="#" onclick = "PutTheValueInTheBox( `' + response[count].CustName + '`   , ' + response[count].CustId + ')"  class="list-group-item list-group-item-action" aria-current="true">' ; 
+                                  html += response[count].CustName; 
+                                  html += '   </a>';
+                      }
                     }
 
                     else html += '<a href="#" class="list-group-item list-group-item-action " aria-current="true"> No Match Found</a> ';
                     document.getElementById('livesearch').innerHTML = html;  
-            }
-        }
-        xmlhttp.open("GET", "AJAXSearch.php?query=" + str, true);
-        xmlhttp.send();
-        }
+          }
+       }
+      xmlhttp.open("GET", "AJAXSearch.php?query=" + str, true);
+      xmlhttp.send();
     }
+}
 
-    function HideLiveSearch(){
-        document.getElementById('livesearch').style.display = 'none';
-    }
+function HideLiveSearch(){
+    document.getElementById('livesearch').style.display = 'none';
+}
+
+
+
 </script>
+
+ 
 <?php  require_once '../App/partials/Footer.inc'; ?>

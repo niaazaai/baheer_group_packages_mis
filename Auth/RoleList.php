@@ -9,9 +9,8 @@ $RECORD_PER_PAGE = 25;
 ?>
 
 <?php 
-
-if(isset($_POST['role_id']) && !empty($_POST['role_id']) && 
-isset($_POST['emp_id']) && !empty($_POST['emp_id']) )
+ 
+if(isset($_POST['role_id']) && !empty($_POST['role_id']) && isset($_POST['emp_id']) && !empty($_POST['emp_id']) )
 {
     $ID=$_POST['role_id'];
     $EmpEid=$_POST['emp_id'];
@@ -20,7 +19,7 @@ isset($_POST['emp_id']) && !empty($_POST['emp_id']) )
     if($Update)
     {
         echo'<div class="alert alert-success alert-dismissible fade show m-3" role="alert">
-        <strong>!</strong> Test Case Passed.
+        <strong>!</strong> success
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>';
     }
@@ -28,21 +27,30 @@ isset($_POST['emp_id']) && !empty($_POST['emp_id']) )
     
 }
  
+if(isset($_POST['FieldType']) && !empty($_POST['FieldType']) && isset($_POST['SearchTerm']) && !empty($_POST['SearchTerm']))
+{
+    $FieldType= $Controller->CleanInput($_POST['FieldType']);
+    $SearchTerm=$Controller->CleanInput($_POST['SearchTerm']);
 
-$Emp="SELECT EId,Ename,EDepartment,branch,EUserName,id,title,`status` FROM employeet LEFT JOIN `role` ON  employeet.role_id=`role`.id ";
-$Emp .= ' LIMIT ' . (($pagination->get_page() - 1) * $RECORD_PER_PAGE) . ',' . $RECORD_PER_PAGE . ' ';
-$Employee=$Controller->QueryData($Emp,[]);
+    $Emp="SELECT EId,Ename,EDepartment,branch,EUserName,id,title,`status` 
+    FROM employeet LEFT JOIN `role` ON  employeet.role_id=`role`.id WHERE {$FieldType} LIKE '%". $SearchTerm ."%'";
+    $Employee=$Controller->QueryData($Emp,[]);
+    
+}
+else
+{
+    $Emp="SELECT EId,Ename,EDepartment,branch,EUserName,id,title,`status` FROM employeet LEFT JOIN `role` ON  employeet.role_id=`role`.id ";
+    $Emp .= ' LIMIT ' . (($pagination->get_page() - 1) * $RECORD_PER_PAGE) . ',' . $RECORD_PER_PAGE . ' ';
+    $Employee=$Controller->QueryData($Emp,[]);
 
-$PaginateQuery = "SELECT COUNT(EId) AS RowCount FROM employeet LEFT JOIN `role` ON  employeet.role_id=`role`.id "; 
- 
-$RowCount =  $Controller->QueryData($PaginateQuery ,[]);
-$row = $RowCount->fetch_assoc(); 
+    $PaginateQuery = "SELECT COUNT(EId) AS RowCount FROM employeet LEFT JOIN `role` ON  employeet.role_id=`role`.id "; 
+    
+    $RowCount =  $Controller->QueryData($PaginateQuery ,[]);
+    $row = $RowCount->fetch_assoc(); 
 
-$pagination->records($row['RowCount']);
-$pagination->records_per_page($RECORD_PER_PAGE);
-
-
-
+    $pagination->records($row['RowCount']);
+    $pagination->records_per_page($RECORD_PER_PAGE);
+}
 
 $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
 
@@ -62,9 +70,26 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
 <div class="card m-3 shadow ">
   <div class="card-body ">
                 <div class="row">
-                    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 ">
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ">
                         <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'JobTable' )">
                     </div>  
+                    <div class = "col-lg-5 col-md-5 col-sm-5 col-xs-12  ">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="POST" >
+                        <!-- <label for="name" class="fw-bold">Search According to Name and etc </label> -->
+                        <div class="input-group my-1  ">
+                            <form action="" method="POST">
+                                <select class="form-select d-block" name="FieldType"  style = "max-width: 30%;">
+                                    <option disabled >Select a Field </option>  
+                                    <option value="Ename"> Employee Name</option> 
+                                    <option value="EUserName "> User Name</option>
+                                    <option value="EDepartment ">Department</option>
+                                </select>
+                                <input type="text" name = "SearchTerm"  aria-label="Write Search Term" class= "form-control"    >  
+                                <input type="submit" name="Find" class="btn btn-outline-primary" value="Find"> 
+                            </form>
+                        </div>
+                        </form>
+                    </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-2 text-end">
                         <a href="ShowAccessList.php" class="btn btn-outline-primary">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" width = "20" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -87,9 +112,12 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                         </a>
                     </div>  
                 </div>
-                
-                
+    </div>
+</div>         
+<div class="card m-3 shadow ">
+  <div class="card-body ">       
                 <table class= "table " id = "JobTable" >
+                   
                     <thead>
                             <tr class="table-info">
                                 <th >#</th>
@@ -102,7 +130,7 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                             </tr>
                     </thead>
                     <tbody>
-                        <?php
+                        <?php 
                             $Counter=1;
                             while($Rows=$Employee->fetch_assoc())
                             {?>
@@ -112,7 +140,7 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                                     <td><?=$Rows['EDepartment']?></td>
                                     <td><?=$Rows['branch']?></td>
                                     <td><?=$Rows['EUserName']?></td> 
-                                    <td> <span class= "badge" style = "background-color:#20c997; color:white;" ><?=$Rows['title']?></span></td> 
+                                    <td> <span class="badge" style = "background-color:#20c997; color:white;" ><?=$Rows['title']?></span></td> 
                                     <td class="text-center">  
                                        
                                         <form action="DisableUser.php" method = "post" >
@@ -131,7 +159,7 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                                 <!-- <input type="hidden" name="id" id="EID" value="<?=$Rows['EId']?>"> -->
                             <?php   
                                 $Counter++;
-                            }
+                            } 
                         ?>  
                     </tbody>
                 </table>

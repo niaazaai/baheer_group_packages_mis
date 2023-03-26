@@ -327,8 +327,8 @@ else die("ID Not Found, This incident will be reported! ");
                     <th class="text-end"> Grade </th>
                     <th class="text-end"> M.Usage</th>
                     <th class="text-center"> Unit Price</th>
-                    <th>Poly & Die </th>
-                    <th class="text-start">Design</th>
+                    <th>Poly & Die</th>
+                    <!-- <th class="text-start">Design</th> -->
                     <th> Status</th>
                     <th>OPS</th>
                 </tr>
@@ -341,10 +341,8 @@ else die("ID Not Found, This incident will be reported! ");
                       FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1  LEFT JOIN designinfo ON designinfo.CaId = carton.CTNId 
                       WHERE CTNId in (select MAX(CTNId) from carton WHERE JobNo != 'NULL'  AND CustId1=? GROUP BY ProductName) AND  JobNo != 'NULL'  AND CustId1=? GROUP BY ProductName  ";
                       $ProductRows = $Controller->QueryData($ProductQuery , [$ID , $ID  ]);
- 
 
-
-if ($ProductRows->num_rows > 0) { $counter = 1;   
+                    if ($ProductRows->num_rows > 0) { $counter = 1;   
                       while ($rows = $ProductRows->fetch_assoc()) :  ?>  
                       <tr class= "py-0">
                         <td><?= $counter++; ?></td>
@@ -403,19 +401,13 @@ if ($ProductRows->num_rows > 0) { $counter = 1;
                                   </svg>
                                 </span> 
                             <?php }  ?>  
-                        </td>
-                        <!-- POLY & DIE ID COLUMN  -->
                         
-                        <td class = " align-item-center text-start" >
-                          <?php
-                            if(isset($rows['DesignCode1']) && !empty($rows['DesignCode1']) )  { ?>
-                            <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-                            href="../Design/ShowDesignImage.php?Url=<?= $rows['DesignImage']?>&ProductName=<?= $rows['ProductName']?>" >
-                                <?php   echo '<span class = "text-success" >'. $rows['DesignCode1'] . '</span>';  ?>  
-                            </a>
-                            <?php }  else {
-                                echo '<span class = "text-danger" >N/A</span>';
-                            } ?>
+                          <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                              href="../Design/ShowDesignImage.php?Url=<?= $rows['DesignImage']?>&ProductName=<?= $rows['ProductName']?>" >
+                                  
+                                  <svg width = "35px" height = "35px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18 4.25H6C5.27065 4.25 4.57118 4.53973 4.05546 5.05546C3.53973 5.57118 3.25 6.27065 3.25 7V17C3.25 17.7293 3.53973 18.4288 4.05546 18.9445C4.57118 19.4603 5.27065 19.75 6 19.75H18C18.7293 19.75 19.4288 19.4603 19.9445 18.9445C20.4603 18.4288 20.75 17.7293 20.75 17V7C20.75 6.27065 20.4603 5.57118 19.9445 5.05546C19.4288 4.53973 18.7293 4.25 18 4.25ZM6 5.75H18C18.3315 5.75 18.6495 5.8817 18.8839 6.11612C19.1183 6.35054 19.25 6.66848 19.25 7V15.19L16.53 12.47C16.4589 12.394 16.3717 12.3348 16.2748 12.2968C16.178 12.2587 16.0738 12.2427 15.97 12.25C15.865 12.2561 15.7622 12.2831 15.6678 12.3295C15.5733 12.3759 15.4891 12.4406 15.42 12.52L14.13 14.07L9.53 9.47C9.46222 9.39797 9.37993 9.34111 9.28858 9.30319C9.19723 9.26527 9.09887 9.24714 9 9.25C8.89496 9.25611 8.79221 9.28314 8.69776 9.32951C8.60331 9.37587 8.51908 9.44064 8.45 9.52L4.75 13.93V7C4.75 6.66848 4.8817 6.35054 5.11612 6.11612C5.35054 5.8817 5.66848 5.75 6 5.75ZM4.75 17V16.27L9.05 11.11L13.17 15.23L10.65 18.23H6C5.67192 18.23 5.35697 18.1011 5.12311 17.871C4.88926 17.6409 4.75525 17.328 4.75 17ZM18 18.25H12.6L16.05 14.11L19.2 17.26C19.1447 17.538 18.9951 17.7884 18.7764 17.9688C18.5577 18.1492 18.2835 18.2485 18 18.25Z" fill="#000000"></path> </g></svg>
+                          </a>
+
                         </td>    
 
 

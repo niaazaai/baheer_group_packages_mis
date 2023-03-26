@@ -1,17 +1,18 @@
 <?php
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 require_once $ROOT_DIR.'App/Controller.php'; 
-if(isset($_GET['CTNId']))
-{
-    $CTNId=$_GET['CTNId']; $ListType=$_GET['ListType'];
-    $UpdateCarton=$Controller->QueryData("UPDATE carton SET Track='Uncheck' WHERE CTNId = ? ",[$CTNId]);
-    if($UpdateCarton)
-    {
-        header("Location:ArchiveJobCenter.php?MSG=Successfully Polymer/Die hand over to Production&State=1&ListType=$ListType");
+if(isset($_GET['CTNId'])&& !empty($_GET['CTNId'])) {
+
+    $CTNId=$_GET['CTNId'];  
+    $UpdateCarton = NULL; 
+    if(isset($_GET['Status']) && !empty($_GET['Status']) && $_GET['Status'] == 'Archieve' ) {
+        $UpdateCarton=$Controller->QueryData("UPDATE carton SET Track='Archieve' WHERE CTNId = ? ",[$CTNId]);
     }
-    else
-    {
-        header("Location:ArchiveJobCenter.php?MSG=Sorry Polymer/Die Did not hand over to Production&State=0&ListType=$ListType");
+    else {
+        $UpdateCarton=$Controller->QueryData("UPDATE carton SET Track='Submitted' WHERE CTNId = ? ",[$CTNId]);
     }
+
+    if($UpdateCarton)  header("Location:Polymer.php");
+    else  header("Location:Polymer.php");
 }
 ?>

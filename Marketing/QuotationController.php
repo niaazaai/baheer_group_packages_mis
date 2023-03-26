@@ -161,7 +161,7 @@
                             ]);
                             if(!$Insert) die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Record not inserted successfully</h1>"); 
                     }
-                    else  die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Design information does exist, please contact system admin</h1>");
+                    else  die("<h1 style = 'text-align:center; margin-top:100px;color:red;border:3px solid red;padding:10px; '>Design information does not exist, please contact system admin</h1>");
  
                     if($request['JobNo'] == 'NULL')  header("Location:IndividualQuotation.php?CustId=".$request['CustomerId']);
                     else header("Location:CustomerProfile.php?id=".$request['CustomerId']);

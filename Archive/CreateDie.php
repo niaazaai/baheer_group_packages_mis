@@ -7,7 +7,7 @@ if(isset($_POST['Save']))
     $CompanyId=$_POST['CustId'];
     $CTNId=$_POST['ProductName'];
     $DieSize=$_POST['DieSize'];
-    
+    $DesignCode=$_POST['DesignCode'];
     $DieNo=$_POST['DieNo'];
     $SampleNo=$_POST['SampleNo'];
     $Location=$_POST['Location'];
@@ -65,8 +65,8 @@ if(isset($_POST['Save']))
             $Info=$SELECT->fetch_assoc();
             $ProductName=$Info['ProductName'];
 
-            $SQL=$Controller->QueryData("INSERT INTO cdie(CDCompany,DieCode,CDProductName,CDSize,CDMade,CDSampleNo,CDOwner,CDMadeDate,CDStatus,CDLocation,APP,DieType,Scatch) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",[$CompanyId,$DieNo,$ProductName,$DieSize,$Mad,$SampleNo,$PropertyOf,$Date,$Status,$Location,$App,$DieType,$FileName]);
+            $SQL=$Controller->QueryData("INSERT INTO cdie(CDCompany,DieCode,CDProductName,CDSize,CDMade,CDSampleNo,CDOwner,CDMadeDate,CDStatus,CDLocation,APP,DieType,Scatch,CDDesignCode) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[$CompanyId,$DieNo,$ProductName,$DieSize,$Mad,$SampleNo,$PropertyOf,$Date,$Status,$Location,$App,$DieType,$FileName,$DesignCode]);
             $SELECTDIE=$Controller->QueryData("SELECT CDieId FROM cdie WHERE CDCompany=? order by CDieId desc",[$CompanyId]);
             $FIRE=$SELECTDIE->fetch_assoc();
             $DieId=$FIRE['CDieId'];    
@@ -99,6 +99,7 @@ if(isset($_POST['Update']))
     $CUSTID=$_POST['CustId'];
     $Id=$_GET['Id'];
     $CTNId=$_POST['ProductName'];
+    $DesignCode=$_POST['DesignCode'];
     $DieSize=$_POST['DieSize'];
     $DieNo=$_POST['DieNo'];
     $SampleNo=$_POST['SampleNo'];
@@ -169,7 +170,8 @@ if(isset($_POST['Update']))
 if(isset($_GET['CustId']))
 {
     $CustId=$_GET['CustId']; $CTNId=$_GET['CTNId'];
-    $DieQuery=$Controller->QueryData("SELECT ProductName,CONCAT(CTNLength,'x',CTNWidth,'x',CTNHeight) AS Size,CustId1,ppcustomer.CustName FROM carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 WHERE CustId1=? AND CTNId=?",[$CustId,$CTNId]);
+    // $DieQuery=$Controller->QueryData("SELECT * FROM cdie WHERE CDCompany = ?",[$CustId]);
+    $DieQuery=$Controller->QueryData("SELECT ProductName,CONCAT(CTNLength,'x',CTNWidth,'x',CTNHeight) AS Size,CustId1,DesignCode1,ppcustomer.CustName FROM carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId WHERE CustId1=? AND CTNId=?",[$CustId,$CTNId]);
     $Excute=$DieQuery->fetch_assoc();
     
 }
@@ -198,7 +200,7 @@ if(isset($_POST['SecondSave']))
     if(isset($_POST['DesignCode'])) $DesignCode=$_POST['DesignCode'];
     else $DesignCode = 0 ; 
 
-  
+    $DesignCode=$_POST['DesignCode'];
     $DieNo=$_POST['DieNo'];
     $SampleNo=$_POST['SampleNo'];
     $Location=$_POST['Location'];
@@ -257,8 +259,8 @@ if(isset($_POST['SecondSave']))
             $Info=$SELECT->fetch_assoc();
             $ProductName=$Info['ProductName'];
 
-            $InsertInDie=$Controller->QueryData("INSERT INTO cdie(CDCompany,DieCode,CDProductName, CDSize, CDMade,CDSampleNo,CDOwner,CDMadeDate,CDStatus,CDLocation,APP,DieType,Scatch) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",[$CustId,$DieNo,$ProductName,$DieSize,$Mad,$SampleNo,$PropertyOf,$Date,$Status,$Location,$App,$DieType,$FileName]);
+            $InsertInDie=$Controller->QueryData("INSERT INTO cdie(CDCompany,DieCode,CDProductName, CDSize, CDMade,CDSampleNo,CDOwner,CDMadeDate,CDStatus,CDLocation,APP,DieType,Scatch,CDDesignCode) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",[$CustId,$DieNo,$ProductName,$DieSize,$Mad,$SampleNo,$PropertyOf,$Date,$Status,$Location,$App,$DieType,$FileName,$DesignCode]);
             $SELECTDIE=$Controller->QueryData("SELECT CDieId FROM cdie WHERE CDCompany=? order by CDieId desc",[$CustId]);
             $FIRE=$SELECTDIE->fetch_assoc();
             $DieId=$FIRE['CDieId'];
@@ -289,7 +291,7 @@ if(isset($_POST['SecondSave']))
         <p class="fw-bold fs-5">Info</p>
 
         <div class="row">
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="z-index: 11">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12" style="z-index: 11">
                 <label for="CompanyName" class="fw-bold pb-1">Company Name</label>              
                     <input type="text" name = "CustomerName" id = "customer" class="form-control" 
                         onclick= "HideLiveSearch()" onkeyup="AJAXSearch(this.value)" value = "<?php if(isset($SHOW['CustName'])){echo $SHOW['CustName'];}elseif(isset($_GET['CustId'])){ echo $Excute['CustName']; }elseif(isset($_POST['CustomerName'])){echo $_POST['CustomerName'];} ?>" >
@@ -304,7 +306,7 @@ if(isset($_POST['SecondSave']))
                     <span>can only include alphabets, digits and whitespaces</span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 <label for="ProductName" class="fw-bold pb-1">Product Name</label>
                 <select name="ProductName" onchange = "PutSizeIntoDieSize()"  id="ProductName"  class = "form-select" >
                     <option value="<?php if(isset($_GET['CustId'])){ echo $Excute['ProductName']; }  ?>"><?php if(isset($_GET['CustId'])){ echo $Excute['ProductName']; } ?></option>
@@ -318,7 +320,7 @@ if(isset($_POST['SecondSave']))
                     <span>can only include alphabets, digits and whitespaces</span>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                 <label for="DieSize" class="fw-bold pb-1">Die Size</label>
                 <input class="form-control" type="DieSize" name="DieSize" id="DieSize"  required value="<?php if(isset($_GET['Id'])){echo $SHOW['CDSize'];}elseif(isset($_GET['CustId'])){echo $Excute['Size'];}elseif(isset($_POST['DieSize'])){echo $_POST['DieSize'];} ?>">
                 <div class="valid-feedback">
@@ -328,6 +330,11 @@ if(isset($_POST['SecondSave']))
                     <span>required.</span>
                     <span>can only include alphabets, digits and dashes</span>
                 </div>
+               
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                    <label for="DieSize" class="fw-bold pb-1">Design Code</label>
+                    <input class="form-control"  name="DesignCode" id="DesignCode"  required value="<?php if(isset($_GET['Id'])){echo $SHOW['CDDesignCode'];}elseif(isset($_GET['CustId'])){echo $Excute['DesignCode1'];}elseif(isset($_POST['DieSize'])){echo $_POST['DieSize'];} ?>">
             </div>
         </div>
 

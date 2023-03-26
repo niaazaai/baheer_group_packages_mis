@@ -11,8 +11,6 @@ if(!in_array( $Gate['VIEW_JOB_CENTER'] , $_SESSION['ACCESS_LIST']  )) {
     header("Location:index.php?msg=You are not authorized to access job center of design department!" );
 }
 
-
-
 if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
 {
     $ListType= $_REQUEST['ListType'];
@@ -76,7 +74,6 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
         }
        
     } 
-    
 }
 else
 {

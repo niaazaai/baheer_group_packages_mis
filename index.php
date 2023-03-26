@@ -29,8 +29,7 @@ else {
         else $_SESSION['last_login_timestamp'] = time();
     }
 }
-
-
+ 
 // $RowCount =  $Controller->QueryData("SELECT * FROM employeet WHERE EUserName = ?" , [$_SESSION['user']] );
 // $r1 = $RowCount->fetch_row(); 
 // if($r1[0]>36 && $r1[0]!=58 && $r1[0]!=53  && $r1[0]!=74 && $r1[0]!=71 && $r1[0]!=33 && $r1[0]!=59 && $r1[0]!=60 && $r1[0]!=35 && $r1[0]!=36

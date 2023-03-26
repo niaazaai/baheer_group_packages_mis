@@ -118,6 +118,19 @@ else
         </div>
 
         <div class= "d-flex justify-content-center   my-3">
+
+            <?php 
+                $RequestRows = $Controller->QueryData("SELECT COUNT(CTNId) AS REQ FROM carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+                LEFT OUTER JOIN cpolymer ON cpolymer.CPid=carton.PolyId LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId
+                LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  
+                WHERE  Track = 'Request' ",[])->fetch_assoc()['REQ'];
+            ?>
+            <a href= "Polymer.php" class="btn btn-primary position-relative me-2 ">
+                Polymer
+                <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger">
+                    <?=$RequestRows; ?>
+                </span>
+            </a>
             <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary me-2  " style = "margin-top:4px;"  title="Click to Read the User Guide ">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
@@ -125,29 +138,18 @@ else
                 <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
                 </svg>
             </a>
-
             <form action="" method = "post"  >
                 <select class = "form-select" name="ListType" id="ListType" style = "border:3px solid green; " onchange = "this.form.submit();" >  
-                 
-                <option value="<?=$ListType;?>"><?=$ListType;?></option>
-                <?php  if(in_array( $Gate['VIEW_NEW_JOB_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
-                    <option value="NewJob">New Jobs</option>
-                <?php } ?>
-                
-                <?php  if(in_array( $Gate['VIEW_PD_REQUEST_LIST_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
-                    <option value="P/DRequestList">P/D Request List</option>
-                <?php } ?>
-                <?php  if(in_array( $Gate['VIEW_PD_IN_PRODUCTION_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
-                    <option value="P/DProduction">P/D In Production</option>
-                <?php } ?>
-                <?php  if(in_array( $Gate['VIEW_JOB_UNDERPROCESS_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
-                    <option value="JobUnderProcess">Job Under Process</option>
-                <?php } ?>
-                <?php  if(in_array( $Gate['VIEW_COMPLETED_JOBS_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
-                    <option value="CompletedJobs">Completed Jobs</option>
-                <?php } ?>
+                    <option value="<?=$ListType;?>"><?=$ListType;?></option>
+                    <?php  if(in_array( $Gate['VIEW_NEW_JOB_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
+                        <option value="NewJob">New Jobs</option>
+                    <?php } ?>
+                    <?php  if(in_array( $Gate['VIEW_JOB_UNDERPROCESS_OPTION_JC'] , $_SESSION['ACCESS_LIST']  )) {?>
+                        <option value="JobUnderProcess">Job Under Process</option>
+                    <?php } ?>
                 </select>
             </form>
+
         </div>
 
     </div>
