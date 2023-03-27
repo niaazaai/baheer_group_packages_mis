@@ -53,7 +53,7 @@ if(isset($_GET) && !empty($_GET))  {
 
         <div class="row"> <!-- start of row div -->
             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 ">
-                <img src="../Public/Img/Brand.svg"  alt="Bahher Logo">
+                <img src="../Public/Img/logo-brand.png"  width="180" height = "85"  alt="Bahher Logo">
             </div>
             <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 fs-1 text-center pt-2">
                 Baheer Printing & Packaging co.Ltd

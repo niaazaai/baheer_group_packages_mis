@@ -310,7 +310,7 @@ require_once '../App/partials/Header.inc'; ?>
                     if (!empty($Rows['DesignImage'])) {   ?>	
                     
                     <div class = "p-3 mb-3" style = "border:3px solid black; border-radius:5px;  " >
-                        <img class = "img-fluid" src="../Assets/DesignImages/<?=$Rows['DesignImage']?>"> 
+                        <img class = "img-fluid" src="../Assets/<?=$Rows['DesignImage']?>"> 
                     </div>
                     
                     <?php

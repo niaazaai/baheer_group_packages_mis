@@ -34,7 +34,7 @@ if(isset($_POST['SaveforDesign']))
     $ListType=$_GET['ListType'];
     $DesignBy=$_POST['DesignBy'];        
     $DesignCode=$_POST['DesignCode'];    
-    $DesignName=$_POST['DesignName'];
+    $DesignName= "DesignImages/".$_POST['DesignName'];
     $FinishTime=$_POST['FinishTime']; 
     $Comment=$_POST['Comment'];
     $DesignStatus= $Controller->CleanInput($_POST['DesignStatus']); 
@@ -140,7 +140,7 @@ if(isset($_POST['Save&Submit']))
     $DesignStatus=$_POST['DesignStatus']; 
     $DesignCode=trim($_POST['DesignCode']);    
     $DesignBy=$_POST['DesignBy'];    
-    $DesignName=$_POST['DesignName'];
+    $DesignName= "DesignImages/".$_POST['DesignName'];
     $Comment=$_POST['Comment'];   
     $JobNo = $_POST['JobNo'];
     $offesetp=$_POST['offesetp'];
@@ -323,7 +323,7 @@ if(isset($_POST['Update']))
     $DesignStatus=$_POST['DesignStatus']; 
     $DesignCode=$_POST['DesignCode'];    
     $DesignBy=$_POST['DesignBy'];    
-    $DesignName=$_POST['DesignName']; 
+    $DesignName= "DesignImages/".$_POST['DesignName']; 
 
     echo $DesignStatus."<br>". $DesignCode;
  

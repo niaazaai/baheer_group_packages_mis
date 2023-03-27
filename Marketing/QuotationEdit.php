@@ -562,11 +562,11 @@
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
               <select class="form-select" name="DieExist" id="DieExist"  onchange = "CheckDiePriceInput(this.value);"   >
                 <option selected value="<?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?>" >  <?=isset($CTN['die_info']) ?   $CTN['die_info'] : '';  ?> </option>
+                <option value="No Die"> No Die</option>
                 <option value="New Die">New Die</option>
                 <option value="Die Exist" >Die Exist</option>
                 <option value="Personal Die" >Personal Die</option>
                 <option value="Free Die" >Free Die </option>
-                <option value="No Die"> No Die</option>
               </select>
           </div>
            

@@ -71,12 +71,13 @@
                 array_push($CTN_DATA,$Row);
                 array_push($UsedPaper,$Controller->QueryData('SELECT * FROM used_paper WHERE carton_id = ?', [$um['double_job_carton_id']])->fetch_assoc());
                 array_push($Cut_Qty,$Controller->QueryData('SELECT cut_qty,cycle_id,cycle_flute_type,cycle_produce_qty,cycle_plan_qty FROM production_cycle WHERE cycle_id = ?', [$um['cycle_id']])->fetch_assoc());
+                
             }// end of while 
 
 
             
         }
-
+       
         /*
         |--------------------------------------------------------------------------
         |  if($mp_history->num_rows > 0){
@@ -345,20 +346,16 @@
 
 
 <div class = "card m-3 shadow">
-    <div class="card-body d-flex justify-content-between align-items-center">
-
+    <div class="card-body d-flex justify-content-end align-items-center">
         <!-- <div>
         اخرین مقدار تولید  : <?=$last_machine_produced_qty; ?>  
         </div> -->
-
         <div   >
-
             <a class="btn mx-3" style = "background-color:#6610f2; color:white; " data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
                 نمایش تولید گذشته ماشین ها
             </a>
             <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">ثبت تعداد تولید</a>
         </div>
-
     </div>
 </div>
 
@@ -369,20 +366,34 @@
         ماشین   
             <span class="badge bg-primary" style = "font-size:15px;">مقدار تولید شده در ماشین های گذشته</span>
         </li>
-        <?php 
-            $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
-            $last_machine_produced_qty = 0 ; 
-            while($um = $used_machine->fetch_assoc()){ 
-                if(!empty($um['produced_qty'])) {
-                    $last_machine_produced_qty = $um['produced_qty']; 
-                    
-                } 
-        ?>
+            <?php 
+                $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
+                $last_machine_produced_qty = 0 ; 
+                while($um = $used_machine->fetch_assoc()){ 
+                    if(!empty($um['produced_qty'])) {
+                        $last_machine_produced_qty = $um['produced_qty']; 
+                    } 
+            ?>
+
             <li class="list-group-item d-flex justify-content-between align-items-center">
                 <?=$um['machine_name']?>
-                <span class="badge bg-primary" style = "font-size:15px;"> <?= isset($um['produced_qty']) ? $um['produced_qty'] : '0';  ?>  دانه</span>
+                <span class="badge bg-primary" style = "font-size:15px;"> <?= isset($um['produced_qty']) ? $um['produced_qty'] : '0';  ?> 
+                    <?php  if(trim($um['machine_name']) == 'Carrogation 5 Ply'  || trim($um['machine_name']) == 'Carrogation 3 Ply') {   ?>
+                    کت
+                    <?php    } else {   ?>
+                        عدد
+                    <?php    }    ?>
+
+                </span>
             </li>
-        <?php  } // end of while   ?>
+
+        <?php  } // end of while   
+            if(trim($machine_['machine_name']) != 'Carrogation 5 Ply'  || trim($machine_['machine_name']) != 'Carrogation 3 Ply') {
+                $last_machine_produced_qty =  $last_machine_produced_qty *  $UsedPaper[0]['ups']; 
+            }
+        ?>
+
+
     </ul>
   </div>
 </div>
@@ -813,6 +824,51 @@
                     <div><?=$CTN_DATA[0]['CTNQTY'];?></div>
                     <div><?=isset($CTN_DATA[1]['CTNQTY']) ? $CTN_DATA[1]['CTNQTY'] : '';?></div>
                 </th>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>

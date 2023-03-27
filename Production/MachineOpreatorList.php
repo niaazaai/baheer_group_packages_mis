@@ -205,7 +205,7 @@
                             $double_job__ =  $Rows['double_job'];
                             echo $double_job__; 
                         }    
-                        else  echo "Normal"; 
+                        else  echo "Single Job"; 
                     ?>
                 </td>
                 <td class = "text-center">

@@ -18,7 +18,7 @@
         $DataRows=$Controller->QueryData("INSERT INTO cartonproduction  (
         cycle_id , `CtnId1` , `ProSubmitBy`, `CompId`, 
         `ProQty`, `ProBrach`, `ProStatus`, `Plate`,
-        `Line`,`Pack`,`ExtraPack`,`Carton`,`ExtraCarton`)
+        `Line`,`Pack`,`ExtraPack`,`Carton1`,`ExtraCarton`)
         VALUES ( 
         ? , ? , ? , ? , 
         ? , ? , ? , ? , 

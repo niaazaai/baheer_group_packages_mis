@@ -542,8 +542,8 @@
           <div class="col-xxl-2 col-xl-2 col-lg-4 col-md-4 col-sm-12 col-xs-12" >
               <label for="DieExist" class="form-label">Select Die<span class="text-danger"> * </span></label>
               <select class="form-select" name="DieExist" id="DieExist" onchange = "CheckDiePriceInput(this.value);"  >
-                <option value="New Die">New Die</option>
                 <option value="No Die"> No Die</option>
+                <option value="New Die">New Die</option>
                 <option value="Die Exist" >Die Exist</option>
                 <option value="Personal Die" >Personal Die</option>
                 <option value="Free Die" >Free Die </option>

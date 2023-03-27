@@ -26,8 +26,8 @@ if(isset($_POST['EMPID']) && !empty($_POST['EMPID']))
 $SQL=$Controller->QueryData("SELECT EId,Ename,EJob,EDepartment , machine_name,EFName , machine_opreator_id  , EId  
 FROM employeet 
 LEFT OUTER JOIN machine ON employeet.EId = machine.machine_opreator_id  
-WHERE EDepartment='Production' AND EJob='Machine Opreator' ",[]);
-
+WHERE EDepartment='Production' ",[]);
+// AND EJob='Machine Operator'
 $Machine=$Controller->QueryData("SELECT machine_id ,machine_name, machine_name_pashto,machine_type FROM machine WHERE machine_type='Production'",[]);
 ?>  
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
