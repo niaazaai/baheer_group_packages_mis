@@ -34,7 +34,7 @@ if(isset($_POST['SaveforDesign']))
     $ListType=$_GET['ListType'];
     $DesignBy=$_POST['DesignBy'];        
     $DesignCode=$_POST['DesignCode'];    
-    $DesignName= "DesignImages/".$_POST['DesignName'];
+    $DesignName= $_POST['DesignName'];
     $FinishTime=$_POST['FinishTime']; 
     $Comment=$_POST['Comment'];
     $DesignStatus= $Controller->CleanInput($_POST['DesignStatus']); 
@@ -42,7 +42,7 @@ if(isset($_POST['SaveforDesign']))
     $target_dir = "../Assets/DesignImages/";
     $target_file = $target_dir . basename($_FILES["DesignImage"]["name"]);
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-    $FileName =  basename( $_FILES["DesignImage"]["name"]) ;
+    $FileName =  "DesignImages/". basename( $_FILES["DesignImage"]["name"]) ;
     $Upload = true; 
     $msg = []; 
 
@@ -75,7 +75,7 @@ if(isset($_POST['SaveforDesign']))
             }
 
             // Allow certain file formats
-            if($imageFileType != "jpg" && $imageFileType != "jpeg" ) {
+            if($imageFileType != "jpg" && $imageFileType != "jpeg"  ) {
                 array_push($msg , "Sorry, only JPG, JPEG  files are allowed."); 
                 $Upload = false;
             }
@@ -140,7 +140,7 @@ if(isset($_POST['Save&Submit']))
     $DesignStatus=$_POST['DesignStatus']; 
     $DesignCode=trim($_POST['DesignCode']);    
     $DesignBy=$_POST['DesignBy'];    
-    $DesignName= "DesignImages/".$_POST['DesignName'];
+    $DesignName = $_POST['DesignName'];
     $Comment=$_POST['Comment'];   
     $JobNo = $_POST['JobNo'];
     $offesetp=$_POST['offesetp'];
@@ -161,22 +161,26 @@ if(isset($_POST['Save&Submit']))
         { 
             if( $FileName !='')
             {
+
+                $FileName = "DesignImages/". basename( $_FILES["DesignImage"]["name"]) ; 
                 if ($_FILES["DesignImage"]["size"] > 3485760  ) { // which is 2 million bytes ( 2MB)
                     array_push($msg , "Sorry, your file is too large ( less than 3 MB) "); 
                     $Upload = false;
                 }
 
                 // Allow certain file formats
-                if($imageFileType != "jpg" && $imageFileType != "jpeg" ) {
+                if($imageFileType != "jpg" && $imageFileType != "jpeg"    ) {
                     array_push($msg , "Sorry, only JPG, JPEG  files are allowed."); 
                     $Upload = false;
                 }
+                var_dump($msg); 
+                die();
                 // Check if $uploadOk is set to 0 by an error/
                 if (!$Upload) 
                 {         
-                    echo '<div class="alert alert-danger m-3 alert-dismissible fade show" role="alert"><strong>Something Went Wrong!</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                    echo '<div class="alert alert-danger m-3 alert-dismissible fade show" role="alert"><strong>Something Went Wrongdddd!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>';
                     
                 // if everything is ok, try to upload file
                 } 
@@ -244,7 +248,7 @@ if(isset($_POST['Save&Submit']))
                 }
 
                 // Allow certain file formats
-                if($imageFileType != "jpg" && $imageFileType != "jpeg" ) {
+                if($imageFileType != "jpg" && $imageFileType != "jpeg"   ) {
                     array_push($msg , "Sorry, only JPG, JPEG  files are allowed."); 
                     $Upload = false;
                 }
@@ -323,17 +327,19 @@ if(isset($_POST['Update']))
     $DesignStatus=$_POST['DesignStatus']; 
     $DesignCode=$_POST['DesignCode'];    
     $DesignBy=$_POST['DesignBy'];    
-    $DesignName= "DesignImages/".$_POST['DesignName']; 
+    $DesignName=  $_POST['DesignName']; 
 
-    echo $DesignStatus."<br>". $DesignCode;
- 
+    // echo $DesignStatus."<br>". $DesignCode;
+
+    // echo $DesignName; 
+    // die(); 
    
 
     $CheckId=$Controller->QueryData("SELECT `DesignId`, `CaId` FROM `designinfo` WHERE CaId=?",[$CTNID]);
     $target_dir = "../Assets/DesignImages/";
     $target_file = $target_dir . basename($_FILES["DesignImage"]["name"]);
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-    $FileName =  basename( $_FILES["DesignImage"]["name"]) ;
+    $FileName =  "DesignImages/".basename( $_FILES["DesignImage"]["name"]) ;
 
     $Upload = true; 
     $msg = []; 
@@ -347,7 +353,7 @@ if(isset($_POST['Update']))
         }
 
         // Allow certain file formats
-        if($imageFileType != "jpg" && $imageFileType != "jpeg" ) {
+        if($imageFileType != "jpg" && $imageFileType != "jpeg"    ) {
             array_push($msg , "Sorry, only JPG, JPEG  files are allowed."); 
             $Upload = false;
         }
@@ -391,7 +397,7 @@ if(isset($_POST['Update']))
         }
 
         // Allow certain file formats
-        if($imageFileType != "jpg" && $imageFileType != "jpeg" ) {
+        if($imageFileType != "jpg" && $imageFileType != "jpeg"    ) {
             array_push($msg , "Sorry, only JPG, JPEG  files are allowed."); 
             $Upload = false;
         }

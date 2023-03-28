@@ -766,17 +766,13 @@
     <?php } ?>
 
     <div class="form-floating mb-3">
-        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
-            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
-        </textarea>
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">  <?=(isset($CTN_DATA[0]['Note'])) ? $CTN_DATA[0]['Note'] : '' ?> </textarea>
         <label for="floatingTextarea">Comments for first Job</label>
     </div>
 
-    <?php if(isset($Cut_Qty[1]['MarketingNote']) && !empty($Cut_Qty[1]['MarketingNote']) ): ?>
+    <?php if(isset($CTN_DATA[1]['Note']) && !empty($CTN_DATA[1]['Note']) ): ?>
     <div class="form-floating">
-        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
-            <?=(isset($Cut_Qty[1]['MarketingNote'])) ? $Cut_Qty[1]['MarketingNote'] : '' ?>
-        </textarea>
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea"><?=(isset($Cut_Qty[1]['Note'])) ? $Cut_Qty[1]['Note'] : '' ?> </textarea>
         <label for="floatingTextarea">Comments for second Job</label>
     </div>
     <?php endif; ?>
@@ -825,50 +821,7 @@
                     <div><?=isset($CTN_DATA[1]['CTNQTY']) ? $CTN_DATA[1]['CTNQTY'] : '';?></div>
                 </th>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
@@ -1017,7 +970,7 @@
                     <div class=""><?=isset($Die['DieType']) ? $Die['DieType'] : '' ;?></div>
                 </th>
                 <th scope="col"  >
-                    <div class=""><?=isset($CTN_DATA[0]['MarketingNote']) ? $CTN_DATA[0]['MarketingNote'] : '' ;?></div>
+                    <div class=""><?=isset($CTN_DATA[0]['Note']) ? $CTN_DATA[0]['Note'] : '' ;?></div>
                 </th>
             </tr>
         </tbody>
@@ -1025,9 +978,7 @@
 
 
     <div class="form-floating mb-3">
-        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
-            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
-        </textarea>
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea"><?=(isset($CTN_DATA[0]['Note'])) ? $CTN_DATA[0]['Note'] : '' ?> </textarea>
         <label for="floatingTextarea">Comments for first Job</label>
     </div>
 

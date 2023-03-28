@@ -16,8 +16,6 @@ if((isset($_POST['Currency']) && !empty('Currency') ) && ( isset($_POST['CustId1
     $CustomerName  = $_POST['CustomerName']; 
     $Query=$Controller->QueryData("SELECT CTNId, CTNOrderDate,JobNo,ProductName,CTNLength,CTNWidth,CTNHeight,FinalTotal,ReceivedAmount,CtnCurrency , PexchangeUSD 
     FROM carton WHERE CustId1 =  ? AND CtnCurrency = ? AND JobNo!='NULL' AND FinalTotal != ReceivedAmount ",[$CustId,$currency]);
-
-
 }
 
 if((isset($_GET['CTNId']) && !empty('CTNId') ) && ( isset($_GET['CustId']) && !empty('CustId') ) ) {
@@ -50,6 +48,7 @@ if((isset($_GET['CTNId']) && !empty('CTNId') ) && ( isset($_GET['CustId']) && !e
   
  
 } 
+
 
  
 if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) $ListType=$_REQUEST['ListType'];
@@ -102,20 +101,6 @@ else $ListType = 'New Job';
     </div>
 </div> 
 
-<!-- <div class="card m-3 ">
-    <div class="card-body d-flex justify-content-between">
-            <div class="">
-                <div class="strong-text fw-bold" style = "font-size:20px;" id = "TopTotalAmountDue"  > 0  </div> 
-                <div class="text-primary"> 
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-cash-stack " viewBox="0 0 16 16">
-                    <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/>
-                    <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z"/>
-                    </svg>
-                    <?php echo (isset($_REQUEST['CustomerName'])) ? '( '. $_REQUEST['CustomerName'] .' )' :   "Customer" ; ?> Balance    |  <span class= "badge bg-warning"><?php echo isset($currency) ? $currency : ''  ?></span>
-                </div>
-            </div>
-    </div>
-</div> -->
  
 
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
@@ -155,7 +140,7 @@ else $ListType = 'New Job';
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 mt-2">
                     <select class="form-select" name="Currency" id="Currency"  onchange="this.form.submit(); " >
-                        <option selected='selected'  value=" <?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?>"  selected="selected" > <?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?> </option>
+                        <option selected='selected'  value="<?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?>"  selected="selected" > <?php if(isset($_POST['Currency'])) echo $_POST['Currency']; elseif(isset($currency) ) echo $currency; ?> </option>
                         <option value="AFN">AFN</option>
                         <option value="USD">USD</option>
                         <option value="PKR">PKR</option>
@@ -240,7 +225,7 @@ else $ListType = 'New Job';
                 <div class = "d-flex justify-content-between">
                     <input type="text" name="CurrentExchangeRate" id="CurrentExchangeRate"
                      onchange = "ApplyCurrentExchangeRate(this.value); " readonly = "readonly" class="form-control">
-                    <input type="text" name="ExchangeRate" disabled id="ExchangeRate" class="form-control ms-2">
+                    <input type="text" name="ExchangeRate" disabled id="ExchangeRate" class="form-control ms-2" style = "border:2px solid #fd7e14">
                     <input type="text" name="GLAmount" disabled id="GLAmount" class="form-control ms-2">
                 </div>
             </div>
@@ -300,9 +285,24 @@ else $ListType = 'New Job';
                             
                             <?php
                                 echo "<td>".$Fire['CTNOrderDate']."</td>";
-                                echo "<td>".$Fire['CTNId']."</td>";
-                                echo "<td> <a target='_blank' style = 'text-decoration:none;' title='Check Job Card' class = 'effect' href='JobCard.php?CTNId=".$Fire['CTNId']."&ListType=New Job'> ".$Fire['ProductName']."(".$Fire['CTNLength']."X".$Fire['CTNWidth']."X".$Fire['CTNHeight'].")"."</a></td>";
-                                echo "<td class='text-end'> ".  number_format($Fire['FinalTotal'],2)." <span class = 'badge me-1' id = 'Average_".$Fire['CTNId']."' style = 'background-color:#fd7e14;'> @ " . $Fire['PexchangeUSD'] . "</span></td>"; ?>
+                                echo "<td>".$Fire['JobNo']."</td>";
+
+
+
+                                echo "<td> <a target='_blank' style = 'text-decoration:none;' title='Check Job Card' 
+                                class = 'effect' href='JobCard.php?CTNId=".$Fire['CTNId']."&ListType=New Job'> ". 
+                                $Fire['ProductName']."(".$Fire['CTNLength']."X".$Fire['CTNWidth']."X".$Fire['CTNHeight'].")"."</a></td>";
+
+                                    echo "<td class='text-end'> ".  number_format($Fire['FinalTotal'],2) ; 
+                                    if( isset($currency) ) {
+                                        if($currency != 'USD') {
+                                            echo " <span class = 'badge me-1' id = 'Average_".$Fire['CTNId']."' style = 'background-color:#fd7e14;'> @ " . 
+                                            $Fire['PexchangeUSD'] . "</span> " ;
+                                        } 
+                                    } 
+                                    echo "</td>"; 
+                                ?>
+
                                 <td class='text-end' id='Due_<?=$Fire['CTNId']?>'> <?=$AmountDue;?> </td> 
                                 <td class='text-end' id='payment' style = "width:150px;" > 
                                     <input type="float" name="Payment_<?=$Fire['CTNId']?>" id = "Payment_<?=$Fire['CTNId']?>"  class = "form-control"
@@ -366,7 +366,8 @@ else $ListType = 'New Job';
 
 <script>
  
-
+    document.getElementById('TopTotalAmountDue').innerText = document.getElementById('TotalAmountDue').innerText
+    
     function AddPrecision(x , y = 2 ) {
     return Number.parseFloat(x).toFixed(y);
     }
@@ -403,7 +404,6 @@ else $ListType = 'New Job';
 
     function Update(){
         var Currency = document.getElementById("Currency").value;
-
         var select = document.getElementById("ARAccount");
         var option = document.createElement("option");
         if(Currency.trim() == 'AFN') 
@@ -442,27 +442,31 @@ else $ListType = 'New Job';
     // this block is for sum each payment amount and if the currency was other than usd it exchange it to usd dollar and shows it in the page 
     function SUM_TOTAL_DUE(){
 
-        var total = 0 ; 
-        var total_usd = 0 ; 
+        let total = 0 ; 
+        let total_usd = 0 ; 
         let currency = document.getElementById('Currency').value;
+        let CurrentExchangeRate = document.getElementById('CurrentExchangeRate').value || 1 ;
         let currency1 = '' ;
 
         for (var key in TOTAL_DUE) {
             // console.log("key " + key + " has value " + TOTAL_DUE[key]);
             total += TOTAL_DUE[key]; 
             var key_number_part = key.replace(/\D/g,'');
-            if(currency.trim() != 'USD') {
-                let a  =  TOTAL_DUE[key] / EX_RATE['EX_'+key_number_part]  ;   
+            if(currency.trim() == 'AFN') {
+                // let a  =  TOTAL_DUE[key] / EX_RATE['EX_'+key_number_part]  ; 
+                let a  =  TOTAL_DUE[key] / CurrentExchangeRate  ;   
                 total_usd += a; 
                 currency1 = 'USD'; 
             }
-            else { 
-                total_usd += total
+            else {
+                total_usd += TOTAL_DUE[key]; 
                 currency = currency1; 
             }
         }
+
+        // console.log(total_usd , EX_RATE['EX_'+key_number_part]  ,TOTAL_DUE);
         // this block will swho exchanged amount in Amount Received td below the page 
-        document.getElementById('AmountReceived').innerText =  AddPrecision(total_usd)  +' ' + currency1; 
+        document.getElementById('AmountReceived').innerText =  AddPrecision(total_usd)  + ' ' + currency1; 
         return Number(AddPrecision(total)); 
     }
 
@@ -473,6 +477,7 @@ else $ListType = 'New Job';
         var TOTAL = 0 ; 
         var ManualPayment = document.getElementById(ManualPayment1); 
         var PaymentTotalAmount = document.getElementById('PaymentAmount'); 
+        var currency3 = document.getElementById('Currency').value; 
         var num = DueId.replace(/\D/g,'');
 
         var CheckBox; 
@@ -508,15 +513,19 @@ else $ListType = 'New Job';
                 ManualPayment.style = "border:4px solid #3EC70B;font-weight:bold;" ;
             }
         }
-        UpdateAveragePrice(EX_RATE);
+
+        
+        if(currency3.trim() == 'AFN') UpdateAveragePrice(EX_RATE);
+         
         let checkkk = CheckPaymentValue(ManualPayment1 , DueId ) ; 
 
         if(checkkk) {
             return ; 
         } 
+
         TOTAL = SUM_TOTAL_DUE();
-        PaymentTotalAmount.value = Number(AddPrecision(TOTAL , 2 ))  ;
-        document.getElementById('AppliedAmount').innerText = Number(AddPrecision(TOTAL , 2 )) ;
+        PaymentTotalAmount.value = Number(AddPrecision(TOTAL , 2 ));
+        document.getElementById('AppliedAmount').innerText = Number(AddPrecision(TOTAL,2)) ;
 
     }
 
@@ -531,6 +540,9 @@ else $ListType = 'New Job';
 
     // this function is find gain and loss 
     function ApplyCurrentExchangeRate(CurrentExchangeRate){
+
+        let currency = document.getElementById('Currency').value; 
+        if(currency.value ==  'USD') return ; 
 
         let AverageExchangeRate = Number (document.getElementById('ExchangeRate').value); 
         let PaymentAmount = Number ( AddPrecision(document.getElementById('PaymentAmount').value)); 
@@ -560,6 +572,11 @@ else $ListType = 'New Job';
             document.getElementById('GLAmount').style.backgroundColor = "";
         } 
         document.getElementById('GLAmount').value = remained_amount; 
+
+
+
+        var AmountReceived1  = Number(document.getElementById('AppliedAmount').innerText) ;
+        document.getElementById('AmountReceived').innerText = AddPrecision(AmountReceived1 / CurrentExchangeRate);
     }
 
     // this block is used to check if the input amount is bigger then due amount

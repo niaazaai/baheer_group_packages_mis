@@ -260,7 +260,7 @@ if(isset($_POST['Submit']))
  
                 <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12 my-1">
                     <label for="orderComment" class="form-label">Order Comment</label>
-                    <textarea type="text" class="form-control" name="orderComment" readonly id="orderComment" rows="1" dir="auto" value="<?php if(isset($_GET['CTNId']) || isset($_GET['CustId'])){ echo $Rows['Note'];} ?>"></textarea>
+                    <textarea type="text" class="form-control" name="orderComment" readonly id="orderComment" rows="1" dir="auto" ><?php if(isset($_GET['CTNId']) || isset($_GET['CustId'])){ echo $Rows['Note'];} ?></textarea>
                 </div>
             </div>
         </div>
@@ -273,7 +273,6 @@ if(isset($_POST['Submit']))
                 <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12  ">
                     <label for="pdStatus" class="form-label">P/D Status</label>
                     <select name="PDStatus" id="pdStatus" class="form-select" required>
-                        <?php if(isset($_GET['CTNId'])){?> <option value="<?=$Rows['DesignStatus']?>"><?=$Rows['DesignStatus']?></option> <?php } ?>
                         <option value="Submit for Making">Submit for Making</option>
                         <option value="Processing">Processing</option>
                         <option value="Polymer Exist">Polymer Exist</option>

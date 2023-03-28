@@ -48,7 +48,7 @@ else {
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
-            <img src="../public/<?=$URL;?>" class="img-fluid" alt="Design Image ">
+            <img src="../Assets/<?=$URL;?>" class="img-fluid" alt="Design Image ">
         </div>
     </div>
 </div>

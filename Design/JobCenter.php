@@ -300,6 +300,9 @@ $number_of_films =$Controller->QueryData('SELECT COUNT(`CTNId`) AS film FROM `ca
                                 <td><?=$Rows['DesignerName1']?></td>
                                 <td>
                                     <?php 
+                                          // echo $Rows['Alarmdatetime']; 
+                                          // die(); 
+                                          
                                           $a =  Carbon::create($Rows['Alarmdatetime'] , 'Asia/Kabul')->diffForHumans(); 
                                           if(isPast( $Rows['Alarmdatetime'] ))  $class = '#dc3545';
                                               echo "<span class = 'badge' style = 'background-color: " . $class . " '>" . $a . "</span>";

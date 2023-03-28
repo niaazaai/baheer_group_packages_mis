@@ -22,7 +22,6 @@ if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) {
 
     switch ($ListType) {
       case 'New Job':
-        
         $LIST['COLUMNS'] = $SAME_COL.',CTNPrice ,   CTNPolimarPrice,  CTNDiePrice, FinalTotal  ,CtnCurrency ';//, CTNStatus';   //,   CTNId 
         $LIST['TH'] = $SAME_TH  . ' <th class="text-end">Unit Price</th> <th class="text-end">Polymer</th> <th class="text-end">Die</th><th class="text-end"> Total Amount</th><th>OPS</th> ';
         $LIST['WHERE'] =  " WHERE CTNStatus='FNew' AND JobNo != 'NULL' and JobType !='Direct Job' ORDER BY CTNId DESC";
@@ -32,7 +31,6 @@ if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) {
         $LIST['COLUMNS'] = $SAME_COL.',CTNPrice , CTNPolimarPrice,  CTNDiePrice, FinalTotal ,CtnCurrency ,PospondComment'; // CTNStatus ,   CTNId 
         $LIST['TH'] = $SAME_TH  . '<th class="text-end">Unit Price</th> <th class="text-end">Polymer</th> <th class="text-end">Die</th><th class="text-end">Total Amount</th><th>Reason</th><th>OPS</th> ';
         $LIST['WHERE'] =  " WHERE  CTNStatus='Pospond' and JobNo != 'NULL' and JobType !='Direct Job' ORDER BY CTNId DESC";
-
         break;
 
       case 'Job Under Process':
@@ -47,6 +45,7 @@ if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) {
         $LIST['EXTRA'] = 'FROM cartonproduction INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 ';
         $LIST['WHERE'] =  " WHERE ProStatus='Accept' AND ManagerApproval='ManagerApproved' GROUP BY carton.JobNo ORDER BY ProSubmitDate DESC ";
         break;
+        
       default:
         echo 'no one selected!';
         break;
