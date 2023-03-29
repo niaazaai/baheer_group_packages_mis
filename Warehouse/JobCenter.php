@@ -16,26 +16,26 @@ if(isset($_POST['CustId']) && !empty($_POST['CustId']))
     $CustId=$_POST['CustId'];
     $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
     ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-    cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
+    cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
     FROM  carton 
     INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
     INNER JOIN designinfo ON designinfo.CaId=carton.CTNId
     INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId 
     INNER JOIN production_cycle ON cartonproduction.cycle_id = production_cycle.cycle_id  
-    WHERE production_cycle.cycle_status = "Completed" AND CustId=? ', [$CustId]);
+    WHERE production_cycle.cycle_status = "Completed" AND CustId=?  Group By JobNo', [$CustId]);
 
 }
 else
 {
     $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
     ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-    cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
+    cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
         FROM  carton 
         INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
         INNER JOIN designinfo ON designinfo.CaId=carton.CTNId
         INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId 
         INNER JOIN production_cycle ON cartonproduction.cycle_id = production_cycle.cycle_id  
-        WHERE production_cycle.cycle_status = "Completed" ', []);
+        WHERE production_cycle.cycle_status = "Completed" Group By JobNo', []);
 }
  
 ?>
@@ -161,9 +161,8 @@ else
                     <th title="Company Name">C.Name</th>
                     <th>Description</th> 
                     <th>Order.QTY</th>
-                    <th>Design</th>
                     <th title="Produced QTY">Prod.QTY</th> 
-                    <th title="Finance Allow Quantity">FAQ</th>
+                    <th title="Finance Allow Quantity">FAQ</th> 
                     <th>Stock Out</th>
                     <th title="Remaining Amount">Available</th>
                     <th>Status</th>
@@ -176,7 +175,7 @@ else
                   $COUNTER=1;$Count=1;
                   while($Rows=$SQL->fetch_assoc())
                   {
-                    $Remaining=$Rows['ProQty']-$Rows['ProOutQty'];
+                    $Remaining=$Rows['ProductQTY']-$Rows['ProOutQty'];
                     ?>
                     
                         <tr>
@@ -184,25 +183,11 @@ else
                             <td><?=$Rows['JobNo']?></td>
                             <td><?=$Rows['CustName']?></td>
                             <td> <?=$Rows['ProductName'].' ( '.$Rows['Size'].' cm) '.$Rows['CTNType'].' Ply'.' - '.$Rows['CTNUnit']?> </td>
-                            <td><?=number_format($Rows['CTNQTY'])?></td>
-                            <td class = " align-item-center    " >
-
-                                <?php
-                            
-                                    if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']) )  { ?>
-                                    <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-                                    href="../Design/ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
-                                        <?php   echo '<span class = "text-success" >'. $Rows['DesignCode1'] . '</span>';  ?>  
-                                    </a>
-                                    <?php }  else {
-                                        echo '<span class = "text-danger" >N/A</span>';
-                                    } ?>
-
-                            </td>
-                            <td><?=number_format($Rows['ProQty'])?></td>
-                            <td><?=number_format($Rows['financeAllowquantity'])?></td>
-                            <td><?=number_format($Rows['ProOutQty'])?></td>
-                            <td><?=number_format($Remaining)?></td>
+                            <td class = "text-end" ><?=number_format($Rows['CTNQTY'])?></td>
+                            <td class = "text-end" ><?=number_format($Rows['ProductQTY'])?></td>
+                            <td class = "text-end" ><?=number_format($Rows['financeAllowquantity'])?></td>
+                            <td class = "text-end" ><?=number_format($Rows['ProOutQty'])?></td>
+                            <td class = "text-end" ><?=number_format($Remaining)?></td>
                             <td><?=$Rows['CTNStatus'];?></td>
                             <td class="text-center"> 
                                 <?php
@@ -227,7 +212,7 @@ else
                                                 </svg> Finance </span> ';
                                 ?>
                             </td>
-                            <td>
+                            <td class = "d-flex justify-content-end">
                                 <?php  if(in_array( $Gate['VIEW_STOCKOUT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) {?>
                                     
                                     <span class= "m-1">
@@ -254,9 +239,25 @@ else
                                 <?php  if(in_array( $Gate['VIEW_DETAILS_BUTTON'] , $_SESSION['ACCESS_LIST']  )) {?>
                                     <a href="DetailPrintPage.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>" 
                                     class="btn btn-outline-primary btn-sm m-1">
-                                        Details
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock-history" viewBox="0 0 16 16">
+                                        <path d="M8.515 1.019A7 7 0 0 0 8 1V0a8 8 0 0 1 .589.022l-.074.997zm2.004.45a7.003 7.003 0 0 0-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 0 0-.439-.27l.493-.87a8.025 8.025 0 0 1 .979.654l-.615.789a6.996 6.996 0 0 0-.418-.302zm1.834 1.79a6.99 6.99 0 0 0-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 0 0-.214-.468l.893-.45a7.976 7.976 0 0 1 .45 1.088l-.95.313a7.023 7.023 0 0 0-.179-.483zm.53 2.507a6.991 6.991 0 0 0-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 0 1-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 0 1-.401.432l-.707-.707z"/>
+                                        <path d="M8 1a7 7 0 1 0 4.95 11.95l.707.707A8.001 8.001 0 1 1 8 0v1z"/>
+                                        <path d="M7.5 3a.5.5 0 0 1 .5.5v5.21l3.248 1.856a.5.5 0 0 1-.496.868l-3.5-2A.5.5 0 0 1 7 9V3.5a.5.5 0 0 1 .5-.5z"/>
+                                    </svg>
+
                                     </a>  
                                 <?php } ?>
+
+                                <?php if(isset($Rows['DesignImage']) && !empty($Rows['DesignImage']) )  {    ?>
+                                    <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                        href="../Design/ShowDesignImage.php?Url=<?=$Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
+                                            <svg width = "35px" height = "35px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                                <g id="SVGRepo_iconCarrier"> <path d="M18 4.25H6C5.27065 4.25 4.57118 4.53973 4.05546 5.05546C3.53973 5.57118 3.25 6.27065 3.25 7V17C3.25 17.7293 3.53973 18.4288 4.05546 18.9445C4.57118 19.4603 5.27065 19.75 6 19.75H18C18.7293 19.75 19.4288 19.4603 19.9445 18.9445C20.4603 18.4288 20.75 17.7293 20.75 17V7C20.75 6.27065 20.4603 5.57118 19.9445 5.05546C19.4288 4.53973 18.7293 4.25 18 4.25ZM6 5.75H18C18.3315 5.75 18.6495 5.8817 18.8839 6.11612C19.1183 6.35054 19.25 6.66848 19.25 7V15.19L16.53 12.47C16.4589 12.394 16.3717 12.3348 16.2748 12.2968C16.178 12.2587 16.0738 12.2427 15.97 12.25C15.865 12.2561 15.7622 12.2831 15.6678 12.3295C15.5733 12.3759 15.4891 12.4406 15.42 12.52L14.13 14.07L9.53 9.47C9.46222 9.39797 9.37993 9.34111 9.28858 9.30319C9.19723 9.26527 9.09887 9.24714 9 9.25C8.89496 9.25611 8.79221 9.28314 8.69776 9.32951C8.60331 9.37587 8.51908 9.44064 8.45 9.52L4.75 13.93V7C4.75 6.66848 4.8817 6.35054 5.11612 6.11612C5.35054 5.8817 5.66848 5.75 6 5.75ZM4.75 17V16.27L9.05 11.11L13.17 15.23L10.65 18.23H6C5.67192 18.23 5.35697 18.1011 5.12311 17.871C4.88926 17.6409 4.75525 17.328 4.75 17ZM18 18.25H12.6L16.05 14.11L19.2 17.26C19.1447 17.538 18.9951 17.7884 18.7764 17.9688C18.5577 18.1492 18.2835 18.2485 18 18.25Z" fill="#000000"></path> </g></svg>
+                                    </a>
+                                <?php } else {  echo '<span class = "text-danger p-1" style = "border:2px solid red; border-radius:3px; "   >N/A</span>'; }  ?>  
+                            
+
                             </td>
                         </tr>
                   <?php

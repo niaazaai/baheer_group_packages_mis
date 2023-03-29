@@ -147,6 +147,8 @@
     }
     $DataRows=$Controller->QueryData($table_query,$table_query_input);
 
+    
+
     $arr = []; 
     $Double=$Controller->QueryData("SELECT carton.CTNId,carton.JobNo,PSPN_1,PSPN_2,PSPN_3,PSPN_4,PSPN_5,PSPN_6, PSPN_7,production_cycle.cycle_flute_type
     FROM carton 

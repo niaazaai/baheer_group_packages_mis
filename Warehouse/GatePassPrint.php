@@ -63,69 +63,67 @@ if(isset($_GET['CTNId']) && !empty($_GET['CTNId'])) {
                 <tr style = "border: 0px;">
                     
                     <th style = "text-align:left; border: 0px;">
-                        <h2 style = "margin:2px; padding:0px;">Baheer Group </h2>
-                        <h3 style = "margin:2px; padding:0px;">Packages Department </h3>
-                        <p  style = "margin:3px; padding:0px;">Goods Delivery Form </p>
+                        <h2 style = "margin:2px;margin-left:0px;   padding:0px;">Baheer Printing & Packaging Co. Ltd</h2>
+                        <p  style = "margin:3px; margin-left:0px; padding:0px;">Goods Delivery Form </p>
                     </th>
                     <th style = "border: 0px; text-align:end; ">
                     </th>
                 
                     <th  style = "border: 0px; text-align:right; ">
-                        <img src="http://localhost:1000/BGIS/Public/Img/logo-brand.png" width="150" height="80" alt="">
+                        <img src="http://localhost:1000/BGIS/Public/Img/logo-brand.png" width="150" height="70" alt="">
                     </th>
                 </tr>
             </table> 
 
             <div  style = "margin-top:0px;">
-                <h4 style = "width: 100%; border-bottom: 4px solid #1b4fd1!important; line-height: 0.05em; padding:0px; margin:2px;"></h4>
+                <h4 style = "width: 100%; border-bottom: 4px solid #1b4fd1!important; line-height: 0.05em; padding:0px; margin:2px;margin-left:0px; "></h4>
             </div>' ;
 
             $Page .= ' <div style = "margin-top:5px;">
                             <div style="float:left;" >
-                                <span style = "font-weight:bold" class="fw-bold fs-5">Receipt No: </span> <span class="fw-bold fs-5">'. $Rows['CtnoutId'] .' </span><br>
-                                <span style = "font-weight:bold" class="fw-bold fs-5">Job No : </span> <span class="fw-bold fs-5"> '.  $Rows['JobNo'].'</span><br> 
+                                <span style = "font-weight:bold; font-size:14px;  " class="fw-bold fs-5">Receipt No: </span> <span  style = "font-size:14px; " class="fw-bold fs-5">'. $Rows['CtnoutId'] .' </span><br>
+                                <span style = "font-weight:bold; font-size:14px; " class="fw-bold fs-5">Job No : </span> <span  style = "font-size:14px; " class="fw-bold fs-5"> '.  $Rows['JobNo'].'</span><br> 
                             </div>
                             <div style=" text-align:right;">
-                                <span style = "font-weight:bold;" class="fw-bold fs-5">Out Date: </span><span class="fw-bold fs-5">'.  $Rows['OutDateTime'].'<span><br>
-                                <span style = "font-weight:bold;" class="fw-bold fs-5">Company Name:</span> <span class="fw-bold fs-5">'.  $Rows['CustName'].'<br>
+                                <span style = "font-weight:bold; font-size:14px; " class="fw-bold fs-5">Out Date: </span><span  style = "font-size:14px; " class="fw-bold fs-5">'.  $Rows['OutDateTime'].'<span><br>
+                                <span style = "font-weight:bold; font-size:14px; " class="fw-bold fs-5">Company Name:</span> <span  style = "font-size:14px; "  class="fw-bold fs-5">'.  $Rows['CustName'].'<br>
                             </div>
                         </div>';
 
 
     $Page .='  <table  style = "margin-top:15px;">
                 <tr class="table-info">
-                    <th>Product Name</th>
-                    <th>Size(L x W x H) cm</th>
-                    <th>Quantity</th>
-                    <th>Comment</th> 
+                    <th style= "font-size:14px;" >Product Name</th>
+                    <th style= "font-size:14px;" >Size(L x W x H) cm</th>
+                    <th style= "font-size:14px;" >Quantity</th>
+                    <th style= "font-size:14px;" >Comment</th> 
                 </tr>
                 <tr>
-                    <td>'.$Rows['ProductName'].'</td>
-                    <td>'.$Rows['Size'] . '- [ ' . $Rows['CTNType'] .'Ply ] </td> 
-                     
-                    <td>'.number_format($Rows['CtnOutQty']).'</td>
-                    <td>'.$Rows['CoutComment'].'</td>
+                    <td style= "font-size:14px;">'.$Rows['ProductName'].'</td>
+                    <td style= "font-size:14px;">'.$Rows['Size'] . '- [ ' . $Rows['CTNType'] .'Ply ] </td> 
+                    <td style= "font-size:14px;">'.number_format($Rows['CtnOutQty']).'</td>
+                    <td style= "font-size:14px;">'.$Rows['CoutComment'].'</td>
                 </tr>         
 
             </table>';
-
+            
 
            
                 
     $Page.='  <table style = "margin-top:25px;">
                 <tr>
-                    <th>Driver Name</th>
-                    <th>Vehicle Type</th>
-                    <th>Plate No</th>
-                    <th>Mobile No</th>
-                    <th>Driver Signature</th>
-                    <th>Manager Signature</th>
+                    <th  style= "font-size:14px;">Driver Name</th>
+                    <th  style= "font-size:14px;">Vehicle Type</th>
+                    <th  style= "font-size:14px;">Plate No</th>
+                    <th  style= "font-size:14px;">Mobile No</th>
+                    <th  style= "font-size:14px;">Driver Signature</th>
+                    <th  style= "font-size:14px;">Manager Signature</th>
                 </tr>
                 <tr>
-                    <td>'.$Rows['CtnDriverName'].'</td>
-                    <td>'.$Rows['CtnCarName'].'</td> 
-                    <td>'.$Rows['CtnCarNo'].'</td>
-                    <td>'.$Rows['CtnDriverMobileNo'] .'</td>
+                    <td style= "font-size:14px;"  >'.$Rows['CtnDriverName'].'</td>
+                    <td style= "font-size:14px;"  >'.$Rows['CtnCarName'].'</td> 
+                    <td style= "font-size:14px;"  >'.$Rows['CtnCarNo'].'</td>
+                    <td style= "font-size:14px;"  >'.$Rows['CtnDriverMobileNo'] .'</td>
                     <td> </td> 
                     <td> </td>
                 </tr>
@@ -134,14 +132,17 @@ if(isset($_GET['CTNId']) && !empty($_GET['CTNId'])) {
             $Page.='  
 
                     <div class="mt-5  fw-bold fs-5">
-                        <p style= "margin:0px; padding:1px; "><strong>Address: </strong> Street No 3, Sarak Naw Bagram, Dispachari, Kabul-Afghanistan </p>
-                        <p style= "margin:0px; padding:1px;"><strong>Phone: </strong> +93(0)782226574 </p>
-                        <p style= "margin:0px; padding:1px;"><strong>Email: </strong> marketing.pkg@baheer.af</p>
-                        <p style= "margin:0px; padding:1px; padding-top:2px;"> <strong> Note: </strong> Baheer Group is not responsible for the amount of dilivered cartons once the truck leaves Baheer Group (factory)  premises. </p>
+                        <br>  
+                        <p style= "margin:0px; padding:1px; padding-top:2px;"> <strong> Note:</strong><span style= "font-size:12px;" >Baheer Group is not responsible for the amount of dilivered cartons once the truck leaves Baheer Group (factory)  premises. </span> </p>
+                        <br>  
+                        <p style= "margin:0px; padding:1px;font-size:12px; "><strong>Address: </strong> Street No 3, Sarak Naw Bagram, Dispachari, Kabul-Afghanistan </p>
+                        <p style= "margin:0px; padding:1px;font-size:12px;"><strong>Phone: </strong> +93(0)782226574 </p>
+                        <p style= "margin:0px; padding:1px;font-size:12px;"><strong>Email: </strong> marketing.pkg@baheer.af</p>
                     </div>';
                      
                     
-            $Page .= '<div style = "margin:0px; padding:0px;">----------------------------------------------------------------------------------------------------------------------------------- </div>'; 
+            $Page .= '<div style = "margin:0px; padding:0px;">----------------------------------------------------------------------------------------------------------------------------------- </div><br><br><br><br><br><br>'; 
+            
             $Page .= $Page; 
         
     

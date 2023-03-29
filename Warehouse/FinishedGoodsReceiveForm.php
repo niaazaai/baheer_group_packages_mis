@@ -9,7 +9,7 @@ use Carbon\Carbon;
         $CTNId=$_REQUEST['CTNId'];  
         $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,ProductQTY,
         ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp ,cartonproduction.CtnId1, cartonproduction.ManagerApproval,ProBrach, 
-        cartonproduction.ProQty,ProOutQty,Plate,`Line`,Pack,ExtraPack,Carton,ExtraCarton FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
+        cartonproduction.ProQty,ProOutQty,Plate,`Line`,Pack,ExtraPack,Carton1,ExtraCarton FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
         INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId WHERE  CTNId = ? ORDER BY CTNOrderDate DESC';
         $DataRows=$Controller->QueryData($SQL,[$CTNId]);
         $Rows=$DataRows->fetch_assoc();
@@ -170,7 +170,7 @@ use Carbon\Carbon;
                     </tr>
                     <tr>
                         <th><strong>Per Packes :</strong> </th>
-                        <td><?=$Rows['Carton']; ?></td>
+                        <td><?=$Rows['Carton1']; ?></td>
                     </tr>
                     <tr>
                         <th><strong>Pieces : </strong> </th>

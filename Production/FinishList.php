@@ -69,6 +69,8 @@
     </div>
 </div>
 
+            
+
 <div class="card shadow m-3   mt-0 " >
     <div class="card-body">
         <table class = "table" id = "JobTable">
@@ -85,6 +87,19 @@
 
             <tr>
                 <?php $counter = 1;  while($Rows=$DataRows->fetch_assoc())  { ?>
+
+                        <?php 
+                            $used_machine  = $Controller->QueryData('SELECT * FROM used_machine 
+                            INNER JOIN machine ON used_machine.machine_id = machine.machine_id WHERE cycle_id = ? ',[ $Rows['cycle_id']]);
+                            $last_machine_produced_qty = 0 ; 
+                            $flag=0;
+                            while($um = $used_machine->fetch_assoc()){ 
+                                if(!empty($um['produced_qty'])) {
+                                    $last_machine_produced_qty = $um['produced_qty']; 
+                                } 
+                            }
+                        ?>
+
                         <tr class ="p-0" >
                         <td><?=$counter++; ?></td>
                             <td><?=$Rows['JobNo']?></td>
@@ -93,20 +108,26 @@
                             <td><?=$Rows['CTNQTY']?></td>
                             <td><?=$Rows['ProductQTY']?></td>
                             <td><?=$Rows['cycle_plan_qty']?></td>
-                            </td>
+                           
                             <td> 
                                 <!-- cycle_id , cycle_status , cycle_plan_qty -->
                             <?php if($Rows['cycle_status'] == 'Finish List') {?>
-                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['CustId1']?>,<?=$Rows['cycle_id']?>,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-success btn-sm ">   
+                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['CustId1']?>,<?=$Rows['cycle_id']?>,<?=$Rows['CTNId']?>,`<?=$Rows['JobNo']?>`,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?> , `<?=$last_machine_produced_qty?>`)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-success btn-sm ">   
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
                                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                                     </svg> Register
                                 </a> 
                             <?php  } // END OF COMPLETED IF BLOCK  ?>
 
-                            <a class = "btn btn-outline-dark btn-sm" style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-                                href="../Design/ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >  View Image
-                            </a>
+                            <?php if(isset($Rows['DesignImage']) && !empty($Rows['DesignImage']) )  {    ?>
+                                <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                    href="../Design/ShowDesignImage.php?Url=<?=$Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
+                                        <svg width = "35px" height = "35px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier"> <path d="M18 4.25H6C5.27065 4.25 4.57118 4.53973 4.05546 5.05546C3.53973 5.57118 3.25 6.27065 3.25 7V17C3.25 17.7293 3.53973 18.4288 4.05546 18.9445C4.57118 19.4603 5.27065 19.75 6 19.75H18C18.7293 19.75 19.4288 19.4603 19.9445 18.9445C20.4603 18.4288 20.75 17.7293 20.75 17V7C20.75 6.27065 20.4603 5.57118 19.9445 5.05546C19.4288 4.53973 18.7293 4.25 18 4.25ZM6 5.75H18C18.3315 5.75 18.6495 5.8817 18.8839 6.11612C19.1183 6.35054 19.25 6.66848 19.25 7V15.19L16.53 12.47C16.4589 12.394 16.3717 12.3348 16.2748 12.2968C16.178 12.2587 16.0738 12.2427 15.97 12.25C15.865 12.2561 15.7622 12.2831 15.6678 12.3295C15.5733 12.3759 15.4891 12.4406 15.42 12.52L14.13 14.07L9.53 9.47C9.46222 9.39797 9.37993 9.34111 9.28858 9.30319C9.19723 9.26527 9.09887 9.24714 9 9.25C8.89496 9.25611 8.79221 9.28314 8.69776 9.32951C8.60331 9.37587 8.51908 9.44064 8.45 9.52L4.75 13.93V7C4.75 6.66848 4.8817 6.35054 5.11612 6.11612C5.35054 5.8817 5.66848 5.75 6 5.75ZM4.75 17V16.27L9.05 11.11L13.17 15.23L10.65 18.23H6C5.67192 18.23 5.35697 18.1011 5.12311 17.871C4.88926 17.6409 4.75525 17.328 4.75 17ZM18 18.25H12.6L16.05 14.11L19.2 17.26C19.1447 17.538 18.9951 17.7884 18.7764 17.9688C18.5577 18.1492 18.2835 18.2485 18 18.25Z" fill="#000000"></path> </g></svg>
+                                </a>
+                            <?php } else {  echo '<span class = "text-danger p-1" style = "border:2px solid red; border-radius:3px; "   >N/A</span>'; }  ?>  
+                            
 
                             </td>
                         <tr class ="p-0" > 
@@ -133,19 +154,28 @@
 
         <div class="modal-body">
             <div class="row mb-3 d-flex justify-content-center">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-floating ">
-                        <input type="text" name = "JobNo" class="form-control "  id = "FJL_job_no"  placeholder  = "Job No"    readonly>
+                        <input type="text" name = "JobNo" class="form-control "  id = "FJL_job_no"  placeholder  = "Job No" readonly>
                         <label for="floatingInput">Job No </label>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="form-floating ">
                         <input type="text" name = "OrderQTY"   id = "FJL_order_qty" class="form-control " readonly  placeholder  = "Order QTY"   >
                         <label for="floatingInput">Order QTY</label>
                     </div>
                 </div>
-            
+                <div class="col-lg-4">
+                    <div class="form-floating ">
+                        <input type="text"    id = "last_machine_produced_qty" class="form-control " style = "border:2px solid #F7C04A" readonly  placeholder  = "آخرین تولید ماشین"   >
+                        <label for="floatingInput">آخرین تولید ماشین</label>
+                    </div>
+                </div>
+
+
+                
+
             </div>
             
             <div class="row mb-3 d-flex justify-content-center">
@@ -212,7 +242,7 @@
             <div class="row mb-3 d-flex justify-content-center">
                 <div class="col-lg-6">
                     <div class="form-floating ">
-                        <input type="text" name = "Total" class="form-control " id = "Total"   placeholder  = "Total QTY" >
+                        <input type="text" name = "Total" class="form-control " id = "Total" readonly  placeholder  = "Total QTY" >
                         <label for="floatingInput">Total </label>
                     </div>
                 </div>
@@ -220,7 +250,7 @@
                     <div class="form-floating">
                         <select class="form-select" name = "Unit" id="Unit" aria-label="Select Unit">
                             <option selected>Select Unit</option>
-                            <option value="Production">Production</option>
+                            <option selected value="Production">Production</option>
                             <option value="Manual">Manual</option>
                         </select>
                         <label for="Unit">Unit</label>
@@ -263,7 +293,7 @@
         }
     }
 
-    function AddCycleForCProduction(CustId, cycle_id , CTNId , JobNo , ProductName , CTNQTY){
+    function AddCycleForCProduction(CustId, cycle_id , CTNId , JobNo , ProductName , CTNQTY , last_machine_produced_qty ){
        
         document.getElementById('FJL_cust_id').value = CustId; 
         document.getElementById('FJL_cycle_id').value = cycle_id; 
@@ -271,6 +301,9 @@
         document.getElementById('FJL_job_no').value = JobNo; 
         document.getElementById('FJL_product_name').value = ProductName; 
         document.getElementById('FJL_order_qty').value = CTNQTY; 
+        document.getElementById('last_machine_produced_qty').value = last_machine_produced_qty; 
+        
+
 
     }
 

@@ -19,7 +19,7 @@ if(isset($_REQUEST['CTNId']))
 
     $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,
     ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-    cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId 
+    cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId 
      FROM  carton 
      INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1
      INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId 
@@ -132,20 +132,20 @@ if(isset($_POST['SetColumns'])) {
                   
                   while($Rows=$SQL->fetch_assoc())
                   {
-                    $Remaining=$Rows['ProQty']-$Rows['ProOutQty'];
+                    $Remaining=$Rows['ProductQTY']-$Rows['ProOutQty'];
                     ?>
                         <tr>
                             <td><?=$Count?></td> 
                             <td><?=$Rows['JobNo']?></td>
                             <td><?=$Rows['ProductName'].' ( '.$Rows['Size'].' cm)'?></td>
                             <td><?=$Rows['CTNQTY']?></td>
-                            <td><?=$Rows['ProQty']?></td> 
+                            <td><?=$Rows['ProductQTY']?></td> 
                             <td><?=$Rows['financeAllowquantity']?></td>
                             <td><?=$Rows['ProOutQty']?></td> 
                             <td><?=$Remaining?></td>
                             <td>
                                 <button type="button" class = "btn btn-outline-primary btn-sm m-1 border-3" 
-                                                    onclick = "PutQTYToModal(<?=$Rows['ProQty'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>' , <?=$Rows['ProOutQty']?> )" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 
+                                                    onclick = "PutQTYToModal(<?=$Rows['ProductQTY'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>' , <?=$Rows['ProOutQty']?> )" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 
                                         STOCK OUT
                                 </button> 
                             </td>
@@ -235,13 +235,14 @@ if(isset($_POST['SetColumns'])) {
           } 
         },{}); 
  
-    function PutQTYToModal(QTY = 0,CTNId,ProId , outqty)
+    function PutQTYToModal(QTY = 0,CTNId,ProId , outqty=0)
     {
         document.getElementById("QTY").value = QTY;        
         document.getElementById("CTNID").value = CTNId; 
         document.getElementById("PROID").value = ProId;
         document.getElementById("minus").value = outqty;
-        
+
+ 
 
     }
 

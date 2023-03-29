@@ -16,29 +16,25 @@ use Carbon\Carbon;
 
 if(isset($_REQUEST['PROId']) && isset($_REQUEST['CTNId']))
 {
-     
-  
-        $CTNId=$_REQUEST['CTNId']; 
-        $PROId=$_REQUEST['PROId'];
-        $CustId=$_REQUEST['CustId'];
-        $FAQ=$_REQUEST['FAQ']; 
+    $CTNId=$_REQUEST['CTNId']; 
+    $PROId=$_REQUEST['PROId'];
+    $CustId=$_REQUEST['CustId'];
+    $FAQ=$_REQUEST['FAQ']; 
 
-        $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit,CTNStatus,CTNQTY,ProductName,JobNo,cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-        cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,Plate,Pack,Carton,ExtraPack,`Line`,cartonproduction.ProId 
-        FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId WHERE CTNId=?
-        ORDER BY CTNOrderDate DESC'; 
+    $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit,ExtraCarton,CTNStatus,CTNQTY,ProductName,JobNo,cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
+    cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,Plate,Pack,Carton1,ExtraPack,`Line`,cartonproduction.ProId 
+    FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId WHERE CTNId=?
+    ORDER BY CTNOrderDate DESC'; 
 
-        $DataRows=$Controller->QueryData($SQL,[$CTNId]); 
-        $Rows=$DataRows->fetch_assoc();
+    $DataRows=$Controller->QueryData($SQL,[$CTNId]); 
+    $Rows=$DataRows->fetch_assoc();
    
 }
 
 
-
-
 if(isset($_POST['StockOut']))
 {
-    $FAQ=$_REQUEST['FAQ']; 
+    $FAQ=$_POST['financeAllowquantity']; 
 
     $ProOutQty= (int)$_POST['ProOutQty'];
     $CTNId=$_GET['CTNId'];
@@ -61,13 +57,17 @@ if(isset($_POST['StockOut']))
     $TotalQTY= (int)$_POST['TotalQTY'];
 
     $Total=$ProOutQty+$TotalQTY;
+
+    $FAQReaminAmount=$FAQ-$TotalQTY;
+
+   
         
   
     $Insert=$Controller->QueryData("INSERT INTO cartonstockout(PrStockId,CtnCustomerId,CtnJobNo,UserId1,CtnCarNo,CtnCarName,CtnDriverName,CtnDriverMobileNo,CoutComment,OutStatus,TotalPlat,LineQTY,PacksInLine,
                                     ExtraPackes,TotalPackes,PerPackes,Pieces,CtnOutQty,financeAllowquantity) 
                                     VALUES(?,?,?,?,?,?,?,?,?,'Done',?,?,?,?,?,?,?,?,?) ",
                                     [$PROId,$CustId,$CTNId,$_SESSION['EId'],$VehiclePlateNO,$VehicleType,$DriverName,$DriverMobileNo,$Comment,$TotalPlat,$LineQTY,$PackesInLine,$Extrapackes,$TotalPackes,$PerPackes,
-                                     $Pieces,$TotalQTY,$FAQ]);
+                                     $Pieces,$TotalQTY,$FAQReaminAmount]);
     $LastId=$DATABASE->last_id();
     $InsertGatePass=$Controller->QueryData("INSERT INTO gatepasspkg (IdStockOutPkg,EmpId,GatepassStatus) VALUES (?,?,?)",[$LastId,$_SESSION['EId'],'Apply by warehouse']);
     if($Insert)
@@ -112,40 +112,40 @@ if(isset($_POST['StockOut']))
                         <input type="hidden" name="ProOutQty" value="<?php if(isset($_REQUEST['CTNId'])){ echo $Rows['ProOutQty']; } ?>">
                     </div>
                 
-                   
+                    
                     <p class="fw-bold mt-4 fs-5">Entry Info:-</p>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="TotalPlat">Total Plate</label>
-                        <input type="text" class="form-control" name="TotalPlat"  onchange="TakeValue(this.name , this.value);"  id="TotalPlat">
+                        <input type="text" class="form-control" name="TotalPlat"  onchange="TakeValue(this.name , this.value);"  id="TotalPlat" value="">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="LineQTY">Line QTY</label>
-                        <input type="text" class="form-control" name="LineQTY" onchange="TakeValue(this.name , this.value);"  id="LineQTY"  >
+                        <input type="text" class="form-control" name="LineQTY" onchange="TakeValue(this.name , this.value);"  id="LineQTY" value=" ">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="PackesInLine">Packes In Line</label>
-                        <input type="text" class="form-control" name="PackesInLine" onchange="TakeValue(this.name , this.value);"  id="PackesInLine" >
+                        <input type="text" class="form-control" name="PackesInLine" onchange="TakeValue(this.name , this.value);"  id="PackesInLine" value="">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="Extrapackes">Extra packes</label> 
-                        <input type="text" class="form-control" name="Extrapackes" onchange="TakeValue(this.name , this.value);"  id="Extrapackes">
+                        <input type="text" class="form-control" name="Extrapackes" onchange="TakeValue(this.name , this.value);"  id="Extrapackes" value="">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="TotalPackes">Total Packes</label>
-                        <input type="text" class="form-control" name="TotalPackes" id="TotalPackes"   >
+                        <input type="text" class="form-control" name="TotalPackes" id="TotalPackes" readonly  >
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="PerPackes">Per Packes </label>
-                        <input type="text" class="form-control" name="PerPackes" onchange="TakeValue(this.name , this.value);" id="PerPackes">
+                        <input type="text" class="form-control" name="PerPackes" onchange="TakeValue(this.name , this.value);" id="PerPackes"  value="">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="Pieces">Pieces </label>
-                        <input type="text" class="form-control" name="Pieces" onchange="TakeValue(this.name , this.value);" id="Pieces">
+                        <input type="text" class="form-control" name="Pieces" onchange="TakeValue(this.name , this.value);" id="Pieces" value="">
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1">
                         <label class="fw-bold" for="TotalQTY">Total QTY</label>
-                        <input type="text" class="form-control" name="TotalQTY" id="TotalQTY">
-                        <input type="hidden" name="financeAllowquantity" id="financeAllowquantity" value="<?php if(isset($_REQUEST['CTNId'])){ echo $Rows['financeAllowquantity']; } ?>">
+                        <input type="text" class="form-control" name="TotalQTY" id="TotalQTY" readonly>
+                        <input type="hidden" name="financeAllowquantity" id="financeAllowquantity" value="<?php if(isset($_REQUEST['CTNId'])){ echo $_REQUEST['FAQ']; } ?>">
                     </div>
  
                     <p class="fw-bold mt-4 fs-5">Driver Info:-</p>
@@ -190,7 +190,7 @@ if(isset($_POST['StockOut']))
 
     function CalculatePlates(total) 
     {
-        let total_packs = (Number(total.TotalPlat) *  Number(total.LineQTY) * Number(total.PackesInLine)) + Number(total.Extrapackes); 
+        let total_packs = (Number(total.TotalPlat)  *  Number(total.LineQTY) * Number(total.PackesInLine)) + Number(total.Extrapackes); 
         document.getElementById("TotalPackes").value=total_packs;
         
         let TotalQTY = Number(total_packs) * Number(total.PerPackes) + Number(total.Pieces);
@@ -206,22 +206,23 @@ if(isset($_POST['StockOut']))
          
         document.getElementById("TotalQTY").value = Number(TotalQTY);
        
-        console.log(total_packs);
-        console.log(Number(TotalQTY));
- 
-        
-
+        // console.log(total_packs);
+        // console.log(Number(TotalQTY));
     }
- 
+
+    // console.log(total); 
+<?php 
+    // $call = ""; 
+    // $call .= "TakeValue(`TotalPlat`," . $Rows['Plate']. "); "; 
+    // $call .= "TakeValue(`LineQTY`," . $Rows['Line']. "); "; 
+    // $call .= "TakeValue(`Extrapackes`," . $Rows['ExtraPack']. "); "; 
+    // $call .= "TakeValue(`PackesInLine`," . $Rows['Pack']. "); "; 
+    // $call .= "TakeValue(`PerPackes`," . $Rows['Carton1']. "); "; 
+    // $call .= "TakeValue(`Pieces`," . $Rows['ExtraCarton']. "); "; 
+    // // $call .= "console.log(total);" ; 
+    // echo ($call)  ; 
+
+?>
 </script>
-
- 
 <?php  require_once '../App/partials/Footer.inc'; ?>
-
-
-
-
-
-
-
  

@@ -19,7 +19,7 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
   
     $Query = "SELECT `CtnoutId`, carton.CTNId,  PrCtnType  , CTNUnit  ,`CtnStockOutDate`, ppcustomer.CustName, carton.ProductName,carton.`CTNWidth`,cartonproduction.ProId, 
     carton.`CTNHeight`, carton.`CTNLength`, carton.CTNQTY, cartonproduction.ProQty, `CtnOutQty`, `CtnDriverName`, `CtnCarNo`, 
-    `CtnDriverMobileNo`, `CtnCarName` , `CoutComment`, `OutDateTime`, `GDNumber`, cartonstockout.CtnOutQty  , carton.JobNo 
+    `CtnDriverMobileNo`, `CtnCarName` , `CoutComment`, `OutDateTime`, `GDNumber`,ProductQTY, cartonstockout.CtnOutQty  , carton.JobNo 
     FROM `cartonstockout` INNER JOIN carton ON carton.CTNId=cartonstockout.CtnJobNo 
     left outer JOIN cartonproduction ON cartonproduction.ProId=cartonstockout.PrStockId 
     INNER JOIN ppcustomer ON ppcustomer.CustId=cartonstockout.CtnCustomerId  
@@ -96,6 +96,8 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
             <div>
                  <span class= "badge bg-danger" > <span id= "topJobNo"></span> Job Number</span>
                 <span  class= "badge bg-success" > <span id= "orderQTY1"></span>   Order QTY</span>
+                <span  class= "badge bg-info" > <span id= "ProducedQTY1"></span> Produced QTY</span>
+                <span  class= "badge bg-warning" > <span id= "RemainingQTY1"></span> Remaining QTY</span>
             </div>
 
         </div>
@@ -116,7 +118,7 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                       <th class="text-center">Vehicle</th>
                       <th class="text-center">Vehicle No</th>
                       <th class="text-center">Mobile</th>
-                      <th class="text-end">Produced QTY</th>
+                      <!-- <th class="text-end">Produced QTY</th> -->
                       <th class="text-end">Out QTY</th>
                       <th class="text-end">Remaining QTY</th>
                       <th class="text-center">Comment</th>
@@ -128,6 +130,10 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                   while($Rows = $DataRows->fetch_assoc()) : ?>
                     <span style = "display:none;" id = "description"><?= $Rows['ProductName']  . ' ('  .  $Rows['CTNLength'] . ' X '.  $Rows['CTNWidth'] .' X ' . $Rows['CTNHeight']. ') -  ' . $Rows['PrCtnType']  . ', ' . $Rows['CTNUnit'];  ?></span>
                           <span id = "orderQTY" style = "display:none;"  class = "text-end" ><?= number_format($Rows['CTNQTY']) ?></span>
+                          <span id = "ProducedQTY" style = "display:none;"  class = "text-end" ><?= ($Rows['ProductQTY']) ?></span>
+                          <span id = "RemainingQTY" style = "display:none;"  class = "text-end" ><?= number_format($Rows['ProductQTY']-$Rows['CtnOutQty']) ?></span>
+
+
                       <span style = "display:none;"  id = "tableJobNo"><?=$Rows['JobNo'] ?></span>
 
                       <tr>  
@@ -137,7 +143,7 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                           <td class="text-center"><?= $Rows['CtnCarName'] ?></td>
                           <td class="text-center"><?= $Rows['CtnCarNo'] ?></td>
                           <td class="text-center"><?= $Rows['CtnDriverMobileNo'] ?></td>
-                          <td class = "text-end"><?php echo  number_format($Rows['ProQty'] );                     $ProduceQTY += $Rows['ProQty']  ?></td>
+                          <!-- <td class = "text-end"><?php echo  number_format($Rows['ProQty'] ); $ProduceQTY += $Rows['ProQty']  ?></td> -->
                           <td class = "text-end"><?php echo number_format($Rows['CtnOutQty']);                      $OutQTY +=  $Rows['CtnOutQty']  ?></td>
                           <td class = "text-end"><?php echo number_format($Rows['ProQty'] - $Rows['CtnOutQty']);    $Remain +=   $Rows['ProQty'] - $Rows['CtnOutQty'] ;  ?></td>
                           <td class="text-center"><?= $Rows['CoutComment'] ?></td>
@@ -159,9 +165,8 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                     <tr>
                         <td  colspan = '6' class = "text-center fw-bold" >Total</td>
                          
-                        <td  class = "text-end fw-bold"><?php    echo number_format ( $ProduceQTY) ?></td>
-                        <td  class = "text-end fw-bold" ><?php    echo number_format ($OutQTY ) ?></td>
-                        <td  class = "text-end fw-bold" ><?php    echo number_format ($Remain) ?></td>
+                        <td   id = "out_qty_total"  class = "text-end fw-bold" ><?=  ($OutQTY ) ?></td>
+                        <!-- <td class = "text-end fw-bold "  >  <?php    echo number_format ($Remain) ?></td> -->
                         <td colspan = '2' ></td>
                     </tr>
               </tbody>             
@@ -170,20 +175,18 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
   </div>
 </div>
 
-<script src="../Assets/SheetJs/SheetJs.js"></script>
 <script>
 
 let description = document.getElementById('description').innerHTML; 
 document.getElementById('desc').innerHTML =   description;  
 document.getElementById('orderQTY1').innerHTML = document.getElementById('orderQTY').innerHTML;  
-document.getElementById('topJobNo').innerHTML = document.getElementById('tableJobNo').innerHTML;  
+document.getElementById('ProducedQTY1').innerHTML = document.getElementById('ProducedQTY').innerHTML; 
 
-function export_data() {
-  let data=document.getElementById('sss');
-  var fp=XLSX.utils.table_to_book(data,{sheet:'text'});
-  XLSX.write(fp,{bookType:'xlsx',type:'base64'});
-  XLSX.writeFile(fp, description + '.xlsx');
-}
+ let pro =  (document.getElementById('ProducedQTY').innerHTML ); 
+ let out =  (document.getElementById('out_qty_total').innerHTML );
+document.getElementById('RemainingQTY1').innerHTML = pro-out;
+document.getElementById('topJobNo').innerHTML = document.getElementById('tableJobNo').innerHTML;  
+ 
 
 function Print()
 {
@@ -242,7 +245,7 @@ function Print()
         <table class=".remove_table">
             <tr>
                 <th th style="padding-left:20px;margin-top:15px;">
-                    <img src="../public/img/Logo.png" width = "210px" height= "100px"   alt="BGC Logo"> 
+                    <!-- <img src="../public/img/Logo.png" width = "210px" height= "100px"   alt="BGC Logo">  -->
                 </th>
                 <th> 
                     <h3 style="padding-left:280px; font-size:25px; margin-top:20px;" > Baheer Group Of Companies </h3>
@@ -310,24 +313,15 @@ function Print()
                     </tr>           
           </table>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
 <script>
 
-let description = document.getElementById('description').innerHTML; 
-document.getElementById('desc').innerHTML =   description;  
-document.getElementById('orderQTY1').innerHTML = document.getElementById('orderQTY').innerHTML;  
-document.getElementById('topJobNo').innerHTML = document.getElementById('tableJobNo').innerHTML;  
+// let description = document.getElementById('description').innerHTML; 
+// document.getElementById('desc').innerHTML =   description;  
+// document.getElementById('orderQTY1').innerHTML = document.getElementById('orderQTY').innerHTML;  
+// document.getElementById('topJobNo').innerHTML = document.getElementById('tableJobNo').innerHTML;  
 
 
-function export_data()
-{
-    let data=document.getElementById('tab');
-    var fp=XLSX.utils.table_to_book(data,{sheet:'text'});
-    XLSX.write(fp,{bookType:'xlsx',type:'base64'});
-    XLSX.writeFile(fp,'test.xlsx');
-
-} 
-
+ 
 
 </script>
 

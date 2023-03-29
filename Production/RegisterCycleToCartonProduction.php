@@ -39,7 +39,7 @@
             $Produced_QTY =  $Controller->QueryData("SELECT ProductQTY , CTNId  FROM carton WHERE CTNId = ? ",[$_REQUEST['CTNId']  ]);
 
             $PQTY = $Produced_QTY->fetch_assoc()['ProductQTY'] ;  
-            $PQTY += $_REQUEST['Total'];
+            $PQTY += (int) $_REQUEST['Total'];
 
             $Update_produced = $Controller->QueryData("UPDATE carton SET ProductQTY = ? WHERE CTNId = ? ",[ $PQTY , $_REQUEST['CTNId'] ]);
             if($Update_produced && $pro_cycle && $Produced_QTY) header('Location:FinishList.php?msg=Data Saved Successfully&class=success'); 

@@ -38,9 +38,9 @@ if (isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType'])) {
         $LIST['TH'] = $SAME_TH  . '  <th class="text-end">Produced QTY</th> <th class="text-end">Total Amount</th> <th class="text-end">Received Amount</th><th class="text-end">Balance</th><th>Status</th><th>OPS</th> ';
         $LIST['WHERE'] =  " WHERE CTNStatus NOT IN ('New','Cancel','Completed','Pospond' , 'FNew') AND JobNo != 'NULL' AND JobType !='Direct Job' ORDER BY CTNId DESC";
         break;
-
+        // SUM(`ProQty`) AS PRODUCED
       case 'Finished Goods':
-        $LIST['COLUMNS'] = $SAME_COL.', ProDate , SUM(`ProQty`) AS PRODUCED, SUM(`ProOutQty`) AS OUTQTY, CTNHeight,   CTNStatus , `ProComment` '; 
+        $LIST['COLUMNS'] = $SAME_COL.', ProDate ,ProductQTY, SUM(`ProOutQty`) AS OUTQTY, CTNHeight,   CTNStatus , `ProComment` '; 
         $LIST['TH'] = $SAME_TH  . ' <th>Pro.date</th><th class="text-end">Produced QTY</th> <th class="text-end">Out QTY</th> <th class="text-end">Available QTY</th><th>Status</th><th>Comment</th><th>OPS</th> ';
         $LIST['EXTRA'] = 'FROM cartonproduction INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 ';
         $LIST['WHERE'] =  " WHERE ProStatus='Accept' AND ManagerApproval='ManagerApproved' GROUP BY carton.JobNo ORDER BY ProSubmitDate DESC ";
@@ -199,7 +199,7 @@ else {
                         }?> 
 
                         <?php if ($key == 'CTNHeight') {    
-                        $res = (int) $Rows['PRODUCED']  - (int) $Rows['OUTQTY'] ; 
+                        $res = (int) $Rows['ProductQTY']  - (int) $Rows['OUTQTY'] ; 
                         echo '<td class="text-end">' .number_format($res) .  ' </td>';
                         continue;
                         }?> 

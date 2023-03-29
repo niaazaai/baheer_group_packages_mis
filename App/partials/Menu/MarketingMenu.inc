@@ -153,7 +153,7 @@
                         </svg>
                     Stock Balance</a>
                 </li>
-<li><a class = "dropdown-item fw-bold" href="./../Finance/CustomerLoan.php">
+                <li><a class = "dropdown-item fw-bold" href="./../Finance/CustomerLoan.php">
                 
                         <svg width="30" height="30" viewBox="0 0 551 578" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_2_100)">
@@ -181,7 +181,7 @@
                         </clipPath>
                         </defs>
                         </svg> 
-                    Customer Balance</a>
+                    Customer Balance Job</a>
                 </li>
                 <li><a class = "dropdown-item fw-bold" href="./../Finance/CustomerBalanceDetail.php">
                 
@@ -228,7 +228,9 @@
 
                     Customer Balance Details</a>
                 </li>
-                
+                <li><a class = "dropdown-item fw-bold" href="./../Finance/CustomerBalanceOne.php"> 
+                    Customer Balance</a>
+                </li>
               
               </ul>
           </li>

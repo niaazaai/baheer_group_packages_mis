@@ -23,7 +23,7 @@
         $Show=$SelectCarton->fetch_assoc();
         $ProductQTY=$Show['ProductQTY'];
 
-        $Select=$Controller->QueryData("SELECT Plate , `Line`, Pack  , ExtraPack , Carton , ExtraCarton FROM cartonproduction WHERE ProId=?",[$ProId]);
+        $Select=$Controller->QueryData("SELECT Plate , `Line`, Pack  , ExtraPack , Carton1 , ExtraCarton FROM cartonproduction WHERE ProId=?",[$ProId]);
         $Data=$Select->fetch_assoc(); 
 
         $Old_Total=$Data['Plate'] * $Data['Line'] * $Data['Pack'] + $Data['ExtraPack'];
@@ -32,7 +32,7 @@
         $CurrentBalance=$ProductQTY - $Old_Total_final; 
         $NewBalance= $Total + $CurrentBalance;
  
-        $Update=$Controller->QueryData("UPDATE cartonproduction SET Plate = ?, `Line` = ?, Pack = ? , ExtraPack = ?, Carton = ? , ExtraCarton = ?, ProStatus = 'Fixed' WHERE ProId = ? ",[$Plate,$Line,$Pack,$ExtraPack,$Carton,$ExtraCarton,$ProId]);
+        $Update=$Controller->QueryData("UPDATE cartonproduction SET Plate = ?, `Line` = ?, Pack = ? , ExtraPack = ?, Carton1 = ? , ExtraCarton = ?, ProStatus = 'Fixed' WHERE ProId = ? ",[$Plate,$Line,$Pack,$ExtraPack,$Carton,$ExtraCarton,$ProId]);
         if($Update) 
         {  
             $Update_produced = $Controller->QueryData("UPDATE carton SET ProductQTY = ? WHERE CTNId = ? ",[$NewBalance , $CTNId ]);
@@ -41,7 +41,7 @@
     }
 
     $DataRows=$Controller->QueryData("SELECT  carton.JobNo , carton.CTNId , carton.CTNQTY , carton.ProductName , ppcustomer.CustName , cartonproduction.ProId ,cartonproduction.CtnId1 ,cartonproduction.CompId 
-                                              ,cartonproduction.ProQty,cartonproduction.ProId ,ProOutQty,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton,ExtraCarton  ,DesignImage,CustId1
+        ,cartonproduction.ProQty,cartonproduction.ProId ,ProOutQty,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton1,ExtraCarton  ,DesignImage,CustId1
       FROM cartonproduction INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 INNER JOIN ppcustomer ON  cartonproduction.CompId = ppcustomer.CustId INNER JOIN designinfo ON carton.CTNId = designinfo.CaId 
       WHERE ProStatus='Pending'",[]) ;
 
@@ -105,7 +105,7 @@
                             <td><?php if($Rows['ProStatus']=='Pending') echo '<span class="badge bg-danger blink_me">Rejected</span>';?></td>
                             </td>
                             <td>                                                                                                                           
-                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['ProId']?>,<?=$Rows['CustId1']?> ,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>,<?=$Rows['Plate']?>,<?=$Rows['Line']?>,<?=$Rows['Pack']?>,<?=$Rows['ExtraPack']?>,<?=$Rows['Carton']?>,<?=$Rows['ExtraCarton']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-danger btn-sm ">   
+                                <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['ProId']?>,<?=$Rows['CustId1']?> ,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>,<?=$Rows['Plate']?>,<?=$Rows['Line']?>,<?=$Rows['Pack']?>,<?=$Rows['ExtraPack']?>,<?=$Rows['Carton1']?>,<?=$Rows['ExtraCarton']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-danger btn-sm ">   
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">
                                         <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                                     </svg> Edit

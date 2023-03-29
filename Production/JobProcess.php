@@ -355,6 +355,7 @@
                 نمایش تولید گذشته ماشین ها
             </a>
             <a class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">ثبت تعداد تولید</a>
+
         </div>
     </div>
 </div>
@@ -369,10 +370,25 @@
             <?php 
                 $used_machine  = $Controller->QueryData('SELECT * FROM used_machine INNER JOIN machine ON used_machine.machine_id = machine.machine_id   WHERE cycle_id = ? ',[$CYCLE_ID]);
                 $last_machine_produced_qty = 0 ; 
+                $flag=0;
                 while($um = $used_machine->fetch_assoc()){ 
                     if(!empty($um['produced_qty'])) {
                         $last_machine_produced_qty = $um['produced_qty']; 
                     } 
+
+                if($flag==0)
+                {
+
+                    $last_machine_produced_qty =  $last_machine_produced_qty *  $UsedPaper[0]['ups']; 
+                    $flag =1;
+                }
+                else
+                {
+                    $last_machine_produced_qty =  $last_machine_produced_qty  ;
+                }
+
+                    
+                   
             ?>
 
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -388,9 +404,6 @@
             </li>
 
         <?php  } // end of while   
-            if(trim($machine_['machine_name']) != 'Carrogation 5 Ply'  || trim($machine_['machine_name']) != 'Carrogation 3 Ply') {
-                $last_machine_produced_qty =  $last_machine_produced_qty *  $UsedPaper[0]['ups']; 
-            }
         ?>
 
 
@@ -820,9 +833,7 @@
                     <div><?=$CTN_DATA[0]['CTNQTY'];?></div>
                     <div><?=isset($CTN_DATA[1]['CTNQTY']) ? $CTN_DATA[1]['CTNQTY'] : '';?></div>
                 </th>
-
- 
-
+  
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
                     <!-- <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div> -->
@@ -1027,7 +1038,7 @@
                 <th scope="col"  >
                     <div class ="text-black" >Plan Qty (تعداد کاري) <span class = "text-danger fw-bold p-0 mt-2" style = "font-size:16px; "  >*</span></div>
                     <!-- <div class=""><?=(isset($Cut_Qty[0]['cycle_plan_qty'])) ? $Cut_Qty[0]['cycle_plan_qty'] : '' ?></div> -->
-                    <div id = "lmpq__"> <?=$last_machine_produced_qty; ?> </div>
+                    <div id = "lmpq__"> <?=$last_machine_produced_qty; ?>  </div>
                 </th>
             </tr>
         </tbody>
@@ -1125,9 +1136,7 @@
     </table>
 
     <div class="form-floating mb-3 ">
-        <textarea class="form-control" readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
-            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
-        </textarea>
+        <textarea class="form-control" readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea"><?=(isset($CTN_DATA[0]['Note'])) ? $CTN_DATA[0]['Note'] : '' ?></textarea>
         <label for="floatingTextarea">Comments for first Job</label>
     </div>
 
@@ -1275,9 +1284,7 @@
     </table>
 
     <div class="form-floating mb-3">
-        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea">
-            <?=(isset($Cut_Qty[0]['MarketingNote'])) ? $Cut_Qty[0]['MarketingNote'] : '' ?>
-        </textarea>
+        <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea"><?=(isset($CTN_DATA[0]['Note'])) ? $CTN_DATA[0]['Note'] : '' ?></textarea>
         <label for="floatingTextarea">Comments for first Job</label>
     </div>
 
