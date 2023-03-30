@@ -1,35 +1,25 @@
 <?php
-
-use Masterminds\HTML5\Elements;
-
   ob_start(); require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; require '../Assets/Carbon/autoload.php'; ?>
 <?php 
 
 if(isset($_REQUEST) && !empty($_REQUEST))
 {
-   
- 
     $Currency=$_REQUEST['Currency'];  
     $SQL=$Controller->QueryData("SELECT CustId ,CTNId ,CustName, CtnCurrency, Sum(CTNTotalPrice) as total_price , Sum(ReceivedAmount) AS r_amount FROM `carton` 
     INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1  WHERE  CtnCurrency = ?  Group by CustName",[$Currency]); 
-
- 
-
-    // CTNTotalPrice,ReceivedAmount,CustName,ProductName,CTNWidth,CTNHeight,CTNLength,CtnCurrency 
 }
- 
-
-
- 
 ?>
 
-
 <div class="card m-3">
-    <div class="card-body">
-        <h4 class="font-bold">
-                
-             Customer balance  
+    <div class="card-body d-flex justify-content-between">
+        <h4 class="font-bold p-0 m-0">
+             Customer balance
         </h4>
+        <div >
+            <a href="CustomerCartonBalance.php" class="btn btn-outline-primary btn-sm">Stock Balance</a>  
+             <a href="CustomerLoan.php" class="btn btn-outline-primary btn-sm">Job Balance</a>  
+             <a href="CustomerBalanceDetail.php" class="btn btn-outline-primary btn-sm">Customer Balance</a>   
+        </div>
     </div>
 </div>
 
@@ -38,7 +28,6 @@ if(isset($_REQUEST) && !empty($_REQUEST))
         <div class="card-body">
             <div class="row"> 
                 <form action="" method="POST">
-                     
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                         <select name="Currency" id="Currency" class="form-select" onchange="this.form.submit()">
                             <option selected>Select Currency</option>
@@ -56,16 +45,13 @@ if(isset($_REQUEST) && !empty($_REQUEST))
 </form>
 
 <div class="card m-3">
-    <div class="card-body">
-        <table class="table table-responsive  table-hover" id="tableId" >
+    <div class="card-body  ">
+        <table class="table  " id="tableId" >
 			<thead class="table-info">
 				<tr style="background-color:#148d8d ;"> 
                     <th>Sr.No</th>
                     <th>Company</th>
-                    <th> </th> 
-                    <th>Currency</th>
                     <th>Balance</th>
-                   
 				</tr>
 			</thead>
             <tbody>
@@ -77,29 +63,26 @@ if(isset($_REQUEST) && !empty($_REQUEST))
                             while($rows=$SQL->fetch_assoc())
                             { 
                                 $total = $rows['total_price'] -  $rows['r_amount'];
+                                if($total > 0)  $color="badge bg-success";
+                                elseif($total < 0) $color="badge bg-danger"; 
+
                                 ?>
                                 <tr> 
                                     <td> <?= $Count ?></td>
                                     <td><?=$rows['CustName']?></td>
-                                    <td></td>
-                                    <!-- <td> <?= $rows['ProductName'].'-'.$rows['CTNWidth'].'X'.$rows['CTNHeight'].'X'.$rows['CTNLength'] ?></td> -->
-                                    <td><span class="badge bg-warning"><?=$rows['CtnCurrency']?></span></td> 
-                                
-                                    <td style="align-text:right;" <?php if($total > 0) { $color="badge bg-success";}elseif($total < 0){ $color="badge bg-danger"; } ?> > <span class='<?=$color?>'> <a href="CheckSpecificCustBalance.php?CustId=<?=$rows['CustId']?>&Currency=<?=$rows['CtnCurrency']?>" style="color:white;  text-decoration:none;"><?=$total?></a>  </span></td>
-                                   
+                                    <td style="align-text:right;" > 
+                                    <span class='<?=$color?>'>  <a href="CheckSpecificCustBalance.php?CustId=<?=$rows['CustId']?>&Currency=<?=$rows['CtnCurrency']?>"  style="color:white;  text-decoration:none;"><?=$total?></a> <?=$rows['CtnCurrency']?>  </span>
+                                    </td>
                                 </tr>
-                                
                             <?php
                                 $Total+=$total;
                                 $Count++;
                             }       
                         }
-               
-                ?>
+                            ?>
                     <tr>
-                        <td colspan="4" class="fw-bold " style="padding-left: 500px;">Total</td>
+                        <td colspan="2" class="fw-bold " style="padding-left: 500px;">Total</td>
                         <td><span class="badge bg-dark" ><?=$Total?></span> <span class="badge bg-warning"><?php if(isset($_REQUEST) && !empty($_REQUEST)) { echo $_REQUEST['Currency'];}else{}?></span></td>
-                
                     </tr>
             </tbody>
         </table>
@@ -134,8 +117,5 @@ function search(Search_input ,JobTable)
                 }
             }
   }
- 
-
 </script>
-
 <?php  require_once '../App/partials/Footer.inc'; ?>

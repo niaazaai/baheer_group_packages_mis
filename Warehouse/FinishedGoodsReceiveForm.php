@@ -1,12 +1,15 @@
  
 <?php
 ob_start(); 
-require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; require '../Assets/Carbon/autoload.php';
+require_once '../App/partials/Header.inc'; require_once '../App/partials/Menu/MarketingMenu.inc'; 
+require '../Assets/Carbon/autoload.php';
 use Carbon\Carbon;
 
     if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId']) )  {
 
         $CTNId=$_REQUEST['CTNId'];  
+
+         
         $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,ProductQTY,
         ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp ,cartonproduction.CtnId1, cartonproduction.ManagerApproval,ProBrach, 
         cartonproduction.ProQty,ProOutQty,Plate,`Line`,Pack,ExtraPack,Carton1,ExtraCarton FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 
@@ -26,10 +29,16 @@ use Carbon\Carbon;
         if($Update)  header("Location:JobCenter.php?MSG=produced QTY Successfully hand over to warehouse&State=".$Status);
     }
     if(isset($_POST['Reject'])) {
+
+
         $CTNId=$_REQUEST['CTNId']; 
         $ProId=$_REQUEST['ProId'];
+        $Comment=$_POST['Comment'];
         $Status=1;  
-        $Update=$Controller->QueryData("UPDATE cartonproduction SET ProStatus='Pending' , ReceivedBy=? WHERE  ProId = ?",[$_SESSION['EId'],$ProId]);
+        // var_dump($_POST);
+        // echo  $CTNId."----".$ProId;
+        // die();
+        $Update=$Controller->QueryData("UPDATE cartonproduction SET ProStatus='Pending' , ReceivedBy=?, RejectComment=? WHERE  ProId = ?",[$_SESSION['EId'],$Comment,$ProId]);
         if($Update)  header("Location:JobCenter.php?MSG=produced QTY Rejected from warehouse side&State=".$Status);
     }
 ?>
@@ -190,10 +199,41 @@ use Carbon\Carbon;
         <form action="" method="POST" class = "m-0 p-0" >
             <div class = "d-flex justify-content-end" >
                 <input type="submit" name="Save&submit" class="btn btn-outline-primary" value="Stock in">
-                <input type="submit" name="Reject" class="btn btn-outline-danger ms-2" value="Reject">
+                <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#exampleModal"> Reject </button>
+                <!-- <input type="submit" name="Reject" class="btn btn-outline-danger ms-2" value="Reject"> -->
             </div>
         </form>
     </div><!-- end of card-body  -->
 </div><!-- end of card -->
  
 <?php  require_once '../App/partials/Footer.inc'; ?>
+
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<form action="" method="POST">
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reject Comment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"> 
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <textarea class="form-control" name="Comment" id="Comment" cols="30" rows="10"></textarea>
+                    </div>
+                </div>    
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-outline-primary" name="Reject" id="Save" value="Save">
+                    <!-- <button type="button" class="btn btn-primary">Save</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

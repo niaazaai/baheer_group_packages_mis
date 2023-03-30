@@ -30,14 +30,16 @@ if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
         $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`, 
         ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress,ppcustomer.CustId, CTNPaper, CTNColor, JobNo, Note, designinfo.DesignImage,CompleteTime,designinfo.DesignCode1 FROM `carton` 
         INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1  LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE `CTNStatus`='Archive' 
-        AND designinfo.DesignDep='Design' order by CTNOrderDate DESC";
+        order by CTNOrderDate DESC";
+        //  AND designinfo.DesignDep='Design'
     }
     elseif($ListType=='JobUnderProcess')
     {
         $SQL="SELECT CTNId,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustEmail,ppcustomer.CustAddress,ppcustomer.CustId, CTNPaper, CTNColor, designinfo.Alarmdatetime, CURRENT_TIMESTAMP, JobNo, designinfo.DesignImage,CompleteTime,designinfo.DesignStatus,designinfo.DesignCode1 
-        FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId WHERE  designinfo.DesignDep='Archive' 
-        AND `CTNStatus`='ArchiveProcess' ORDER BY CTNOrderDate DESC";
+        FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId WHERE  `CTNStatus`='ArchiveProcess' ORDER BY CTNOrderDate DESC";
+        // designinfo.DesignDep='Archive'   AND
+       
     }
     elseif($ListType=='P/DProduction')
     {

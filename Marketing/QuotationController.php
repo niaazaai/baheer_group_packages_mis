@@ -32,6 +32,10 @@
             if(isset($request['TotalPrice'] ) ) {
                 $request['TotalPrice'] = str_replace(",","", $request['TotalPrice']); 
             }
+
+            if(!isset($request['DiePrice'])) {
+                $request['DiePrice'] = 0 ; 
+            }
             
             if($request['JobNo'] == 'NULL' && (isset($request['RorderAndPrint']) || isset($request['Rorder']) ) )   $Status = 'New';              
             else if($request['JobNo'] != 'NULL' && (isset($request['RorderAndPrint']) || isset($request['Rorder']) ))  $Status = 'FNew';    
@@ -128,20 +132,25 @@
                 }
                 elseif(isset($_POST['Rorder']) || isset($_POST['RorderToDesign']) || isset($_POST['RorderAndPrint'])   ){
 
+
+
+                      // var_dump($SelectCPolymer); 
+                    // echo $LID ; 
+                    // echo $SelectCPolymer->num_rows; echo "<br>"; 
+                    // echo $_POST['PolyId'] ;   echo "<br>"; 
+                    // echo $_POST['DieId'] ;   echo "<br>"; 
+                    // var_dump($CPolymer); 
+                    // die(); 
+
+
                     $LID = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
                     $SelectDesigninfo= $this->Controller->QueryData("SELECT * FROM designinfo WHERE CaId=?",[ $_POST['CTNId']]);
                     $DataRows=$SelectDesigninfo->fetch_assoc();
-                    
-                    // var_dump($DataRows); 
-                    // echo $_POST['CTNId'] ; 
-                    // echo "<br>"; 
-                    // echo $LID ; 
-
-                    // die(); 
 
 
                     if($SelectDesigninfo->num_rows > 0)
                     {
+                        // copy design info record and put back to designinfo table 
                         $Insert=$this->Controller->QueryData("INSERT INTO designinfo (
                                 DesignName1, DesignerName1, DesignStatus, DesignImage, CaId,  DesignCode1,   DesignDep, OriginalFile, design_type,  designer_id, Re_OrderStatus
                             ) 
@@ -163,6 +172,44 @@
                     }
                     else  die("<h1 style = 'text-align:center; margin-top:100px;color:red;border:3px solid red;padding:10px; '>Design information does not exist, please contact system admin</h1>");
  
+                    // copy cpolymer record 
+                    $SelectCPolymer= $this->Controller->QueryData("SELECT * FROM cpolymer WHERE   CPid = ?" , [$request['PolyId'] ]);
+                    $CPolymer=$SelectCPolymer->fetch_assoc();
+                    if($SelectCPolymer->num_rows) {
+                        $CPolymerInsert=$this->Controller->QueryData("INSERT INTO cpolymer (
+                            CPNumber, CompId, ProductName, PColor, Psize,  PMade,   CartSample, POwner, MakeDate,  `Type`, UsageQTY , DesignCode , PStatus , PLocation , Dieno21
+                        ) 
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        [   
+                            $CPolymer['CPNumber'],
+                            $CPolymer['CompId'],
+                            $CPolymer['ProductName'],
+                            $CPolymer['PColor'],
+                            $CPolymer['Psize'],
+                            $CPolymer['PMade'],
+                            $CPolymer['CartSample'],
+                            $CPolymer['POwner'],
+                            $CPolymer['MakeDate'],
+                            $CPolymer['Type'],
+                            $CPolymer['UsageQTY'],
+                            $CPolymer['DesignCode'],
+                            $CPolymer['PStatus'],
+                            $CPolymer['PLocation'],
+                            $CPolymer['Dieno21'],
+                        ]);
+
+                        
+                        $LastPolymerId = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
+                        $updatePolymerIDCarton = $this->Controller->QueryData("UPDATE `carton` SET `PolyId`=? WHERE `CTNId` = ?",[ $LastPolymerId , $LID ]);
+                        // var_dump($updatePolymerIDCarton); 
+                        // die();
+                        
+                    } // end of polymer if block 
+
+
+
+
+
                     if($request['JobNo'] == 'NULL')  header("Location:IndividualQuotation.php?CustId=".$request['CustomerId']);
                     else header("Location:CustomerProfile.php?id=".$request['CustomerId']);
                     

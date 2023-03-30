@@ -41,7 +41,7 @@
     }
 
     $DataRows=$Controller->QueryData("SELECT  carton.JobNo , carton.CTNId , carton.CTNQTY , carton.ProductName , ppcustomer.CustName , cartonproduction.ProId ,cartonproduction.CtnId1 ,cartonproduction.CompId 
-        ,cartonproduction.ProQty,cartonproduction.ProId ,ProOutQty,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton1,ExtraCarton  ,DesignImage,CustId1
+        ,cartonproduction.ProQty,cartonproduction.ProId ,ProOutQty,RejectComment,ProStatus,Plate,`Line`,Pack,ExtraPack,Carton1,ExtraCarton  ,DesignImage,CustId1
       FROM cartonproduction INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 INNER JOIN ppcustomer ON  cartonproduction.CompId = ppcustomer.CustId INNER JOIN designinfo ON carton.CTNId = designinfo.CaId 
       WHERE ProStatus='Pending'",[]) ;
 
@@ -90,6 +90,7 @@
                 <th>Order Qty</th>
                 <th>Produced Qty</th>
                 <th>Status</th>
+                <th>Reject Comment</th>
                 <th class="text-center">OPS</th>
             </tr>
 
@@ -103,7 +104,7 @@
                             <td><?=$Rows['CTNQTY']?></td>
                             <td><?=$Rows['ProQty']?></td>
                             <td><?php if($Rows['ProStatus']=='Pending') echo '<span class="badge bg-danger blink_me">Rejected</span>';?></td>
-                            </td>
+                            <td><?=$Rows['RejectComment']?></td>
                             <td>                                                                                                                           
                                 <a type="button"  onclick = "AddCycleForCProduction(<?=$Rows['ProId']?>,<?=$Rows['CustId1']?> ,<?=$Rows['CTNId']?>,<?=$Rows['JobNo']?>,`<?=$Rows['ProductName']?>`,<?=$Rows['CTNQTY']?>,<?=$Rows['Plate']?>,<?=$Rows['Line']?>,<?=$Rows['Pack']?>,<?=$Rows['ExtraPack']?>,<?=$Rows['Carton1']?>,<?=$Rows['ExtraCarton']?>)" data-bs-toggle="modal" data-bs-target="#exampleModal1" class="btn btn-outline-danger btn-sm ">   
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-lg" viewBox="0 0 16 16">

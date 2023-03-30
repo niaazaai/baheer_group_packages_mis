@@ -164,18 +164,20 @@ else
                     <th title="Produced QTY">Prod.QTY</th> 
                     <th title="Finance Allow Quantity">FAQ</th> 
                     <th>Stock Out</th>
-                    <th title="Remaining Amount">Available</th>
+                    <th>Available</th>
                     <th>Status</th>
-                    <th class = "text-center" >Cycle Process</th>
+                    <th class = "text-center"> Cycle Process </th>
                     <th>OPS</th>
                 </tr>
             </thead>
             <tbody style = "font-size:12px;">
               <?php 
                   $COUNTER=1;$Count=1;
+                  $show_stockout =  true; 
                   while($Rows=$SQL->fetch_assoc())
                   {
                     $Remaining=$Rows['ProductQTY']-$Rows['ProOutQty'];
+                    if($Rows['financeAllowquantity'] == 0) $show_stockout = false; 
                     ?>
                     
                         <tr>
@@ -189,9 +191,13 @@ else
                             <td class = "text-end" ><?=number_format($Rows['ProOutQty'])?></td>
                             <td class = "text-end" ><?=number_format($Remaining)?></td>
                             <td><?=$Rows['CTNStatus'];?></td>
-                            <td class="text-center"> 
+                            <td class="text-end"> 
                                 <?php
-                                    if($Rows['ProStatus']=='Pending')  echo "<span class='badge bg-danger'>Rejected</span>";
+                                    if($Rows['ProStatus']=='Pending')  echo '<span class="badge bg-danger fw-bold me-1"> 
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16">
+                                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                            </svg>
+                                            Rejected</span>';
                                     elseif($Rows['ProStatus']==' ')  echo "<span class='badge bg-info'>Checking</span>";
                                     elseif($Rows['ProStatus']=='Fixed')  echo "<span class='badge bg-success'>Fixed</span>";
                                     else echo'<span class="badge bg-success fw-bold badge-sm" >
@@ -199,13 +205,21 @@ else
                                                  <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
                                              </svg> Checked </span> ';       
                                
-                                    if($Rows['ManagerApproval']=='NotApproved') echo "<span class='badge bg-danger'>Not Approved</span>";
+                                    if($Rows['ManagerApproval']=='NotApproved') echo '<span class="badge bg-danger fw-bold me-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16">
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg>
+                                        Not Approved </span>';
                                     else  echo'  <span class="badge bg-success fw-bold" title = "Approved By Warehouse Manager" >
                                                 <svg xmlns="http://www.w3.org/2000/svg"  width="16" height="16" fill="currentColor"   viewBox="0 0 16 16">
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
                                                 </svg> Approved </span>';
                                 
-                                    if($Rows['financeApproval']=='FinanceNotApproved')  echo "<span class='badge bg-danger'>Finance Approving</span>";
+                                    if($Rows['financeApproval']=='FinanceNotApproved')  echo '<span class="badge bg-danger me-1 fw-bold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"  viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg> Finance Approving</span>';
+
                                     else   echo'  <span class="fw-bold badge bg-success" title = "Approved By Finance " >
                                                 <svg xmlns="http://www.w3.org/2000/svg"  width="16" height="16" fill="currentColor"   viewBox="0 0 16 16">
                                                     <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
@@ -220,13 +234,12 @@ else
                                         <a href="FinishedGoodsReceiveForm.php?CTNId=<?=$Rows['CTNId']?>&ProId=<?=$Rows['ProId']?>" class="btn btn-outline-primary btn-sm  m-0 ">
                                             Stock In
                                         </a> 
-                                    <?php }  elseif($Rows['financeApproval']=='FinanceApproved') {?>
-                                    
+                                    <?php }  elseif($Rows['financeApproval']=='FinanceApproved') { if( $show_stockout) {?>
+                                            
                                             <a href="FinishedGoodsStockOutForm.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>&FAQ=<?=$Rows['financeAllowquantity']?>" class="btn btn-outline-danger btn-sm m-0  ">
                                                 Stock out
                                             </a>  
-
-                                    <?php } elseif($Rows['ProStatus']=='Accept' ) {?>
+                                    <?php }} elseif($Rows['ProStatus']=='Accept' ) {?>
                                         <?php if($Rows['ManagerApproval'] !='ManagerApproved') {?>
                                             <a href="WarehouseStateChanger.php?ProId=<?=$Rows['ProId']?>" class="btn btn-outline-success btn-sm  m-0"
                                                 onclick="return confirm(`Do you want to Approved this produced QTY Mr.Manager`);">

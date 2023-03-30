@@ -120,7 +120,6 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                       <th class="text-center">Mobile</th>
                       <!-- <th class="text-end">Produced QTY</th> -->
                       <th class="text-end">Out QTY</th>
-                      <th class="text-end">Remaining QTY</th>
                       <th class="text-center">Comment</th>
                       <th class="text-center">Print</th>
                   </tr>
@@ -144,8 +143,7 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
                           <td class="text-center"><?= $Rows['CtnCarNo'] ?></td>
                           <td class="text-center"><?= $Rows['CtnDriverMobileNo'] ?></td>
                           <!-- <td class = "text-end"><?php echo  number_format($Rows['ProQty'] ); $ProduceQTY += $Rows['ProQty']  ?></td> -->
-                          <td class = "text-end"><?php echo number_format($Rows['CtnOutQty']);                      $OutQTY +=  $Rows['CtnOutQty']  ?></td>
-                          <td class = "text-end"><?php echo number_format($Rows['ProQty'] - $Rows['CtnOutQty']);    $Remain +=   $Rows['ProQty'] - $Rows['CtnOutQty'] ;  ?></td>
+                          <td class = "text-end"><?php echo number_format($Rows['CtnOutQty']); $OutQTY +=  $Rows['CtnOutQty']  ?></td>
                           <td class="text-center"><?= $Rows['CoutComment'] ?></td>
                           <td class="text-center">
                           <?php  if(in_array( $Gate['VIEW_PRINT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) {?>
@@ -279,7 +277,6 @@ function Print()
               <th class="border th">Mobile</th>
               <th class="border th">Produced QTY</th>
               <th class="border th">Out QTY</th>
-              <th class="border th">Remaining QTY</th>
               <th class="border th">Comment</th>
             </tr>
                   <?php $ProduceQTY = 0 ; $OutQTY = 0 ; $Remain = 0 ; 

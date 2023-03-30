@@ -15,9 +15,9 @@
       $Page = $_GET['Page'] ; 
     } else die('Page Parameter is not set Correctly'); 
 
-    $CTN  =  $Controller->QueryData("SELECT * From carton WHERE CTNId = ?  " , [ $CTNId ] );
+    $CTN = $Controller->QueryData("SELECT * From carton WHERE CTNId = ?  " , [ $CTNId ] );
     $CTN = $CTN->fetch_assoc(); 
- 
+   
     // FOR TAKING LAST JOB-NO 
     $Customer =  $Controller->QueryData("SELECT CustId, CustName,  CustContactPerson, CustMobile, CustEmail,  CustAddress, CustWebsite, CustCatagory 
     FROM ppcustomer WHERE CustId=  ?" , [ $CTN['CustId1'] ] );
@@ -315,6 +315,10 @@
       <input type="hidden" name='CTNId' value = "<?=$CTNId?>" > 
       <input type="hidden" name='Page' value = '<?=$Page?>' >
       <input type="hidden" name='CTNStatus' value = '<?=$CTN['CTNStatus']?>' >
+      <input type="hidden" name='DieId' value = '<?=$CTN['DieId']?>' >
+      <input type="hidden" name='PolyId' value = '<?=$CTN['PolyId']?>' >
+ 
+    
       <div class="row my-3 gy-2 gx-3 align-items-center " id = "JobTypeRow"  style = "display:none;">
         <div class="col-xxl-2  col-xl-2 col-lg-2 col-md-12 col-sm-12 col-xs-12   ">
         </div>

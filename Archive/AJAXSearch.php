@@ -1,6 +1,6 @@
 <?php
 
-$ROOT_DIR = 'F:/BaheerApps/htdocs/BGIS/'; 
+$ROOT_DIR = 'C:/xampp/htdocs/BGIS/'; 
 require_once $ROOT_DIR. 'App/Controller.php'; 
 
 if(isset($_GET["query"]) && !empty($_GET["query"]) ){
