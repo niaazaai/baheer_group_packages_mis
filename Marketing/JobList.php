@@ -17,7 +17,7 @@
     $RECORD_PER_PAGE = 15;
 
     $DEFAULT_COLUMNS = "CTNId,JobNo , CustId, offesetp , flexop,   CTNOrderDate,ppcustomer.CustName,ProductName, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size  , CTNQTY,CTNPrice, CTNStatus,CtnCurrency, DesignCode1,DesignImage "; 
-    $DEFAULT_TABLE_HEADING = '<th>#</th><th>Q-No</th><th>Job No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Size(LxWxH) (cm)</th>   <th>Order Qty</th><th>Unit Price</th><th>Status</th> <th>Design</th> <th>R Days</th> <th>OPS</th>'; 
+    $DEFAULT_TABLE_HEADING = '<th>#</th><th>Q-No</th><th>Job No</th><th>order-Date</th><th>Company</th><th>Product</th><th>Size(LxWxH) (cm)</th>   <th>Order Qty</th><th>Unit Price</th><th>Status</th>  <th>R Days</th> <th>OPS</th>'; 
     $COLUMNS = ''; 
     $TABLE_HEADING = ''; 
  
@@ -152,16 +152,7 @@
                                               ?> 
                                         </td>
                                         <td><?= $Rows['CTNStatus']  ?> </td>
-                                        <td class = " align-item-center " >        
-                                            <?php if(isset($Rows['DesignCode1']) && !empty($Rows['DesignCode1']) )  { ?>
-                                            <a class = " " style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
-                                                href="ShowDesignImage.php?Url=<?=$Rows['DesignImage']?>&ProductName=<?=$Rows['ProductName']?>" >
-                                            <?php   echo '<span class = "text-success" >'. $Rows['DesignCode1'] . '</span>';  ?>  
-                                            </a>
-                                            <?php }  else {
-                                                echo '<span class = "text-danger" >N/A</span>';
-                                            } ?>
-                                        </td>
+                                         
                                         <td> 
                                             <?php
 
@@ -181,7 +172,7 @@
 
                         <td>  
                           <?php  if(in_array( $Gate['VIEW_JOB_CARD_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
-                            <a class="text-primary Py-1 my-1 " href="../Finance/JobCard.php?CTNId=<?=$Rows['CTNId'];?>&ListType=JobList" title="View Job Card">  
+                            <a class="text-primary Py-1 my-1 " href="../Finance/JobCard.php?CTNId=<?=$Rows['CTNId'];?>&ListType=JobList" title="View Job Card" style ="text-decoration:none;" >  
                                 <svg width="25" height="25" viewBox="0 0 25 25" fill="#20c997" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M1.68878 18.5713L6.42858 23.3111V18.5713H1.68878Z" fill="#20c997"></path>
                                     <path d="M15.3725 10.0308H14.3265V11.592H15.3725C15.9031 11.592 16.3367 11.2399 16.3367 10.8114C16.3367 10.3828 15.9031 10.0308 15.3725 10.0308Z" fill="#20c997"></path>
@@ -192,13 +183,25 @@
                             </a>
                           <?php } ?> 
                           <?php  if(in_array( $Gate['VIEW_EDIT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
-                              <a class="text-primary Py-1 my-1 " href="QuotationEdit.php?Page=JobList&CTNId=<?=$Rows['CTNId'];?>  " title="Edit Quotation">  
+                              <a class="text-primary Py-1 my-1 " href="QuotationEdit.php?Page=JobList&CTNId=<?=$Rows['CTNId'];?>  " title="Edit Quotation" style ="text-decoration:none;" >  
                                   <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                   </svg>
                               </a>
                           <?php } ?> 
+
+                          <?php if(isset($Rows['DesignImage']) && !empty($Rows['DesignImage']) )  { ?>
+                            <a class = "" style ="text-decoration:none;" target = "_blank" title = "Click To Show Design Image"  
+                                href="../Design/ShowDesignImage.php?Url=<?= $Rows['DesignImage']?>&ProductName=<?= $Rows['ProductName']?>" >
+                                    <svg width = "35px" height = "35px"  viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18 4.25H6C5.27065 4.25 4.57118 4.53973 4.05546 5.05546C3.53973 5.57118 3.25 6.27065 3.25 7V17C3.25 17.7293 3.53973 18.4288 4.05546 18.9445C4.57118 19.4603 5.27065 19.75 6 19.75H18C18.7293 19.75 19.4288 19.4603 19.9445 18.9445C20.4603 18.4288 20.75 17.7293 20.75 17V7C20.75 6.27065 20.4603 5.57118 19.9445 5.05546C19.4288 4.53973 18.7293 4.25 18 4.25ZM6 5.75H18C18.3315 5.75 18.6495 5.8817 18.8839 6.11612C19.1183 6.35054 19.25 6.66848 19.25 7V15.19L16.53 12.47C16.4589 12.394 16.3717 12.3348 16.2748 12.2968C16.178 12.2587 16.0738 12.2427 15.97 12.25C15.865 12.2561 15.7622 12.2831 15.6678 12.3295C15.5733 12.3759 15.4891 12.4406 15.42 12.52L14.13 14.07L9.53 9.47C9.46222 9.39797 9.37993 9.34111 9.28858 9.30319C9.19723 9.26527 9.09887 9.24714 9 9.25C8.89496 9.25611 8.79221 9.28314 8.69776 9.32951C8.60331 9.37587 8.51908 9.44064 8.45 9.52L4.75 13.93V7C4.75 6.66848 4.8817 6.35054 5.11612 6.11612C5.35054 5.8817 5.66848 5.75 6 5.75ZM4.75 17V16.27L9.05 11.11L13.17 15.23L10.65 18.23H6C5.67192 18.23 5.35697 18.1011 5.12311 17.871C4.88926 17.6409 4.75525 17.328 4.75 17ZM18 18.25H12.6L16.05 14.11L19.2 17.26C19.1447 17.538 18.9951 17.7884 18.7764 17.9688C18.5577 18.1492 18.2835 18.2485 18 18.25Z" fill="#000000"></path> </g></svg>
+                            </a>
+                          <?php } else {  echo '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                          </svg>'; }  ?>
+
                         </td>
                      <?php  $counter++;
                             echo "</tr>";

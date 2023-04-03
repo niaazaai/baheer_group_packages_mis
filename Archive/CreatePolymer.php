@@ -45,7 +45,8 @@ if(isset($_POST['Save']))
 if(isset($_GET['Id']))
 {
     $Id=$_GET['Id'];   $Data=$_GET['Polymer'];
-    $SELECT=$Controller->QueryData("SELECT CPid,CPNumber,CompId,ProductName,PColor,Psize,PMade, CartSample, POwner, MakeDate , `Type`, DesignCode, PStatus, PLocation ,ppcustomer.CustName,ppcustomer.CustId
+    $SELECT=$Controller->QueryData("SELECT CPid,CPNumber,CompId,ProductName,PColor,Psize,PMade, CartSample, POwner, MakeDate ,
+     `Type`, DesignCode, PStatus, PLocation ,ppcustomer.CustName,ppcustomer.CustId
     FROM cpolymer INNER JOIN ppcustomer ON ppcustomer.CustId=cpolymer.CompId WHERE CPid = ?",[$Id]);
     
  
@@ -178,7 +179,15 @@ if(isset($_POST['SavePolymer']))
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                         <label for="ProductName" class="fw-bold pb-1">Product Name</label>
                         <select name="ProductName" onchange = "PutSizeIntoOtherFileds()"  id="ProductName"  class = "form-select" >
-                            <option value="<?php if(isset($_GET['CustId']) && isset($_GET['Polymer'])){ echo $Excute['ProductName']; }  ?>"><?php if(isset($_GET['CustId'])){ echo $Excute['ProductName']; } ?></option>
+                            <option selected 
+                                value="<?php if(isset($_GET['CustId']) && isset($_GET['Polymer'])){ echo $Excute['ProductName']; }   ?>">
+                                <?php   if(isset($_GET['CustId'])){ echo $Excute['ProductName']; }  
+                                if(isset($_GET['Id'])) {
+                                   echo  $SHOW['ProductName']; 
+                                }
+                                ?>
+                            </option>
+
                             <option disabled> Select Product</option>
                         </select>
                         <input type="hidden" id = "CTNId1"  name="CTNId" value= "" >

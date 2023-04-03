@@ -1,6 +1,9 @@
 <?php 
     ob_start();
     require_once '../App/partials/Header.inc'; 
+    require_once '../Assets/Carbon/autoload.php'; 
+    use Carbon\Carbon;
+    
     $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
     if(!in_array( $Gate['VIEW_UNDER_PROCESS_JOBS_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
         header("Location:index.php?msg=You are not authorized to access this page!" );
@@ -34,22 +37,22 @@
         case 'Carrogation 3 Ply':
             $table_heading = '
                 <th>#</th>
+                <th>Date</th>
                 <th>JobNo</th>
                 <th>Size (LxWxH) cm</th>
-                <th>Type</th>
-                <th>Ply</th>
-                <th>Product Name</th>
-                <th>Flute</th>
-                <th>Order Qty</th>
                 <th>Reel</th>
+                <th>Flute</th>
+                <th>Type</th>
+                <th>APP</th>
                 <th>Creasing</th>
                 <th>Cut Qty</th>
-                <th>APP</th>
-                <th>Comment</th>
+                <th>Paper</th>
                 <th>D-Status</th>
                 <th class="text-center">OPS</th>'; 
-            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id ,carton.JobNo, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size ,CTNUnit,CTNType,carton.ProductName , carton.CFluteType ,  carton.CTNQTY , used_paper.reel ,
-            used_paper.creesing , production_cycle.cut_qty , used_paper.ups , used_paper.comment, used_machine.double_job 
+            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id ,production_cycle.page_arrival_time , carton.JobNo, 
+             CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size 
+              , used_paper.reel , production_cycle.cycle_flute_type , CTNUnit , used_paper.ups ,  
+             used_paper.creesing , production_cycle.cut_qty ,carton.CTNPaper ,    used_machine.double_job 
             FROM carton 
             INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
             INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -60,20 +63,20 @@
 
         case 'Flexo #1':  
         case 'Flexo #2':
+        case 'Flexo #3':
             $table_heading = '
                 <th>#</th>
+                <th>Date</th>
                 <th>JobNo</th>
-                <th>Size (LxWxH)</th>
-                <th>Type</th>
-                <th>Ply</th>
                 <th>Product Name</th>
+                <th>Size (LxWxH)</th>
                 <th>color</th>
                 <th>Order Qty</th>
-                <th>Comment</th>
-                <th>D-Status</th>
+                <th>Plan QTY</th>
                 <th class="text-center">OPS</th>'; 
-            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , carton.JobNo,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,
-                CTNUnit,CTNType,carton.ProductName , CTNColor , carton.CTNQTY , used_paper.comment  , used_machine.double_job 
+            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , production_cycle.page_arrival_time ,carton.JobNo,   carton.ProductName ,
+                CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,
+                CTNColor , carton.CTNQTY , production_cycle.cycle_plan_qty  , used_machine.double_job 
                 FROM carton
                 INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
                 INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -83,18 +86,22 @@
         break; 
 
         case 'Glue Folder':
+        case '4 Khat':
             $table_heading = '
                 <th>#</th>
+                <th>Date</th>
                 <th>JobNo</th>
-                <th>Product Name</th> 
-                <th>Size (LxWxH) cm</th>
+                <th>Size(LxWxH)cm</th>
                 <th>Type</th> 
-                <th>Ply</th>
-                <th>Color</th>
-                <th>D-Status</th>
+                <th>Flute</th>
+                <th>App</th>
+                <th>Order QTy</th>
+                <th>Cycle QTY</th>
+                <th>Comment</th>
                 <th class="text-center">OPS</th>'; 
-            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , carton.JobNo, carton.ProductName , CONCAT( FORMAT(carton.CTNLength / 10 ,1 ) , ' x ',FORMAT (carton.CTNWidth / 10 , 1 ), ' x ', FORMAT(carton.CTNHeight/ 10,1) ) AS Size  ,
-                CTNUnit , CTNType , CTNColor, used_machine.double_job 
+            $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , production_cycle.page_arrival_time , carton.JobNo,  
+             CONCAT( FORMAT(carton.CTNLength / 10 ,1 ) , ' x ',FORMAT (carton.CTNWidth / 10 , 1 ), ' x ', FORMAT(carton.CTNHeight/ 10,1) ) AS Size  ,
+                CTNUnit ,production_cycle.cycle_flute_type , used_paper.ups ,  carton.CTNQTY, production_cycle.cycle_plan_qty  , carton.Note, used_machine.double_job 
                 FROM carton
                 INNER JOIN  production_cycle on production_cycle.CTNId = carton.CTNId 
                 INNER JOIN  used_machine on production_cycle.cycle_id = used_machine.cycle_id 
@@ -106,6 +113,7 @@
         default:
         $table_heading = '
             <th>#</th>
+            <th>Date</th>
             <th>JobNo</th>
             <th>Size (LxWxH) cm</th>
             <th>Type</th>
@@ -115,9 +123,8 @@
             <th>Cut Qt</th>
             <th>APP</th>
             <th>Machine</th>
-            <th>D-Status</th>
             <th class="text-center">OPS</th>'; 
-        $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , 
+        $table_query = "SELECT carton.CTNId, machine.machine_id , production_cycle.cycle_id , production_cycle.page_arrival_time ,
             carton.JobNo ,  CONCAT( FORMAT(CTNLength / 10 ,1 ) , 'x' , FORMAT ( CTNWidth / 10 , 1 ), 'x', FORMAT(CTNHeight/ 10,1) ) AS Size ,  
             CTNUnit ,carton.ProductName , carton.CTNColor  ,  carton.CTNQTY , production_cycle.cut_qty , used_paper.ups , used_machine.double_job , machine.machine_name
             FROM carton  
@@ -130,7 +137,12 @@
         break;
     }
     $DataRows=$Controller->QueryData($table_query,$table_query_input);
+
+
+    
+    
 ?>
+ 
  
 
 <div class=" m-3">
@@ -177,7 +189,6 @@
 
 <div class="card shadow m-3 " >
     <div class="card-body">
-
     <table class = "table" id = "JobTable" >
         <tr class="table-info"><?=$table_heading;?></tr>
         <?php 
@@ -185,34 +196,44 @@
             while ($Rows = $DataRows->fetch_assoc() ) {     ?>
             <tr>
                 <td><?=$counter++; ?></td>
-                    <?php foreach ($Rows  as $key => $value) { ?>
-                    <?php  if($key == 'CTNId' || $key == 'cycle_id' || $key == 'double_job' || $key == 'machine_id') continue; ?>
-                    <td><?php 
+                <td>
+                    <?php 
+                        if(isset($Rows['page_arrival_time']) && !empty($Rows['page_arrival_time'])) {
+                            $a =  Carbon::createFromTimeStamp(strtotime($Rows['page_arrival_time']) , 'Asia/Kabul' )->diffForHumans();
+                            echo "<span class = 'badge bg-success'>{$a}</span>";
+                        }
+                    ?>
+                </td>
+
+                <?php foreach ($Rows as $key => $value) { ?>
+                <?php  if($key == 'CTNId' || $key == 'cycle_id' || $key == 'double_job' || $key == 'machine_id' || $key == 'page_arrival_time' ) continue; ?>
+                    <td>
+                        <?php 
                             if($key == "CFluteType"){
                                 if($machine['machine_name'] == 'Carrogation 5 Ply') $value = 'BC'; 
                                 if($machine['machine_name'] == 'Carrogation 3 Ply') $value = 'C';  
                             }
                             echo $value;
                         ?>
-                    <?=($key == 'CTNType') ? ' Ply' : '' ?>
-                </td>
-                <?php } ?>  
+                        <?=($key == 'CTNType') ? ' Ply' : '' ?>
+                    </td>
+                <?php } // END FOREACH  ?>  
 
-                <td> 
-                    <?php 
-                        $double_job__ = 0;  
+                <?php $double_job__ = 0;  
+                    if($machine['machine_name'] == 'Carrogation 3 Ply' || $machine['machine_name'] == 'Carrogation 5 Ply') {
+                        echo "<td>"; 
                         if(isset($Rows['double_job'])) {
                             $double_job__ =  $Rows['double_job'];
                             echo $double_job__; 
                         }    
                         else  echo "Single Job"; 
-                    ?>
-                </td>
+                        echo "</td>";
+                    } 
+                ?>
+                
                 <td class = "text-center">
-                   
-                <?php  // $Rows['machine_id'] = 5 ?>
                     <a type="button" href="JobProcess.php?CTNId=<?=$Rows['CTNId']?>&CYCLE_ID=<?=$Rows['cycle_id']?>&machine_id=<?=$Rows['machine_id']?>&double_job=<?=$double_job__?>" 
-                    class="btn btn-outline-success btn-sm ">   
+                        class="btn btn-outline-success btn-sm ">   
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="p-0 m-0" viewBox="0 0 16 16">
                             <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
                             <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
@@ -222,21 +243,8 @@
                             else  echo 'Process'; 
                         ?> 
                     </a>
-
-                    <!-- 
-                    <a type="button" href="JobProcess.php?CYCLE_ID=<?=$Rows['cycle_id']?>&machine_id=<?=$Rows['machine_id']?>&double_job=<?=$double_job__?>" 
-                    class="btn btn-outline-success btn-sm ">   
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="p-0 m-0" viewBox="0 0 16 16">
-                            <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
-                            <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"></path>
-                        </svg> 
-                        <?php 
-                            if(isset($Rows['double_job']))  echo '  Jobs'; 
-                            else  echo 'Process'; 
-                        ?> 
-                    </a> -->
-
                 </td>
+
             </tr>
         <?php 
             }   

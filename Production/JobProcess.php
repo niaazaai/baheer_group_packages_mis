@@ -378,7 +378,6 @@
 
                 if($flag==0)
                 {
-
                     $last_machine_produced_qty =  $last_machine_produced_qty *  $UsedPaper[0]['ups']; 
                     $flag =1;
                 }
@@ -987,11 +986,11 @@
         </tbody>
     </table>
 
-
+<!-- 
     <div class="form-floating mb-3">
         <textarea class="form-control"  readonly="readonly" placeholder="Leave a comment here" id="floatingTextarea"><?=(isset($CTN_DATA[0]['Note'])) ? $CTN_DATA[0]['Note'] : '' ?> </textarea>
         <label for="floatingTextarea">Comments for first Job</label>
-    </div>
+    </div> -->
 
     <div >
         <img src="../Assets/<?=$CTN_DATA[0]['DesignImage']?>" class="img-fluid img-thumbnail  mx-auto  shadow" width="100%" alt="Design Image">

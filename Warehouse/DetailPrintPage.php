@@ -1,16 +1,11 @@
 
 <?php ob_start();  
-
-
-
   require_once '../App/partials/Header.inc';  
 
 $Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';
 if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
     header("Location:index.php?msg=You are not authorized to access this page!" );
 }
-
-
   if((  isset($_GET['CTNId']) && !empty('CTNId') ) ) {
   
     
@@ -51,26 +46,6 @@ if(!in_array( $Gate['VIEW_PRINTED_DETAILS_PAGE'] , $_SESSION['ACCESS_LIST']  )) 
           Driver & Loaded Jobs Printing Page</h3> 
       </h3>
       <div>
-      <!-- <a  onclick = 'Print()' class="btn btn-outline-primary  my-1" title="Click to Print Customer List ">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
-          <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"></path>
-          <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"></path>
-        </svg>
-        Print
-        </a>
-        <a href="#" type="button"  onclick="export_data()"  class="btn btn-outline-success  my-1" title="New Customer">  
-        <svg width="25" height="25" viewBox="0 0 111 108" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M57.55 0H64.975V10C77.488 10 90 10.025 102.512 9.962C104.625 10.049 106.95 9.9 108.787 11.162C110.074 13.012 109.925 15.362 110.012 17.487C109.95 39.187 109.975 60.875 109.988 82.562C109.926 86.2 110.325 89.912 109.563 93.5C109.063 96.1 105.938 96.162 103.85 96.25C90.9 96.287 77.938 96.225 64.975 96.25V107.5H57.212C38.162 104.037 19.074 100.838 0 97.5V10.013C19.188 6.675 38.375 3.388 57.55 0Z" fill="#207245"/>
-            <path d="M64.9746 13.75H106.225V92.5H64.9746V85H74.9746V76.25H64.9746V71.25H74.9746V62.5H64.9746V57.5H74.9746V48.75H64.9746V43.75H74.9746V35H64.9746V30H74.9746V21.25H64.9746V13.75Z" fill="white"/>
-            <path d="M79.9746 21.25H97.4746V30H79.9746V21.25Z" fill="#207245"/>
-            <path d="M37.0251 32.962C39.8501 32.762 42.6881 32.587 45.5251 32.45C42.1927 39.2936 38.8303 46.1227 35.4381 52.937C38.8761 59.937 42.3871 66.887 45.8371 73.887C42.8279 73.7143 39.8198 73.5226 36.8131 73.3119C34.6881 68.0989 32.1001 63.0619 30.5751 57.6119C28.8761 62.6869 26.4501 67.4739 24.5011 72.4499C21.7631 72.4119 19.0251 72.2999 16.2881 72.1869C19.5001 65.8999 22.6001 59.562 25.9121 53.312C23.1001 46.874 20.0121 40.5619 17.1121 34.1619C19.8621 33.9989 22.6121 33.837 25.3621 33.687C27.2241 38.575 29.2611 43.3989 30.8001 48.4119C32.4491 43.0999 34.9121 38.1 37.0251 32.962Z" fill="white"/>
-            <path d="M79.9746 35H97.4746V43.75H79.9746V35ZM79.9746 48.75H97.4746V57.5H79.9746V48.75ZM79.9746 62.5H97.4746V71.25H79.9746V62.5ZM79.9746 76.25H97.4746V85H79.9746V76.25Z" fill="#207245"/>
-        </svg>
-
-            Excel
-        </a> -->
-        
-
         <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary my-1 ms-1" title="Click to Read the User Guide ">
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
                     <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
@@ -309,19 +284,6 @@ function Print()
                         <td class="border" colspan = '1' ></td>
                     </tr>           
           </table>
-
-<script>
-
-// let description = document.getElementById('description').innerHTML; 
-// document.getElementById('desc').innerHTML =   description;  
-// document.getElementById('orderQTY1').innerHTML = document.getElementById('orderQTY').innerHTML;  
-// document.getElementById('topJobNo').innerHTML = document.getElementById('tableJobNo').innerHTML;  
-
-
- 
-
-</script>
-
     </div>
 </div>
 <?php  require_once '../App/partials/Footer.inc'; ?>

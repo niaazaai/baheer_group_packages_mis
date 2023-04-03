@@ -60,7 +60,7 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
     WHERE cycle_status = 'Task List' AND ( used_machine.status = 'Incomplete' OR used_machine.status = 'Proccessed')",[])->fetch_assoc()['tl'];
 
     $EMPLOYEE_ID = $Controller->QueryData("SELECT  COUNT(EId) AS eid FROM employeet 
-    WHERE EDepartment='Production' AND EJob='Machine Opreator' ",[])->fetch_assoc()['eid'];
+    WHERE EDepartment = 'Production' AND TRIM(EJob)=TRIM('Machine Operator') ",[])->fetch_assoc()['eid'];
 
     $FINISH_LIST = $Controller->QueryData("SELECT COUNT(carton.CTNId) AS fl   
     FROM carton  

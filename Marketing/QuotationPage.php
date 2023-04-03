@@ -345,7 +345,7 @@ require_once '../App/partials/Header.inc'; ?>
                 echo '<div class="alert alert-success"> <strong>Agreement Updated Successfully</strong></div>'; 
             }
             else { 
-                echo '<div class="alert alert-success"> <strong>Somthing went wrong , Please try again </strong></div>'; 
+                echo '<div class="alert alert-success"> <strong>Something went wrong , Please try again </strong></div>'; 
             }
         } 
         ?>

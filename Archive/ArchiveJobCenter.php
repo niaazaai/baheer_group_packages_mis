@@ -18,43 +18,39 @@ $ListType='';
 if(isset($_REQUEST['ListType']) && !empty($_REQUEST['ListType']))
 {
     $ListType=$_REQUEST['ListType'];
-    if($ListType=='P/DRequestList')
-    {
-        $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,
-        carton.`ProductName`, ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, PolyId, DieId, cpolymer.CartSample, 
-        CPNumber, cdie.DieCode,cdie.CDSampleNo,CompleteTime,designinfo.DesignImage,designinfo.DesignCode1  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN cpolymer ON cpolymer.CPid=carton.PolyId LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId
-        LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE CTNStatus='Production Process' AND Track='Done' ORDER BY CTNOrderDate DESC";
-    } 
-    elseif($ListType=='NewJob')
+    if($ListType=='NewJob')
     {
         $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`, 
         ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress,ppcustomer.CustId, CTNPaper, CTNColor, JobNo, Note, designinfo.DesignImage,CompleteTime,designinfo.DesignCode1 FROM `carton` 
         INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1  LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE `CTNStatus`='Archive' 
         order by CTNOrderDate DESC";
+         
         //  AND designinfo.DesignDep='Design'
     }
     elseif($ListType=='JobUnderProcess')
     {
+    
         $SQL="SELECT CTNId,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,`ProductName`,
         ppcustomer.CustMobile, ppcustomer.CustEmail,ppcustomer.CustAddress,ppcustomer.CustId, CTNPaper, CTNColor, designinfo.Alarmdatetime, CURRENT_TIMESTAMP, JobNo, designinfo.DesignImage,CompleteTime,designinfo.DesignStatus,designinfo.DesignCode1 
         FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId WHERE  `CTNStatus`='ArchiveProcess' ORDER BY CTNOrderDate DESC";
         // designinfo.DesignDep='Archive'   AND
        
     }
-    elseif($ListType=='P/DProduction')
-    {
-        $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,
-        carton.`ProductName`, ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, PolyId, DieId, cpolymer.CartSample, 
-        CPNumber,cdie.DieCode,cdie.CDSampleNo,designinfo.DesignImage,CompleteTime,designinfo.DesignCode1  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN cpolymer ON cpolymer.CPid=carton.PolyId
-        LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE CTNStatus='Production Process' AND Track='Uncheck' ORDER BY CTNOrderDate DESC";
-    }
-    elseif($ListType=='CompletedJobs')
-    {
-        $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,
-        carton.`ProductName`, ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, PolyId, DieId, cpolymer.CartSample, 
-        CPNumber,cdie.DieCode,cdie.CDSampleNo,designinfo.DesignImage,CompleteTime,designinfo.DesignCode1  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN cpolymer ON cpolymer.CPid=carton.PolyId
-        LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE CTNStatus='Completed' AND Track='Done' ORDER BY CTNOrderDate DESC";
-    }
+    // elseif($ListType=='P/DProduction')
+    // {
+    //     $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,
+    //     carton.`ProductName`, ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, PolyId, DieId, cpolymer.CartSample, 
+    //     CPNumber,cdie.DieCode,cdie.CDSampleNo,designinfo.DesignImage,CompleteTime,designinfo.DesignCode1  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 LEFT OUTER JOIN cpolymer ON cpolymer.CPid=carton.PolyId
+    //     LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE CTNStatus='Production Process' AND Track='Uncheck' ORDER BY CTNOrderDate DESC";
+    // }
+    // elseif($ListType=='CompletedJobs')
+    // {
+    //     $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit, CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`, `CTNUnit`,
+    //     carton.`ProductName`, ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress, CTNPaper, CTNColor, JobNo, Note, PolyId, DieId, cpolymer.CartSample, 
+    //     CPNumber,cdie.DieCode,cdie.CDSampleNo,designinfo.DesignImage,CompleteTime,designinfo.DesignCode1  FROM `carton` INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN cpolymer ON cpolymer.CPid=carton.PolyId
+    //     LEFT OUTER JOIN cdie ON cdie.CDieId=carton.DieId LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId 
+    //      WHERE CTNStatus='Completed' AND Track='Done' ORDER BY CTNOrderDate DESC";
+    // }
 
    
     $DataRows=$Controller->QueryData($SQL,[]);
@@ -68,8 +64,8 @@ else
     $SQL="SELECT `CTNId`,ppcustomer.CustName, CTNUnit,CONCAT( FORMAT(CTNLength / 10 ,1 ) , ' x ' , FORMAT ( CTNWidth / 10 , 1 ), ' x ', FORMAT(CTNHeight/ 10,1) ) AS Size,`CTNOrderDate`, `CTNStatus`, `CTNQTY`,`ProductName`, 
           ppcustomer.CustMobile, ppcustomer.CustEmail, ppcustomer.CustAddress,ppcustomer.CustId, CTNPaper, CTNColor, JobNo, Note, designinfo.DesignImage,CompleteTime,designinfo.DesignCode1 FROM `carton` 
           INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1  LEFT OUTER JOIN designinfo ON designinfo.CaId=carton.CTNId  WHERE `CTNStatus`='Archive' 
-          AND designinfo.DesignDep='Design' order by CTNOrderDate DESC";
-
+           order by CTNOrderDate DESC";
+//AND designinfo.DesignDep='Design'
     $DataRows=$Controller->QueryData($SQL,[]);
 }
  
@@ -209,7 +205,7 @@ else
                 <tr class="table-info "  >
                     <th>#</th>
                     <th>JobNo</th>       
-                    <th title="Order Date">O.Date</th>
+                    <!-- <th title="Order Date">O.Date</th> -->
                     <th title="Company Name">C.Name</th> 
                     <th title="Product Name">P.Name</th> 
                     <th>Size(LxWxH) cm</th>
@@ -236,7 +232,7 @@ else
                         <tr>
                             <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> > <?=$Count?></td>
                             <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['JobNo']?></td>
-                            <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['CompleteTime']?></td>
+                            <!-- <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['CompleteTime']?></td> -->
                             <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['CustName']?></td>
                             <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['ProductName']?></td>
                             <td <?=($ListType !='JobUnderProcess')  ?  "data-title='" . $Rows['Note'] . "'" : ''; ?> ><?=$Rows['Size']?></td>

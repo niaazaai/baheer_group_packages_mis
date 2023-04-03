@@ -14,7 +14,7 @@ use Carbon\Carbon;
 if(isset($_POST['CustId']) && !empty($_POST['CustId']))
 {
     $CustId=$_POST['CustId'];
-    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
+    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit,FAQTY, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
     ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
     cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
     FROM  carton 
@@ -27,7 +27,7 @@ if(isset($_POST['CustId']) && !empty($_POST['CustId']))
 }
 else
 {
-    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
+    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit,FAQTY, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,CTNUnit,CTNType,
     ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
     cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId, DesignImage, DesignCode1	 
         FROM  carton 
@@ -177,7 +177,9 @@ else
                   while($Rows=$SQL->fetch_assoc())
                   {
                     $Remaining=$Rows['ProductQTY']-$Rows['ProOutQty'];
-                    if($Rows['financeAllowquantity'] == 0) $show_stockout = false; 
+                    if($Rows['FAQTY'] === 0) $show_stockout = false; 
+                    else $show_stockout = true; 
+
                     ?>
                     
                         <tr>
@@ -187,7 +189,7 @@ else
                             <td> <?=$Rows['ProductName'].' ( '.$Rows['Size'].' cm) '.$Rows['CTNType'].' Ply'.' - '.$Rows['CTNUnit']?> </td>
                             <td class = "text-end" ><?=number_format($Rows['CTNQTY'])?></td>
                             <td class = "text-end" ><?=number_format($Rows['ProductQTY'])?></td>
-                            <td class = "text-end" ><?=number_format($Rows['financeAllowquantity'])?></td>
+                            <td class = "text-end" ><?=number_format($Rows['FAQTY'])?></td>
                             <td class = "text-end" ><?=number_format($Rows['ProOutQty'])?></td>
                             <td class = "text-end" ><?=number_format($Remaining)?></td>
                             <td><?=$Rows['CTNStatus'];?></td>
@@ -236,7 +238,7 @@ else
                                         </a> 
                                     <?php }  elseif($Rows['financeApproval']=='FinanceApproved') { if( $show_stockout) {?>
                                             
-                                            <a href="FinishedGoodsStockOutForm.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>&FAQ=<?=$Rows['financeAllowquantity']?>" class="btn btn-outline-danger btn-sm m-0  ">
+                                            <a href="FinishedGoodsStockOutForm.php?PROId=<?=$Rows['ProId']?>&CTNId=<?=$Rows['CTNId']?>&CustId=<?=$Rows['CustId']?>&FAQ=<?=$Rows['FAQTY']?>" class="btn btn-outline-danger btn-sm m-0  ">
                                                 Stock out
                                             </a>  
                                     <?php }} elseif($Rows['ProStatus']=='Accept' ) {?>

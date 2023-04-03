@@ -134,78 +134,106 @@
 
 
 
-                      // var_dump($SelectCPolymer); 
-                    // echo $LID ; 
-                    // echo $SelectCPolymer->num_rows; echo "<br>"; 
-                    // echo $_POST['PolyId'] ;   echo "<br>"; 
-                    // echo $_POST['DieId'] ;   echo "<br>"; 
-                    // var_dump($CPolymer); 
-                    // die(); 
-
+                
 
                     $LID = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
                     $SelectDesigninfo= $this->Controller->QueryData("SELECT * FROM designinfo WHERE CaId=?",[ $_POST['CTNId']]);
                     $DataRows=$SelectDesigninfo->fetch_assoc();
 
+                   
+                
+ 
 
                     if($SelectDesigninfo->num_rows > 0)
                     {
                         // copy design info record and put back to designinfo table 
                         $Insert=$this->Controller->QueryData("INSERT INTO designinfo (
-                                DesignName1, DesignerName1, DesignStatus, DesignImage, CaId,  DesignCode1,   DesignDep, OriginalFile, design_type,  designer_id, Re_OrderStatus
-                            ) 
-                            VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-                            [   
-                                $DataRows['DesignName1'],
-                                $DataRows['DesignerName1'],
-                                $DataRows['DesignStatus'],
-                                $DataRows['DesignImage'],
-                                $LID,
-                                $DataRows['DesignCode1'],
-                                $DataRows['DesignDep'],
-                                $DataRows['OriginalFile'],
-                                $DataRows['design_type'],
-                                $DataRows['designer_id'],
-                                'Yes'
-                            ]);
-                            if(!$Insert) die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Record not inserted successfully</h1>"); 
+                            DesignName1, DesignerName1, DesignStatus, DesignImage, CaId,  DesignCode1,   DesignDep, OriginalFile, design_type,  designer_id, Re_OrderStatus
+                        ) 
+                        VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                        [   
+                            $DataRows['DesignName1'],
+                            $DataRows['DesignerName1'],
+                            $DataRows['DesignStatus'],
+                            $DataRows['DesignImage'],
+                            $LID,
+                            $DataRows['DesignCode1'],
+                            $DataRows['DesignDep'],
+                            $DataRows['OriginalFile'],
+                            $DataRows['design_type'],
+                            $DataRows['designer_id'],
+                            'Yes'
+                        ]);
+                        if(!$Insert) die("<h1 style = 'text-align:center; margin-top:100px;color:red;'>Record not inserted successfully</h1>"); 
+
                     }
                     else  die("<h1 style = 'text-align:center; margin-top:100px;color:red;border:3px solid red;padding:10px; '>Design information does not exist, please contact system admin</h1>");
  
                     // copy cpolymer record 
-                    $SelectCPolymer= $this->Controller->QueryData("SELECT * FROM cpolymer WHERE   CPid = ?" , [$request['PolyId'] ]);
-                    $CPolymer=$SelectCPolymer->fetch_assoc();
+                    $SelectCPolymer= $this->Controller->QueryData("SELECT * FROM cpolymer WHERE CPid = ?",[$request['PolyId'] ]);
+                    // $CPolymer=$SelectCPolymer->fetch_assoc();
                     if($SelectCPolymer->num_rows) {
-                        $CPolymerInsert=$this->Controller->QueryData("INSERT INTO cpolymer (
-                            CPNumber, CompId, ProductName, PColor, Psize,  PMade,   CartSample, POwner, MakeDate,  `Type`, UsageQTY , DesignCode , PStatus , PLocation , Dieno21
-                        ) 
-                        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                        [   
-                            $CPolymer['CPNumber'],
-                            $CPolymer['CompId'],
-                            $CPolymer['ProductName'],
-                            $CPolymer['PColor'],
-                            $CPolymer['Psize'],
-                            $CPolymer['PMade'],
-                            $CPolymer['CartSample'],
-                            $CPolymer['POwner'],
-                            $CPolymer['MakeDate'],
-                            $CPolymer['Type'],
-                            $CPolymer['UsageQTY'],
-                            $CPolymer['DesignCode'],
-                            $CPolymer['PStatus'],
-                            $CPolymer['PLocation'],
-                            $CPolymer['Dieno21'],
-                        ]);
-
-                        
-                        $LastPolymerId = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
-                        $updatePolymerIDCarton = $this->Controller->QueryData("UPDATE `carton` SET `PolyId`=? WHERE `CTNId` = ?",[ $LastPolymerId , $LID ]);
-                        // var_dump($updatePolymerIDCarton); 
-                        // die();
-                        
+                        // $CPolymerInsert=$this->Controller->QueryData("INSERT INTO cpolymer (
+                        //     CPNumber, CompId, ProductName, PColor, Psize,  PMade,   CartSample, POwner, MakeDate,  `Type`, UsageQTY , DesignCode , PStatus , PLocation , Dieno21
+                        // ) 
+                        // VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        // [   
+                        //     $CPolymer['CPNumber'],
+                        //     $CPolymer['CompId'],
+                        //     $CPolymer['ProductName'],
+                        //     $CPolymer['PColor'],
+                        //     $CPolymer['Psize'],
+                        //     $CPolymer['PMade'],
+                        //     $CPolymer['CartSample'],
+                        //     $CPolymer['POwner'],
+                        //     $CPolymer['MakeDate'],
+                        //     $CPolymer['Type'],
+                        //     $CPolymer['UsageQTY'],
+                        //     $CPolymer['DesignCode'],
+                        //     $CPolymer['PStatus'],
+                        //     $CPolymer['PLocation'],
+                        //     $CPolymer['Dieno21'],
+                        // ]);
+                        // $LastPolymerId = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
+                        $updatePolymerIDCarton = $this->Controller->QueryData("UPDATE `carton` SET `PolyId`=? WHERE `CTNId` = ?",[  $_POST['PolyId'] , $LID ]);
+                      
                     } // end of polymer if block 
+                           
 
+                      // copy cpolymer record 
+                      $SelectDie= $this->Controller->QueryData("SELECT * FROM cdie WHERE   CDieId = ?" , [$request['DieId'] ]);
+                    //   $CDie=$SelectDie->fetch_assoc();
+                      
+                      if($SelectDie->num_rows) {
+                        //   $CDieInsert=$this->Controller->QueryData("INSERT INTO cdie (`DieCode`,`CDCompany`,`cartonId`,`CDProductName`,`CDSize`,`CDMade`,`CDSampleNo`,`CDOwner`, `CDMadeDate`, `CDDesignCode`, `CDStatus`, `CDLocation`, `App`, `DieType`, `Scatch`) 
+                        //   VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?)",
+                        //   [   
+                        //       $CDie['DieCode'],
+                        //       $CDie['CDCompany'],
+                        //       $CDie['cartonId'],
+                        //       $CDie['CDProductName'],
+                        //       $CDie['CDSize'],
+                        //       $CDie['CDMade'],
+                        //       $CDie['CDSampleNo'],
+                        //       $CDie['CDOwner'],
+                        //       $CDie['CDMadeDate'],
+                        //       $CDie['CDDesignCode'],
+                        //       $CDie['CDStatus'],
+                        //       $CDie['CDLocation'],
+                        //       $CDie['App'],
+                        //       $CDie['DieType'],
+                        //       $CDie['Scatch'],
+                        //   ]);
+                        // $LastDieId = $this->Controller->QueryData('SELECT LAST_INSERT_ID() AS ID;' , [])->fetch_assoc()['ID'];
+                        $this->Controller->QueryData("UPDATE `carton` SET `DieId`=? WHERE `CTNId` = ?",[  $_POST['DieId'] , $LID ]);
+                        
+                      } // end of polymer if block 
+                     
+                    //   var_dump($CDieInsert); 
+                    // echo $_POST['PolyId'] ;   echo "<br>"; 
+                    // echo $_POST['DieId'] ;   echo "<br>"; 
+                    // // var_dump($CPolymer); 
+                    // die(); 
 
 
 

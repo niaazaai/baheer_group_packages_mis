@@ -493,8 +493,8 @@ else die("ID Not Found, This incident will be reported! ");
               <table class="table " id = "PolymerTable" >
                 <thead>
                   <tr>
-                    <th>#</th> 
-                    <th> Polymer Code</th>
+                      <th>#</th> 
+                      <th> Polymer Code</th>
                       <th> Product Name </th>  
                       <th> Size <span style = "font-size:10px">     (L x W x H) mm  </span> </th>
                       <th> Color </th>
@@ -508,7 +508,7 @@ else die("ID Not Found, This incident will be reported! ");
                 <tbody>
                 <?php
 
-                  $PolymerQuery="SELECT ppcustomer.CustId,cpolymer.PColor,cpolymer.PSize,cpolymer.PMade,cpolymer.POwner, 
+                  $PolymerQuery="SELECT ppcustomer.CustId,cpolymer.PColor,cpolymer.CPNumber , cpolymer.PSize,cpolymer.PMade,cpolymer.POwner, 
                   cpolymer.DesignCode , cpolymer.CPid, cpolymer.ProductName AS PolymerProductName,cpolymer.CartSample , cpolymer.PStatus
                   FROM cpolymer INNER JOIN ppcustomer ON ppcustomer.CustId=cpolymer.CompId   WHERE   CustId = ? ORDER BY CPid DESC";
                   $ProductRows = $Controller->QueryData($PolymerQuery , [$ID]);
@@ -526,8 +526,8 @@ else die("ID Not Found, This incident will be reported! ");
                     
                     foreach ($ProductRows as $key => $value) : ?>  
                         <tr id = "polymer_tab_tr_<?= $value['CPid']; ?>" >
-                        <td><?=$counter++; ?></td>
-                        <td><?= $value['CPid']; ?></td>
+                          <td><?=$counter++; ?></td>
+                          <td><?= $value['CPNumber']; ?></td>
                           <td><?= $value['PolymerProductName']; ?></td>
                           <td><?= $value['PSize']  ?></td>
                           <td><?= $value['PColor']  ?></td> 
@@ -590,26 +590,26 @@ else die("ID Not Found, This incident will be reported! ");
                           <th> Product Name </th>
                           <th> Size <span style = "font-size:10px">     (L x W x H) mm  </span>  </th>
                           <th> App </th>
-                          <th>Die Type</th>
+                          <th> Die Type</th>
                           <th> Made By </th>
                           <th> Owner </th>
                           <th> Sketch</th>
-                          <th>Sample Code </th>
-                          <th>Status</th>
+                          <th> Sample Code </th>
+                          <th> Status</th>
                       </tr>
                     </thead>
                     <tbody>
                     <?php
 
                     $ProductRows = $Controller->QueryData(" SELECT ppcustomer.CustId, cdie.CDProductName , cdie.CDSize , cdie.CDMade , cdie.CDOwner ,
-                    cdie.CDDesignCode , cdie.CDSampleNo , cdie.CDieId , cdie.CDDesignCode ,  cdie.App , cdie.DieType , cdie.Scatch ,cdie.CDStatus
+                    cdie.CDDesignCode , cdie.CDSampleNo , cdie.CDieId ,cdie.DieCode, cdie.CDDesignCode ,  cdie.App , cdie.DieType , cdie.Scatch ,cdie.CDStatus
                     FROM cdie INNER JOIN ppcustomer ON ppcustomer.CustId=cdie.CDCompany  WHERE ppcustomer.CustId= ?  ORDER BY CDieId DESC " , [$ID]);
 
                       if ($ProductRows->num_rows > 0) {   $counter = 1;  
                         foreach ($ProductRows as $key => $value) : ?>  
                             <tr id= 'die_tab_tr_<?= $value['CDieId']; ?>'>
                               <td><?=$counter++; ?></td>
-                              <td><?= $value['CDieId']; ?></td>
+                              <td><?= $value['DieCode']; ?></td>
                               <td> <?= $value['CDProductName']; ?></td>
                               <td>   <?= $value['CDSize']  ?></td>
                               <td>   <?= $value['App']  ?> </td>

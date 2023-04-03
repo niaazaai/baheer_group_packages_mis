@@ -8,18 +8,9 @@ use Carbon\Carbon;
 if(isset($_REQUEST['CTNId']))
 {
     $CTNId=$_REQUEST['CTNId']; $ListType=$_REQUEST['ListType'];
-    // $SQL=$Controller->QueryData('SELECT CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,
-    // CTNStatus,CTNQTY,ProductName,JobNo,cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-    // cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,
-    // cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId
-    //  FROM carton INNER JOIN ppcustomer  ON ppcustomer.CustId=carton.CustId1 
-    //  INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId 
-    //  WHERE ManagerApproval="ManagerApproved" and (ProQty - ProOutQty) != 0 AND CTNId=? 
-    // ORDER BY CTNOrderDate DESC', [$CTNId]);
-
-    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,
-    ProductName,CTNPaper,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
-    cartonproduction.ProQty,cartonproduction.financeApproval,ProductQTY,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId 
+    $SQL=$Controller->QueryData('SELECT carton.CTNId,ppcustomer.CustName,ProductQTY,CTNUnit, CONCAT(FORMAT(CTNLength/10,1),"x",FORMAT(CTNWidth/10,1),"x",FORMAT(CTNHeight/ 10,1)) AS Size ,CTNStatus,CTNQTY,CustId,
+    ProductName,CTNPaper,FAQTY,CTNColor,JobNo,Note,offesetp, cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
+    cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,cartonproduction.ProId 
      FROM  carton 
      INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1
      INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId 
@@ -28,26 +19,7 @@ if(isset($_REQUEST['CTNId']))
 
 
 }
-else header('Location:JobCenter.php'); 
-
-if(isset($_POST['SetColumns'])) {
-    $minus=$_POST['minus'];
-    $PROID=$_POST['PROID']; 
-    $UpdateCartonProduction=$Controller->QueryData("UPDATE cartonproduction SET financeApproval='FinanceApproved', financeAllowquantity=? WHERE ProId=?",[$minus,$PROID]);
-    if($UpdateCartonProduction)
-    {
-        echo "  <div class='alert alert-success alert-dismissible fade show ms-3 mt-3 me-3' role='alert'>".$minus." carton out
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>";
-        // echo "<span class='alert alert-success ms-3 mt-3' role='alert'> Updated </span>";
-    }
-    else
-    {
-        echo "<div class='alert alert-warning' role='alert'> not updated </div>";
-    }
-}
- 
-    
+else header('Location:index.php'); 
  
 ?>
  
@@ -74,15 +46,15 @@ if(isset($_POST['SetColumns'])) {
  
  
 <div class="card m-3 shadow ">
-  <div class="card-body d-flex justify-content-between    ">
+  <div class="card-body d-flex justify-content-between   ">
 
-      <div class = "my-1"> 
-        <a class="btn btn-outline-primary" href="JobCenter.php?ListType=<?=$ListType?>">
+      <div class = "my-1 p-0 m-0"> 
+        <a class="btn btn-outline-primary btn-sm" href="JobCenter.php?ListType=<?=$ListType?>">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"></path>
             </svg>
         </a>
-        <span class = "fs-bold fs-2" >Finance Approval Page</span> 
+        <span class = "fs-bold fs-3" >Finance Approval Page</span> 
       </div>
          
       <div class= "d-flex justify-content-end mt-1">
@@ -97,7 +69,6 @@ if(isset($_POST['SetColumns'])) {
 
   </div>
 </div>
-
  
 <div class="card m-3 shadow">
     <div class="card-body">
@@ -140,14 +111,15 @@ if(isset($_POST['SetColumns'])) {
                             <td><?=$Rows['ProductName'].' ( '.$Rows['Size'].' cm)'?></td>
                             <td><?=$Rows['CTNQTY']?></td>
                             <td><?=$Rows['ProductQTY']?></td> 
-                            <td><?=$Rows['financeAllowquantity']?></td>
+                            <td><?=$Rows['FAQTY']?></td>
                             <td><?=$Rows['ProOutQty']?></td> 
                             <td><?=$Remaining?></td>
                             <td>
-                                <button type="button" class = "btn btn-outline-primary btn-sm m-1 border-3" 
-                                                    onclick = "PutQTYToModal(<?=$Rows['ProductQTY'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>' , <?=$Rows['ProOutQty']?> )" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 
+                            <button class="btn btn-outline-primary btn-sm"  onclick = "PutQTYToModal(<?=$Rows['ProductQTY'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>' , <?=$Rows['ProOutQty']?> )" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Stock Out</button>
+                                <!-- <button type="button" class = "btn btn-outline-primary btn-sm m-1 border-3" 
+                                                    onclick = "PutQTYToModal(<?=$Rows['ProQty'] - $Rows['ProOutQty']?>,'<?=$Rows['CTNId']?>','<?=$Rows['ProId']?>' , <?=$Rows['ProOutQty']?> )" data-bs-toggle="modal" data-bs-target="#staticBackdrop"> 
                                         STOCK OUT
-                                </button> 
+                                </button>  -->
                             </td>
                         </tr>
                   <?php
@@ -159,43 +131,36 @@ if(isset($_POST['SetColumns'])) {
         </table>  
     </div>
 </div>
-
-<!-- STOCK OUT Modal -->
-<div class="modal fade" style = "font-family: Roboto,sans-serif;" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Stock Out</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method = "post" >
+ 
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Finance Approval</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    
+        <form  id = "form_id" action="StoreStockOut.php" method = "post" onsubmit="return CheckQTY(event)" >  
+            <input type="hidden" name="ListType" id = "ListType" value = "<?=$_REQUEST['ListType'];?>" >
             <input type="hidden" name="CTNID" id = "CTNID" value = "" >
             <input type="hidden" name="PROID" id = "PROID" value = "" >
-            <input type="hidden" name = "CTNId" value = "<?php echo $_REQUEST['CTNId']; ?>">
-            <input type="hidden" name="ListType" value="<?php if(isset($_POST['ListType'])){echo $_POST['ListType'];} ?>">
-            <div class="modal-body">
+            <input type="hidden" name="ListType" value="<?php if(isset($_POST['ListType'])){echo $_POST['ListType'];} ?>"> 
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12  ">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  ">
                         <label>Available QTY</label>
-                        <input type="text" name="QTY" id="QTY"   class="form-control " disabled>
+                        <input type="text" name="QTY" id="QTY"   class="form-control mt-1" disabled>
                     </div><!-- END OF COL   -->
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                        <label>OUT QTY</label>
-                        <input type="text" name="minus" id="minus" class="form-control" value="<?=$Rows['ProOutQty']?>">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <label class="mt-2">OUT QTY</label>
+                        <input type="text" name="minus" id="minus" class="form-control mt-1" value="<?=$Rows['ProOutQty']?>">
                     </div><!-- END OF COL   -->
-                </div><!-- END OF ROW  -->
-                <table class = "table "  id = "SetColumnTable"></table>
-            </div><!-- END OF MODAL BODY  -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button  class="btn btn-primary"  type="submit" name="SetColumns" >Stock Out</button>
-            </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <input type="submit" name="Save" id="Save" value="Save"  class="btn btn-outline-primary mt-3 text-end" >
+                    </div>
+                </div><!-- END OF ROW  --> 
+                <!-- <button  class="btn btn-primary"  type="submit" name="SetColumns" >Stock Out</button> --> 
         </form>
-    </div>
   </div>
 </div>
- 
 
 <script>
       function search(InputId ,tableId )
@@ -225,29 +190,30 @@ if(isset($_POST['SetColumns'])) {
             }
       }
 
-      var fruits = document.getElementById("ListType");
-      [].slice.call(fruits.options) 
-        .map(function(a){
-          if(this[a.value]){ 
-            fruits.removeChild(a); 
-          } else { 
-            this[a.value]=1; 
-          } 
-        },{}); 
- 
+      
     function PutQTYToModal(QTY = 0,CTNId,ProId , outqty=0)
     {
         document.getElementById("QTY").value = QTY;        
         document.getElementById("CTNID").value = CTNId; 
         document.getElementById("PROID").value = ProId;
         document.getElementById("minus").value = outqty;
-
- 
-
     }
 
- 
-</script>
- 
-<?php  require_once '../App/partials/Footer.inc'; ?>
+    function CheckQTY(e)
+    {
+        e.preventDefault();
+        var Qunatity = Number(document.getElementById("QTY").value);
+        var minus = Number(document.getElementById("minus").value);
 
+        console.log(typeof minus , typeof Qunatity); 
+
+        if(minus > Qunatity)
+        {
+            console.log(minus , Qunatity); 
+            alert("Can not Stockout More than Produced QTY");
+            return false; 
+        }
+        document.getElementById("form_id").submit();
+    }
+</script>
+<?php  require_once '../App/partials/Footer.inc'; ?>

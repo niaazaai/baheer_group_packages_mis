@@ -4,12 +4,15 @@ ob_start();
 require_once '../App/partials/Header.inc'; 
 
 
+
 //User Auth logic
-// $Gate = require_once  $ROOT_DIR . '/Auth/Gates/CUSTOMER_LIST';  
+// 
 // if(!in_array( $Gate['VIEW_FINISH_GOODS_STOCK_OUT_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
 //   header("Location:index.php?msg=You are not authorized to access this page!" );
 // }
 
+// $Gate = require_once  $ROOT_DIR . '/Auth/Gates/WAREHOUSE_DEPT';  
+// echo $Gate['VIEW_FINISH_GOODS_STOCK_OUT_PAGE']; 
 
 require_once '../App/partials/Menu/MarketingMenu.inc'; require '../Assets/Carbon/autoload.php';
 use Carbon\Carbon;
@@ -21,7 +24,7 @@ if(isset($_REQUEST['PROId']) && isset($_REQUEST['CTNId']))
     $CustId=$_REQUEST['CustId'];
     $FAQ=$_REQUEST['FAQ']; 
 
-    $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit,ExtraCarton,CTNStatus,CTNQTY,ProductName,JobNo,cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
+    $SQL='SELECT CTNId,ppcustomer.CustName,CTNUnit,FAQTY,ExtraCarton,CTNStatus,CTNQTY,ProductName,JobNo,cartonproduction.CtnId1, cartonproduction.ManagerApproval, 
     cartonproduction.ProQty,cartonproduction.financeApproval,cartonproduction.financeAllowquantity,cartonproduction.ProOutQty,cartonproduction.ProStatus,Plate,Pack,Carton1,ExtraPack,`Line`,cartonproduction.ProId 
     FROM  carton INNER JOIN ppcustomer ON ppcustomer.CustId=carton.CustId1 INNER JOIN designinfo ON designinfo.CaId=carton.CTNId INNER JOIN cartonproduction ON cartonproduction.CtnId1=carton.CTNId WHERE CTNId=?
     ORDER BY CTNOrderDate DESC'; 
@@ -54,25 +57,25 @@ if(isset($_POST['StockOut']))
     $TotalPackes=$_POST['TotalPackes'];
     $PerPackes=$_POST['PerPackes'];
     $Pieces=$_POST['Pieces'];
-    $TotalQTY= (int)$_POST['TotalQTY'];
-
-    $Total=$ProOutQty+$TotalQTY;
-
-    $FAQReaminAmount=$FAQ-$TotalQTY;
-
-   
-        
+    // (int)$_POST['TotalQTY']; 
+    $TotalPack=($TotalPlat * $LineQTY * $PackesInLine) + ($Extrapackes);
+    $FAQReaminAmount = ($TotalPack * $PerPackes) + ($Pieces);
+    $Total=$ProOutQty+$FAQReaminAmount;
+    $FAQAmount=$FAQ - $FAQReaminAmount;
+    $CTNId=$_REQUEST['CTNId'];   
+  
   
     $Insert=$Controller->QueryData("INSERT INTO cartonstockout(PrStockId,CtnCustomerId,CtnJobNo,UserId1,CtnCarNo,CtnCarName,CtnDriverName,CtnDriverMobileNo,CoutComment,OutStatus,TotalPlat,LineQTY,PacksInLine,
-                                    ExtraPackes,TotalPackes,PerPackes,Pieces,CtnOutQty,financeAllowquantity) 
-                                    VALUES(?,?,?,?,?,?,?,?,?,'Done',?,?,?,?,?,?,?,?,?) ",
+                                    ExtraPackes,TotalPackes,PerPackes,Pieces,CtnOutQty) 
+                                    VALUES(?,?,?,?,?,?,?,?,?,'Done',?,?,?,?,?,?,?,?) ",
                                     [$PROId,$CustId,$CTNId,$_SESSION['EId'],$VehiclePlateNO,$VehicleType,$DriverName,$DriverMobileNo,$Comment,$TotalPlat,$LineQTY,$PackesInLine,$Extrapackes,$TotalPackes,$PerPackes,
-                                     $Pieces,$TotalQTY,$FAQReaminAmount]);
+                                     $Pieces, $FAQReaminAmount]);
     $LastId=$DATABASE->last_id();
     $InsertGatePass=$Controller->QueryData("INSERT INTO gatepasspkg (IdStockOutPkg,EmpId,GatepassStatus) VALUES (?,?,?)",[$LastId,$_SESSION['EId'],'Apply by warehouse']);
     if($Insert)
     {  
         $Update=$Controller->QueryData("UPDATE cartonproduction SET ProOutQty=?, financeAllowquantity=? WHERE ProId=?",[$Total,0,$PROId]); 
+        $Update=$Controller->QueryData("UPDATE carton SET FAQTY=?  WHERE CTNId=?",[$FAQAmount,$CTNId]);
         header("Location:JobCenter.php?MSG=Data Driver Info Inserted Successfully&State=1");
     }
     
@@ -212,15 +215,15 @@ if(isset($_POST['StockOut']))
 
     // console.log(total); 
 <?php 
-    // $call = ""; 
-    // $call .= "TakeValue(`TotalPlat`," . $Rows['Plate']. "); "; 
-    // $call .= "TakeValue(`LineQTY`," . $Rows['Line']. "); "; 
-    // $call .= "TakeValue(`Extrapackes`," . $Rows['ExtraPack']. "); "; 
-    // $call .= "TakeValue(`PackesInLine`," . $Rows['Pack']. "); "; 
-    // $call .= "TakeValue(`PerPackes`," . $Rows['Carton1']. "); "; 
-    // $call .= "TakeValue(`Pieces`," . $Rows['ExtraCarton']. "); "; 
-    // // $call .= "console.log(total);" ; 
-    // echo ($call)  ; 
+    $call = ""; 
+    $call .= "TakeValue(`TotalPlat`," . $Rows['Plate']. "); "; 
+    $call .= "TakeValue(`LineQTY`," . $Rows['Line']. "); "; 
+    $call .= "TakeValue(`Extrapackes`," . $Rows['ExtraPack']. "); "; 
+    $call .= "TakeValue(`PackesInLine`," . $Rows['Pack']. "); "; 
+    $call .= "TakeValue(`PerPackes`," . $Rows['Carton1']. "); "; 
+    $call .= "TakeValue(`Pieces`," . $Rows['ExtraCarton']. "); "; 
+    // $call .= "console.log(total);" ; 
+    echo ($call)  ; 
 
 ?>
 </script>
