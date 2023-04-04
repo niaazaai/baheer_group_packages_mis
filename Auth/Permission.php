@@ -12,6 +12,7 @@ function CheckPermission($permission_id , $role_id , $cont ){
 if(isset($_GET['role_id']) && !empty($_GET['role_id'])) {
 
     $role_id = $Controller->CleanInput($_GET['role_id']); 
+    $AccessControl = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'AccessControl'" , []);
     $PermissionsList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Finance'" , []);
     $MarketingList = $Controller->QueryData("SELECT  id,title, page FROM permission WHERE module = 'Marketing'" , []);
     $DesignList = $Controller->QueryData("SELECT id,title, page FROM permission WHERE module = 'Design'" , []);
@@ -48,6 +49,69 @@ else header('Location:ShowAccessList.php')
 </div> 
 
 <div class="accordion accordion-flush m-3 shadow"   id="accordionFlushExample">
+
+
+<div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseZero" aria-expanded="false" aria-controls="flush-collapseOne">
+        Access Control
+      </button>
+    </h2>
+    <div id="flush-collapseZero" class="accordion-collapse collapse" aria-labelledby="flush-headingZero" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body d-flex justify-content-center">
+            <div style = "width:70%" > 
+                <input type="text" class="form-control border-3 mb-2" id = "Search_input" placeholder="Search Anything" onkeyup="search( this.id , 'AccessControlList' )">
+                <table class= "table border"  id = "FinanceList"   >
+                    <thead>
+                            <tr class="table-info">
+                                <th >#</th>
+                                <th >Permissions</th>  
+                                <th class="text-center" tile = "assign role ">OPS</th>  
+                            </tr>
+                    </thead>
+                    <tbody>
+                        <form action="AssignPermission.php" method="post">
+                            <input type="hidden" name="role_id" value = "<?=$role_id?>"  >
+                            <!-- <input type="hidden" id = "permission_id" name="permission_id" > -->
+                            <input type="hidden" id = "title" name="title" value = "<?=$title?>" >
+                            <input type="hidden" name = "module"  value = "AccessControl">
+
+                            <?php $counter=1; while($Permissions = $AccessControl->fetch_assoc()) {?>
+                                <tr>
+                                    <td><?=$counter++;?></td>
+                                    <td>
+                                        <div class = "d-flex justify-content-between align-item-center">
+                                            <div><?=$Permissions['title']?> </div>
+                                            <div><span class = "badge bg-primary"> <?=$Permissions['page']?> </span>  </div> 
+                                        </div>
+                                    </td>  
+                                    <td class="text-center">  
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            
+                                            <input class="form-check-input" type="checkbox" value = "<?=$Permissions['id']?>"  
+                                            <?=CheckPermission($Permissions['id'],$_GET['role_id'] , $Controller);?> 
+                                            name = "permission_id[]">
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php }  ?>  
+                            <tr>
+
+                                <td colspan = 3 class="text-end" >  <button class ="btn btn-sm btn-outline-primary">Apply Permission </button></td>
+                            </tr>
+                    </tbody>
+                </table>
+                </form>
+            </div>
+      </div>
+    </div>
+  </div>
+
+
+
+ 
+ 
+
 
   <div class="accordion-item">
     <h2 class="accordion-header" id="flush-headingOne">

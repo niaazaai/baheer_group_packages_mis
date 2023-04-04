@@ -3,10 +3,8 @@
 
 $EmpId=$_SESSION['EId'];
  
-// EmpIdNo
  
-$SELECT=$Controller->QueryData("SELECT * FROM employeet WHERE EId =?",[$EmpId]);
-$Record=$SELECT->fetch_assoc();
+$Record=$Controller->QueryData("SELECT * FROM employeet WHERE EId =?",[$EmpId])->fetch_assoc();
 
 // $SELECT=$Controller->QueryData("SELECT * FROM employeet WHERE EId =?",[$EmpId]);
 // $Password=$SELECT->fetch_assoc();
@@ -28,13 +26,7 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
             </div>';
     }
 }
-
-
 ?>
-
-
- 
-
 
 <div class="card m-3">
     <div class="card-body">
@@ -47,24 +39,22 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
         </h3>
     </div>
 </div>
-
- 
-
+<div class="m-3">
 <div class="row ">
     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 my-1"> 
-        <div class="card shadow ms-3">
+        <div class="card shadow  ">
             <div class="card-body ">
                 <div class="text-center " >
-                    <img  src="../Assets/DesignImages/pic.jpg" class=" rounded-circle img-fluid" alt="..." style="width:200px;"  >
-                    <!-- <img  src="../Assets/DesignImages/<?=$Record['Eimage']?>" class=" rounded-circle img-fluid" alt="..." style="width:200px;"  > -->
+                    <img  src="../Assets/<?=$Record['Eimage']?>" class=" rounded-circle img-fluid" alt="..." style="width:180px;height:180px;"  >
                 </div>
                 <h3 class="card-title text-center mt-4 "><?=$Record['Ename']?></h3>
-                <p class="card-text text-center"><span class="badge bg-info"><?=$Record['EJob']?></span> <span class="badge bg-info">( <?=$Record['EUserName']?> )</span></p>
-                <p class="card-text text-center"></p>
-                
+                <p class="card-text text-center">
+                    <span class="badge bg-primary"><?=$Record['EJob']?></span> 
+                    <span class="badge bg-primary">( <?=$Record['EUserName']?> )</span>
+                </p>
                 <!-- Button trigger modal -->
                 <div class="text-center" style="margin-bottom:90px ;">
-                    <button type="button" class="btn btn-outline-primary btn sm  " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <button type="button" class="btn btn-outline-primary btn-sm  " data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         Change Password
                     </button>
                 </div>
@@ -75,36 +65,16 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
         <div class="card shadow"> <!-- Start of info card -->
             <div class="card-body">
                 <table class="table ">
-                     <tr>
-                         <th>Employee Name</th><td><?=$Record['Ename']?></td> 
-                     </tr>
-                     <tr>
-                        <th>F/Name</th><td><?=$Record['EFName']?></td> 
-                     </tr>
-                     <tr>
-                        <th>Phone</th><td><?=$Record['EMobileNumber']?></td>
-                     </tr>
-                     <tr>
-                        <th>Current Address</th><td><?=$Record['ECAddress']?></td>
-                     </tr>
-                     <tr>
-                        <th>permanent</th><td><?=$Record['EPAddress']?></td>
-                     </tr>
-                     <tr>
-                        <th>Email</th><td><?=$Record['Eemail']?></td>
-                     </tr>
-                     <tr>
-                        <th>Status</th><td><?=$Record['EMStatus']?></td>
-                     </tr>
-                     <tr>
-                        <th>tazikara No</th><td><?=$Record['EIdentityNumber']?></td>
-                     </tr>
-                     <tr>
-                        <th>Qualification</th><td><?=$Record['EQualification']?></td>
-                     </tr>
-                     <tr>
-                        <th>Blood Group</th><td><?=$Record['Eblood']?></td>
-                     </tr>
+                     <tr> <th>Employee Name</th><td><?=$Record['Ename']?></td>   </tr>
+                     <tr> <th>F/Name</th><td><?=$Record['EFName']?></td>   </tr>
+                     <tr> <th>Phone</th><td><?=$Record['EMobileNumber']?></td> </tr>
+                     <tr> <th>Current Address</th><td><?=$Record['ECAddress']?></td> </tr>
+                     <tr> <th>permanent</th><td><?=$Record['EPAddress']?></td>  </tr>
+                     <tr> <th>Email</th><td><?=$Record['Eemail']?></td>   </tr>
+                     <tr> <th>Status</th><td><?=$Record['EMStatus']?></td>  </tr>
+                     <tr> <th>tazikara No</th><td><?=$Record['EIdentityNumber']?></td>   </tr>
+                     <tr> <th>Qualification</th><td><?=$Record['EQualification']?></td>  </tr>
+                     <tr> <th>Blood Group</th><td><?=$Record['Eblood']?></td>  </tr>
                     
                 </table>
             </div>
@@ -114,31 +84,20 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
         <div class="card shadow"> <!-- Start of info card -->
             <div class="card-body">
                 <table class="table ">
-                    <tr>
+                    <!-- <tr>
                         <th>User ID</th><td><?=$Record['EAccessId']?></td> 
-                    </tr>
-                    <tr>
-                        <th>Grade</th><td><?=$Record['EGrade']?></td> 
-                    </tr>
-                    <tr>
-                        <th>Type</th><td><?=$Record['EType']?></td>
-                    </tr>
-                    <tr>
-                        <th>Department</th><td><?=$Record['EDepartment']?></td>
-                    </tr> 
-                    <tr>
-                        <th>Position</th><td><?=$Record['EJob']?></td>
-                    </tr>
-                    <tr>
-                        <th>Join Date</th><td><?=$Record['EJoinDate']?></td>
-                    </tr>
-                  
+                    </tr> -->
+                    <tr> <th>Grade</th><td><?=$Record['EGrade']?></td></tr>
+                    <tr> <th>Employee Type</th><td><?=$Record['EType']?></td> </tr>
+                    <tr> <th>Department</th><td><?=$Record['EDepartment']?></td></tr> 
+                    <tr> <th>Position</th><td><?=$Record['EJob']?></td> </tr>
+                    <tr> <th>Join Date</th><td><?=$Record['EJoinDate']?></td> </tr>
                 </table>
             </div>
         </div><!-- End of info card -->
     </div>
 </div>
-
+</div>
  
 
 
@@ -159,23 +118,21 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
       <form action="" method="POST" onsubmit  = "return matchPassword(this)">
       <div class="modal-body"> 
 
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="CurrentPassword" name="CurrentPassword" placeholder="Password">
+            <label for="floatingInput">Current Password</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="NewPassword" name="NewPassword" placeholder="Password">
+            <label for="floatingPassword">New Password</label>
+        </div>
 
+        <div class="form-floating">
+            <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="Password">
+            <label for="floatingPassword">Confirm Password</label>
 
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="CurrentPassword" name="CurrentPassword" placeholder="Password">
-                <label for="floatingInput">Current Password</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="NewPassword" name="NewPassword" placeholder="Password">
-                <label for="floatingPassword">New Password</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" placeholder="Password">
-                <label for="floatingPassword">Confirm Password</label>
-    
-            </div>
-            <div id="massege"></div>
+        </div>
+        <div id="massege"></div>
 
       </div>
       <input type="hidden" name="EAccessId" value="<?=$Record['EAccessId']?>">
@@ -188,51 +145,39 @@ if(isset($_POST['Update']) && !empty($_POST['Update']))
   </div>
 </div>
 
-
-
 <script>
 
 document.getElementById("UpdatePassword").addEventListener("click", function(event){
 
+    var NewPassword= document.getElementById("NewPassword").value;
+    var ConfirmPassword= document.getElementById("ConfirmPassword").value;
+    var CurrentPassword = document.getElementById("CurrentPassword").value; 
+    
 
-        var NewPassword= document.getElementById("NewPassword").value;
-        var ConfirmPassword= document.getElementById("ConfirmPassword").value;
-        var CurrentPassword = document.getElementById("CurrentPassword").value; 
-        
+    if(CurrentPassword == NewPassword) {
+        event.preventDefault(); 
+        document.getElementById("massege").classList = "text-danger mt-2  ";
+        document.getElementById("massege").innerHTML="You can not use your old password "; 
+    } 
 
-      
+    if(NewPassword != ConfirmPassword)   {   
+        // alert("Passwords did not match"); 
+        event.preventDefault(); 
+        document.getElementById("ConfirmPassword").classList = ' form-control is-invalid';
+        document.getElementById("NewPassword").classList = ' form-control is-invalid';
 
-        if(CurrentPassword == NewPassword) {
-            event.preventDefault(); 
-            document.getElementById("massege").classList = "text-danger mt-2  ";
-            document.getElementById("massege").innerHTML="You can not use your old password "; 
-        
-        } 
+        document.getElementById("massege").classList = "text-danger mt-2  ";
+        document.getElementById("massege").innerHTML="New Password does not match"; 
 
-        if(NewPassword != ConfirmPassword)   {   
+    } 
 
-           
-            // alert("Passwords did not match"); 
-            event.preventDefault(); 
-            document.getElementById("ConfirmPassword").classList = ' form-control is-invalid';
-            document.getElementById("NewPassword").classList = ' form-control is-invalid';
-
-            document.getElementById("massege").classList = "text-danger mt-2  ";
-            document.getElementById("massege").innerHTML="New Password does not match"; 
-
-        } 
-
-        if(NewPassword.length < 8 ) {
-            event.preventDefault(); 
-            document.getElementById("massege").classList = "text-danger mt-2  ";
-            document.getElementById("massege").innerHTML="Password must contain at lease 8 characters "; 
-        }
-
-        
-
+    if(NewPassword.length < 8 ) {
+        event.preventDefault(); 
+        document.getElementById("massege").classList = "text-danger mt-2  ";
+        document.getElementById("massege").innerHTML="Password must contain at lease 8 characters "; 
+    }
 });
 
  
 </script>
-
 <?php  require_once '../App/partials/Footer.inc'; ?>

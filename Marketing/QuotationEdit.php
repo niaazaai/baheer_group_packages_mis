@@ -703,9 +703,11 @@
                 <?php } elseif( $Page == 'CancelQuotation') { // DONE ?>
                   <button type="submit"  id="COP_EditOnly"  name="COP_EditOnly" class="btn btn-outline-success fw-bold" style = "max-width:180px;" onclick = "alert('Are you sure you want to process this again?');">Process Again</button>
                 <?php } elseif( $Page == 'IndividualQuotation') { // DONE || $Page == 'CustomerProductList'   ?>
+                  
                 <button type="submit"  id="SentDirectlyToFinance"  name="SentDirectlyToFinance" class="btn btn-outline-primary fw-bold " style = "max-width:180px;">Sent To Finance</button>
                 <button type="submit"  id="EditOnly"  name="EditOnly" class="btn btn-outline-primary fw-bold" style = "max-width:180px;"    >Update</button>
                 <a  data-bs-toggle="modal" data-bs-target="#exampleModal"    class="btn btn-outline-danger border-danger  fw-bold " style = "max-width:180px;"   >Cancel Quote</a>
+
               <?php } elseif($Page == 'CustomerProfile') {  ?>
                 <button type="submit"  id="RorderAndPrint"  name="RorderAndPrint" class="btn btn-outline-primary fw-bold " style = "max-width:180px;" >Rorder & Print</button>
                 <button type="submit"  id="RorderToDesign"  name="RorderToDesign" class="btn btn-outline-primary fw-bold   " style = "max-width:180px;"  >Send To Design</button>

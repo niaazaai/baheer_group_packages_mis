@@ -292,21 +292,18 @@
 
 
             
-            if(!isset($request['JobNo'] ) &&  empty($request['JobNo']) ) {
+            if($request['JobNo'] == 'NULL'){
                 $request['JobNo'] = "NULL";
-
                 if(isset($_POST['SentDirectlyToFinance'])) {
                     $Status = 'New'; 
                 }
             } 
-
+           
             if($request['JobNo'] != 'NULL'){
                 $QuotationRows = $this->Controller->QueryData("UPDATE ppcustomer SET CusStatus=? , PPCondition=? WHERE CustId = ?" , ['Active' , 'Working' , $request['CustomerId'] ]); 
             }
             //  else $Status = 'Order';
             
-
-
           
             if(trim($_POST['Page']) == 'JobList') {
                  $Status = $request['CTNStatus']; 
@@ -315,8 +312,10 @@
 
             if($_POST['Page'] == 'CustomerOrderPage') {  
                 // the edit comes from order page then if it is not job then it should be in the order page else send it to finance for payment 
-                if($request['JobNo'] == 'NULL') {$Status = 'Order'; 
+                if($request['JobNo'] == 'NULL') {
+                    $Status = 'Order'; 
                 } else  {
+                    
                     $Status = 'FNew'; 
                     // THIS PART IS USED FOR CREATING THE NOTIFICATION 
                     $user = $this->Controller->QueryData("SELECT user_id FROM alert_access_list WHERE department = ? AND notification_type = ?" , [ 'Finance' , 'NEW-JOB']); 
@@ -324,6 +323,7 @@
                     $alert_comment = 'Job with ID (' . $request['JobNo'] . ') Arrived'; 
                     if($user->num_rows > 0 ) $user_id  =  $user->fetch_assoc()['user_id'];
                     $this->Controller->QueryData("INSERT INTO alert (department,user_id,title,alert_comment, `type`) VALUES ('Finance',?,'New Job',?,'NEW-JOB')" , [$user_id ,  $alert_comment ]);
+
                 } 
             }
                 
@@ -407,8 +407,10 @@
         if(isset($_POST['Page'] ) && !empty($_POST['Page']) ) {
 
             if($_POST['Page'] == 'IndividualQuotation' ) { // || $_POST['Page'] == 'CustomerProductList' 
-                if(isset($_POST['SentDirectlyToFinance']) ||  isset($_POST['EditOnly']) ) $QUOTATION->EditQuotation( $_POST , 'FNew');
-                if(isset($_POST['EditToDesign'])  ) $QUOTATION->EditQuotation($_POST , 'Design' );
+                if(isset($_POST['SentDirectlyToFinance'])  ) $QUOTATION->EditQuotation( $_POST , 'FNew');
+                if(isset($_POST['EditOnly']) ) $QUOTATION->EditQuotation($_POST,'New');
+                
+                // if(isset($_POST['EditToDesign'])  ) $QUOTATION->EditQuotation($_POST , 'Design' );
                 if(isset($_POST['CancelQuote'])) $QUOTATION->EditQuotation($_POST , 'Cancel' );
             } 
             elseif($_POST['Page'] == 'CustomerOrderPage') {
@@ -426,7 +428,7 @@
                 }   else die('Reorder : create quotation '); 
             }
         } 
-
+        
         if(isset($_POST['SaveButton']) || isset($_POST['SaveOnly'])) $QUOTATION->CreateQuotation($_POST);  
         if(isset($_POST['SendToDesign'])  ) $QUOTATION->CreateQuotation($_POST , 'Design' );
 

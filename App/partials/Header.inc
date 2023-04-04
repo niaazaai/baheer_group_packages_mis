@@ -681,19 +681,19 @@ $USER_DEPARTMENT = 0 ;
           </ul>
         </li>
 
-        <li class="nav-item dropdown  " style = "border-left:1.5px solid black; margin-left:10px;" >
+        <li class="nav-item dropdown  " style = "border-left:1.5px solid black; margin-left:10px;margin-right:10px;" >
           <a class="nav-link dropdown-toggle " href="#" id="UserArea" role="button" data-bs-toggle="dropdown" aria-expanded="false"  style = "color: black;" >
             <strong > <?php echo (isset($_SESSION['user'] )) ? $_SESSION['user']  : '' ; ?></strong>
-            <img  style = " border-radius: 50%;" src="../Public/Img/profile.png" width="45px"  height = "45px" alt="User Image">
+            <img  style = " border-radius: 50%;" src="../Assets/<?=$_SESSION['user_image']?>" width="40px"  height = "40px" alt="User Image">
           </a>
           <ul class="dropdown-menu" aria-labelledby="UserArea">
-            <li><a class="dropdown-item" href="#">
+            <li><a class="dropdown-item" href="../UserAccount/UserProfile.php">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-video2" viewBox="0 0 16 16">
                 <path d="M10 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                 <path d="M2 1a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2H2ZM1 3a1 1 0 0 1 1-1h2v2H1V3Zm4 10V2h9a1 1 0 0 1 1 1v9c0 .285-.12.543-.31.725C14.15 11.494 12.822 10 10 10c-3.037 0-4.345 1.73-4.798 3H5Zm-4-2h3v2H2a1 1 0 0 1-1-1v-1Zm3-1H1V8h3v2Zm0-3H1V5h3v2Z"/>
               </svg>
-
-              My Profile</a></li>
+              My Profile</a>
+            </li>
             <li><a class="dropdown-item" href="#">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-right-dots" viewBox="0 0 16 16">
                 <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z"/>
@@ -741,66 +741,66 @@ $USER_DEPARTMENT = 0 ;
 
 
 
-  function GetNotification(department , user_id ) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200)  {
-            var response = JSON.parse(this.responseText);
-            var html = ''; 
-            var noti_count = 0 ; 
-            if(response !=  '-1'){
-              for(var count = 0; count < response.length; count++) {
-                html += `<li><a class="dropdown-item p-0  " style = "font-size:12px; width:300px; " href="#" id = 'Notification_${response[count].id}' onclick = "RemoveNotification(${response[count].id})">`; 
-                html += '<div class="m-0" style = "border-radius:0px;"><div class="row ps-2 pe-2"><div class="col-2 py-2 text-center " >'; 
-                html += '<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">'; 
-                html += '<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>';
-                html += '</svg></div>';
-                html += '<div class="col-10 my-1 p-0"><div class=" d-flex justify-content-between ">';      
-                html += `<div><strong>${response[count].title}</strong> </div>`;
-                html += `<div class = "me-4">${response[count].created_at} </div> `;
-                html += ' </div><div class="">';
-                html += response[count].alert_comment
-                html += '</div></div></div></div></a></li>';
-                last_time_notfication =   response[count].last_time ; 
-                // console.log(response[count].last_time); 
-              }
-              noti_count = response.length;  
-            }
-            document.getElementById('NotificationNavbar__counter').innerHTML = noti_count; 
+  // function GetNotification(department , user_id ) {
+  //   var xmlhttp = new XMLHttpRequest();
+  //   xmlhttp.onreadystatechange = function() {
+  //       if (this.readyState == 4 && this.status == 200)  {
+  //           var response = JSON.parse(this.responseText);
+  //           var html = ''; 
+  //           var noti_count = 0 ; 
+  //           if(response !=  '-1'){
+  //             for(var count = 0; count < response.length; count++) {
+  //               html += `<li><a class="dropdown-item p-0  " style = "font-size:12px; width:300px; " href="#" id = 'Notification_${response[count].id}' onclick = "RemoveNotification(${response[count].id})">`; 
+  //               html += '<div class="m-0" style = "border-radius:0px;"><div class="row ps-2 pe-2"><div class="col-2 py-2 text-center " >'; 
+  //               html += '<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" fill="currentColor" class="bi bi-info-circle-fill" viewBox="0 0 16 16">'; 
+  //               html += '<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>';
+  //               html += '</svg></div>';
+  //               html += '<div class="col-10 my-1 p-0"><div class=" d-flex justify-content-between ">';      
+  //               html += `<div><strong>${response[count].title}</strong> </div>`;
+  //               html += `<div class = "me-4">${response[count].created_at} </div> `;
+  //               html += ' </div><div class="">';
+  //               html += response[count].alert_comment
+  //               html += '</div></div></div></div></a></li>';
+  //               last_time_notfication =   response[count].last_time ; 
+  //               // console.log(response[count].last_time); 
+  //             }
+  //             noti_count = response.length;  
+  //           }
+  //           document.getElementById('NotificationNavbar__counter').innerHTML = noti_count; 
 
 
             
             
-            document.getElementById('NotificationNavbar__').innerHTML = html;  
-        }
-    }
-    xmlhttp.open("GET", "GetNotification.php?department=" + department + "&user_id=" + user_id , true);
-    xmlhttp.send();
-  } // END OF GET NOTIFICATION
+  //           document.getElementById('NotificationNavbar__').innerHTML = html;  
+  //       }
+  //   }
+  //   xmlhttp.open("GET", "GetNotification.php?department=" + department + "&user_id=" + user_id , true);
+  //   xmlhttp.send();
+  // } // END OF GET NOTIFICATION
 
-  window.onload = function() {
-    GetNotification(`<?=$USER_DEPARTMENT?>`,`<?=$_SESSION['EId']?>`);
-  };
+  // window.onload = function() {
+  //   GetNotification(`<?=$USER_DEPARTMENT?>`,`<?=$_SESSION['EId']?>`);
+  // };
   
-  setInterval(() => {
-    GetNotification(`<?=$USER_DEPARTMENT?>`,`<?=$_SESSION['EId']?>`);
-  }, 40 * 1000);
+  // setInterval(() => {
+  //   GetNotification(`<?=$USER_DEPARTMENT?>`,`<?=$_SESSION['EId']?>`);
+  // }, 40 * 1000);
 
-  function RemoveNotification(id){
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200)  {
-          var response = JSON.parse(this.responseText);
-          if(response !=  '-1')  {
-            document.getElementById('Notification_' + response[0]).remove();
-            document.getElementById('NotificationNavbar__counter').innerHTML = Number(document.getElementById('NotificationNavbar__counter').innerHTML) - 1 ; 
-          } 
-          else console.log('Somthing went wrong!'); 
-        }
-    }
-    xmlhttp.open("GET", "SetNotification.php?id=" + id, true);
-    xmlhttp.send();
-  } // end of Remove Notification 
+  // function RemoveNotification(id){
+  //   var xmlhttp = new XMLHttpRequest();
+  //   xmlhttp.onreadystatechange = function() {
+  //       if (this.readyState == 4 && this.status == 200)  {
+  //         var response = JSON.parse(this.responseText);
+  //         if(response !=  '-1')  {
+  //           document.getElementById('Notification_' + response[0]).remove();
+  //           document.getElementById('NotificationNavbar__counter').innerHTML = Number(document.getElementById('NotificationNavbar__counter').innerHTML) - 1 ; 
+  //         } 
+  //         else console.log('Somthing went wrong!'); 
+  //       }
+  //   }
+  //   xmlhttp.open("GET", "SetNotification.php?id=" + id, true);
+  //   xmlhttp.send();
+  // } // end of Remove Notification 
 
 
 </script>

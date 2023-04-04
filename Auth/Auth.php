@@ -14,7 +14,7 @@
         $DBPassword = $LoginedUser->fetch_assoc();
         if ($DBPassword['EPassword'] == $UserPassword) {
             session_start();
-            $Empl = $Controller->QueryData("SELECT EDepartment , EId , role_id  FROM employeet WHERE EUserName = ?  AND EPassword = ?", [$UserName , $UserPassword]);
+            $Empl = $Controller->QueryData("SELECT EDepartment , EId , role_id, Eimage  FROM employeet WHERE EUserName = ?  AND EPassword = ?", [$UserName , $UserPassword]);
             $Employeet = $Empl->fetch_assoc();
         
        
@@ -22,6 +22,8 @@
             $_SESSION['user'] = $UserName;
             $_SESSION['EId'] = $Employeet['EId'];
             $_SESSION['last_login_timestamp'] = time();
+            $_SESSION['user_image'] = $Employeet['Eimage'];
+            
 
             // Authorization block 
             // gets access list of the role which is predefined for the authenticated user 

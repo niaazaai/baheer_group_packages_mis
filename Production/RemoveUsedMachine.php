@@ -9,8 +9,6 @@ if( isset($_POST['cycle_id']) && trim(!empty($_POST['cycle_id']))  &&
     $Delete  = $Controller->QueryData('Delete FROM used_machine WHERE cycle_id = ? AND machine_id = ?', [$cycle_id , $machine_id ]);
     if($Delete)  header('Location:JobManagement.php?CTNId='.$CTNId.'&msg=Machine removed &class=success') ;
     else header('Location:JobManagement.php?CTNId='.$CTNId.'&msg=Somthing went wrong &class=danger') ;
-
-    
 } // END IF BLOCK 
 
 

@@ -1,0 +1,14 @@
+<?php
+return [
+    'VIEW_ROLELIST_PAGE'       => '274',
+    'VIEW_ROLELIST_BUTTON'     => '275', 
+    'VIEW_DISABLE_USER_BUTTON' => '276' ,
+    'VIEW_SET_ROLE_BUTTON'     => '277' ,
+      
+    'VIEW_SHOWACCESS_LIST_PAGE' => '278' ,
+    'VIEW_NEW_ROLE_BUTTON' => '279' ,
+    'VIEW_DELETE_BUTTON' => '280' ,
+    'VIEW_EDIT_BUTTON' => '281',
+    'VIEW_PERMISSION_PAGE' => '282' 
+]; 
+?>

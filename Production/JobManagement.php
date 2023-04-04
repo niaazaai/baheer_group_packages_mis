@@ -668,14 +668,23 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <th scope="col" class = "custom-font-lg text-center">  <?=$machine_td ?>   </th>
                 <th scope="col" class = "pt-3" > 
                     <?php 
+                       
+                        
+                        // show if the cycle has manual machines 
+                        if($cycle['has_manual'] == 'Yes') {
+                            // echo '<span style = "background-color:#fd7e14; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "has manual" >
+                            // Manual  </span>'; 
+                            if($cycle['manual_status'] == 'Complete')
+                              echo '<a style = "text-decoration:none;"data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <span style = "background-color:#3EC70B; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "Manual Side is Complete" >
+                              Manual Completed  </span>  </a>';
+                            else if($cycle['manual_status'] == 'Incomplete')
+                              echo '<span style = "background-color:#fd7e14; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "Manual Side is Not Complete" >
+                              Manual Not Completed Yet  </span>';
+                        }
+                       
                         echo ($cycle['cycle_status'] == 'Completed') ? '<span style = "background-color:#198754; padding:2px; color:white;">Completed</span>': '<span class ="  " style = "background-color:#d63384; padding:2px; color:white; ">Cycle is Incomplete</span>' ; 
                         $a =  Carbon::create($cycle['cycle_date'] , 'Asia/Kabul')->diffForHumans(); 
                         echo "<span class = '  ms-1' style = 'background-color:#6f42c1; padding:2px; color:white;'  > Created " . $a . "</span>";
-                        
-                        // show if the cycle has manual machines 
-                        if($cycle['has_manual'] == 'Yes') 
-                        echo '<span style = "background-color:#fd7e14; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "has manual" >
-                          Manual  </span>'; 
 
                         if($cycle['cycle_status'] == 'Task List') {
                             echo '<span class = "ms-1"  style = "background-color:#227C70; padding:2px; color:white;">In Task List</span>'; 
@@ -686,13 +695,41 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                         }
 
                     ?>  
+                                 
+                           <!-- THIS BLOCK IS USED TO SHOW MANUAL SECTION PRODUCED QUANTITY -->
+                        <div class="collapse mt-3" id="collapseExample">
+                            <div class="card card-body">
+                                <table class= "table table-sm  table-striped table-hover" >
+                                    <tr>
+                                        <th>Machine</th>
+                                        <th>Produced Qty</th>
+                                        <th>Wast Qty</th>
+                                    </tr>
+                                    <?php 
+                                        $machines_cycle  = $Controller->QueryData('SELECT machine_name , produced_qty , wast_qty FROM  production_cycle 
+                                            LEFT JOIN used_machine ON production_cycle.cycle_id = used_machine.cycle_id 
+                                            LEFT JOIN machine ON used_machine.machine_id = machine.machine_id 
+                                            WHERE production_cycle.cycle_id = ? && production_cycle.CTNId= ? && machine.machine_type = "Manual" ',[$cycle['cycle_id'] , $cycle['CTNId']  ]);
+                                        if($machines_cycle->num_rows > 0 ){
+                                            while($job = $machines_cycle->fetch_assoc()  ) {  
+                                                echo "<tr>" ; 
+                                                echo "<td>" . $job['machine_name'] . "</td>"; 
+                                                echo "<td>" . $job['produced_qty'] . "</td>"; 
+                                                echo "<td>" . $job['wast_qty'] . "</td>"; 
+                                                echo "</tr>";
+                                            }
+                                        }
+                                    ?>
+                                </table>
+                            </div>
+                        </div>
+
                 </th>
-                <!-- class ="plan-qty" -->
 
                 <th style = "max-width:100px;" > 
                     <input type="text" 
                         name="cycle_plan_qty" class = "form-control form-control-sm" 
-                        id = "PlanQty" onchange=  "UpdateCyclePlanQTY(<?=  $cycle['cycle_id']?> , <?=$Product['CTNQTY'];?> , this.value , <?=$UsedPaper['ups']?>)" 
+                        id = "PlanQty" onchange=  "UpdateCyclePlanQTY(<?=$cycle['cycle_id']?> , <?=$Product['CTNQTY'];?> , this.value , <?=$UsedPaper['ups']?>)" 
                         value = "<?=isset($cycle['cycle_plan_qty']) ? $cycle['cycle_plan_qty'] : 0; ?>" >
                 </th>
                 <th class = "" style = "max-width:100px;">
@@ -789,6 +826,10 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                                 </svg> Mark as Complete
                             </a>
                         <?php } ?>
+
+                       
+                     
+
 
                     <?php  } // END OF COMPLETED IF BLOCK   
                     else if($cycle['cycle_status'] == 'Incomplete') { ?>

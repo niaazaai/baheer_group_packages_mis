@@ -53,6 +53,14 @@
     $Query = 'SELECT * FROM  paperstock WHERE PCatagory = ? AND  PReel != PUsedReel';
     $DBRows  = $Controller->QueryData( $Query, [$PaperCatagory] );
 
+
+
+//     $Query = "SELECT `PId`, `PName`,  `Pdescription`, `PQuantity`, `PSizeType`,   `PReOrder`, `PPurchaseBy`,
+//     `PPurchaseFrom`,DATE_FORMAT(`PStockIn`, '%e-%m-%Y'), `PUsedQuantity`, `PReelSerial`,  `PSize`, `PMade`,  `PGSM`, `PReel`,
+//      `PCatagory`,  `PComment`, `PUsedReel`,`POrderNo`,`PPCurrency`, `PPrice`, `PTotalPrice` FROM `paperstock` 
+//      WHERE `PQuantity`-`PUsedQuantity` >'0'   ORDER BY `PSize`"; 
+//    $DBRows  = $Controller->QueryData( $Query, [] );
+
 ?>
  
 <style>

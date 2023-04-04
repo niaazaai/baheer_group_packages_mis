@@ -645,7 +645,7 @@ require_once '../App/partials/Header.inc'; ?>
                     $Rows= $DataRows ->fetch_assoc();
                     if (!empty($Rows['DesignImage'])) {   ?>	
                         <div style = "padding:10px; margin-bottom:1cm;  border:2px solid black; border-radius:5px;  " >
-                            <img style = "width:100%; " src="../Assets/DesignImages/<?=$Rows['DesignImage']?>"> 
+                            <img style = "width:100%; " src="../Assets/<?=$Rows['DesignImage']?>"> 
                         </div>
                     <?php
                     }

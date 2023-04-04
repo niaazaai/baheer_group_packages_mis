@@ -941,6 +941,7 @@
         $CDie = $Controller->QueryData('SELECT DieCode , DieType FROM cdie WHERE CDieId = ?',[$CTN_DATA[0]['DieId']]);
         $Polymer = $CPolymer->fetch_assoc(); 
         $Die = $CDie->fetch_assoc(); 
+        // var_dump($CTN_DATA[0] ); 
     ?>
 
     <table class="table table-bordered custom-font " >

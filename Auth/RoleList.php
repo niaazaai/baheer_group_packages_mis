@@ -1,11 +1,19 @@
  
 <?php 
 ob_start();
+ 
 require_once '../App/partials/Header.inc'; 
 require_once '../App/partials/Menu/MarketingMenu.inc'; 
 require_once '../Assets/Zebra/Zebra_Pagination.php';
 $pagination = new Zebra_Pagination();
 $RECORD_PER_PAGE = 25;
+
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/ACCESS_CONTROL';
+if(!in_array( $Gate['VIEW_ROLELIST_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:../index.php?msg=You are not authorized to access the Access Control Page!" );
+}
+
 ?>
 
 <?php 
@@ -90,6 +98,7 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                         </div>
                         </form>
                     </div>
+                    <?php  if(in_array( $Gate['VIEW_ROLELIST_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>    
                     <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-2 text-end">
                         <a href="ShowAccessList.php" class="btn btn-outline-primary">
                             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" width = "20" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -112,6 +121,7 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                         </a>
                     </div>  
                 </div>
+                <?php } ?> 
     </div>
 </div>         
 <div class="card m-3 shadow ">
@@ -145,14 +155,17 @@ $Role=$Controller->QueryData("SELECT * FROM `role`  ",[]);
                                        
                                         <form action="DisableUser.php" method = "post" >
                                             <input type="hidden" name="Eid" value = "<?=$Rows['EId'];?>" >
-                                            <button type="submit" class="btn btn-outline-danger btn-sm" title = "Disable User"  > 
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">
-                                                    <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
-                                                </svg> 
-                                            </button>
-
+                                            <?php  if(in_array( $Gate['VIEW_DISABLE_USER_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>  
+                                                <button type="submit" class="btn btn-outline-danger btn-sm" title = "Disable User"  > 
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">
+                                                        <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+                                                    </svg> 
+                                                </button>
+                                            <?php } ?> 
                                              <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"  onclick = "PutEIdToModal('<?=$Rows['EId']?>')" > Set Role </button>
+                                            <?php  if(in_array( $Gate['VIEW_SET_ROLE_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                                                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"  onclick = "PutEIdToModal('<?=$Rows['EId']?>')" > Set Role </button>
+                                            <?php } ?> 
                                         </form>
                                     </td>
                                 </tr>

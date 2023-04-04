@@ -60,7 +60,7 @@ if(  isset($_POST['Query']) && !empty(trim($_POST['Query'])) ) {
     <table style = "border: 0px;  ">
         <tr style = "border: 0px;">
             <th style = "border: 0px; text-align:center; ">
-                <img src="http://localhost:4001/BGIS/Public/Img/only-logo-brand.png" width="100" height="100" alt="">
+                <img src="http://localhost:1000/BGIS/Public/Img/only-logo-brand.png" width="100" height="100" alt="">
             </th>
             
             <th style = "text-align:center; border: 0px;">
@@ -71,7 +71,7 @@ if(  isset($_POST['Query']) && !empty(trim($_POST['Query'])) ) {
             </th>
 
             <th  style = "border: 0px; text-align:center; ">
-            <img src="http://localhost:4001/BGIS/Public/Img/bgis-logo.png" width="100" height="100" alt="">
+            <img src="http://localhost:1000/BGIS/Public/Img/bgis-logo.png" width="100" height="100" alt="">
             </th>
         </tr>
     </table>'; 

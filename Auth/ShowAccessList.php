@@ -6,6 +6,12 @@ require_once '../App/partials/Menu/MarketingMenu.inc';
 require_once '../Assets/Zebra/Zebra_Pagination.php';
 $pagination = new Zebra_Pagination();
 $RECORD_PER_PAGE = 25;
+
+$Gate = require_once  $ROOT_DIR . '/Auth/Gates/ACCESS_CONTROL';
+if(!in_array( $Gate['VIEW_SHOWACCESS_LIST_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
+    header("Location:index.php?msg=You are not authorized to access the Access Control Page!" );
+}
+
  
 if(isset($_POST['save']) && !empty($_POST['save'])) {
     $Title=$_POST['Title'];
@@ -62,15 +68,17 @@ $pagination->records_per_page($RECORD_PER_PAGE);
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 ">
                         <input type="text" class="form-control border-3 mb-2" id = "Search_input"  placeholder="Search Anything " onkeyup="search( this.id , 'JobTable' )">
                     </div>  
-                    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-2 text-end">
+                    <?php  if(in_array( $Gate['VIEW_NEW_ROLE_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?> 
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 mb-2 text-end">
                         <!-- <a href="CreateRole.php" class="btn btn-outline-primary">Create Rule</a> -->
-                        <button type="button" class="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#exampleModal" > 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-signpost-split" viewBox="0 0 16 16">
-                            <path d="M7 7V1.414a1 1 0 0 1 2 0V2h5a1 1 0 0 1 .8.4l.975 1.3a.5.5 0 0 1 0 .6L14.8 5.6a1 1 0 0 1-.8.4H9v10H7v-5H2a1 1 0 0 1-.8-.4L.225 9.3a.5.5 0 0 1 0-.6L1.2 7.4A1 1 0 0 1 2 7h5zm1 3V8H2l-.75 1L2 10h6zm0-5h6l.75-1L14 3H8v2z"/>
-                            </svg>
-                            New Role 
-                        </button>  
-                    </div>  
+                            <button type="button" class="btn btn-outline-success " data-bs-toggle="modal" data-bs-target="#exampleModal" > 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-signpost-split" viewBox="0 0 16 16">
+                                <path d="M7 7V1.414a1 1 0 0 1 2 0V2h5a1 1 0 0 1 .8.4l.975 1.3a.5.5 0 0 1 0 .6L14.8 5.6a1 1 0 0 1-.8.4H9v10H7v-5H2a1 1 0 0 1-.8-.4L.225 9.3a.5.5 0 0 1 0-.6L1.2 7.4A1 1 0 0 1 2 7h5zm1 3V8H2l-.75 1L2 10h6zm0-5h6l.75-1L14 3H8v2z"/>
+                                </svg>
+                                New Role 
+                            </button>  
+                        </div>  
+                    <?php } ?> 
                 </div>
                 
                 
@@ -100,26 +108,30 @@ $pagination->records_per_page($RECORD_PER_PAGE);
                                         <form action="DeleteRole.php" method="post" >
                                             
                                             <input type="hidden" name="Id" value = "<?=$Rows['id']?>">
-                                            <button onclick = "return confirm('Are you sure you want to delete this role permanently '); " type="submit" class  = "btn p-0 m-0" >
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="text-danger" viewBox="0 0 16 16">
-                                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                                </svg>
-                                            </button>
-
-                                            <a href="EditRole.php?Id=<?=$Rows['id']?>" class = "btn btn-sm p-0 ">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class=" text-warning p-0 m-0" viewBox="0 0 16 16">
-                                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l  -2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
-                                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
-                                                </svg> 
-                                            </a>
-
-                                            <a href="Permission.php?role_id=<?=$Rows['id']?>&title=<?=$Rows['title'];?>" class = "btn btn-sm p-0 ">
-                                                <svg version="1.1" class = "text-warning"     width="25" height="25" viewBox="0 0 512 512"   >
-                                                    <path d="m224,128h64c8.836,0 16-7.164 16-16v-64c0-26.512-21.492-48-48-48s-48,21.488-48,48v64c0,8.836 7.164,16 16,16zm32-96c8.836,0 16,7.162 16,16 0,8.836-7.164,16-16,16s-16-7.164-16-16c0-8.838 7.164-16 16-16z"/>
-                                                    <path d="m416,32h-80v96c0,17.672-14.328,32-32,32h-96c-17.672,0-32-14.328-32-32v-96h-80c-17.672,0-32,14.326-32,32v416c0,17.672 14.328,32 32,32h320c17.672,0 32-14.328 32-32v-416c0-17.674-14.328-32-32-32zm-240,400c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm160,192h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16z"/>
-                                                </svg>
-                                            </a> 
+                                            <?php  if(in_array( $Gate['VIEW_DELETE_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                                                <button onclick = "return confirm('Are you sure you want to delete this role permanently '); " type="submit" class  = "btn p-0 m-0" >
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="text-danger" viewBox="0 0 16 16">
+                                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                                    </svg>
+                                                </button>
+                                            <?php } ?> 
+                                            <?php  if(in_array( $Gate['VIEW_EDIT_BUTTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                                                <a href="EditRole.php?Id=<?=$Rows['id']?>" class = "btn btn-sm p-0 ">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class=" text-warning p-0 m-0" viewBox="0 0 16 16">
+                                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l  -2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"></path>
+                                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"></path>
+                                                    </svg> 
+                                                </a>
+                                            <?php } ?> 
+                                            <?php  if(in_array( $Gate['VIEW_PERMISSION_PAGE'] , $_SESSION['ACCESS_LIST']  )) { ?>
+                                                <a href="Permission.php?role_id=<?=$Rows['id']?>&title=<?=$Rows['title'];?>" class = "btn btn-sm p-0 ">
+                                                    <svg version="1.1" class = "text-warning"     width="25" height="25" viewBox="0 0 512 512"   >
+                                                        <path d="m224,128h64c8.836,0 16-7.164 16-16v-64c0-26.512-21.492-48-48-48s-48,21.488-48,48v64c0,8.836 7.164,16 16,16zm32-96c8.836,0 16,7.162 16,16 0,8.836-7.164,16-16,16s-16-7.164-16-16c0-8.838 7.164-16 16-16z"/>
+                                                        <path d="m416,32h-80v96c0,17.672-14.328,32-32,32h-96c-17.672,0-32-14.328-32-32v-96h-80c-17.672,0-32,14.326-32,32v416c0,17.672 14.328,32 32,32h320c17.672,0 32-14.328 32-32v-416c0-17.674-14.328-32-32-32zm-240,400c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm0-64c-8.836,0-16-7.164-16-16s7.164-16 16-16 16,7.164 16,16-7.164,16-16,16zm160,192h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16zm0-64h-96c-8.836,0-16-7.164-16-16s7.164-16 16-16h96c8.836,0 16,7.164 16,16s-7.164,16-16,16z"/>
+                                                    </svg>
+                                                </a> 
+                                            <?php } ?> 
                                         </form> 
                                         
                                     </td>

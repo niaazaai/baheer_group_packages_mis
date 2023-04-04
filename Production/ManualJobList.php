@@ -2,9 +2,8 @@
 
     $Gate = require_once  $ROOT_DIR . '/Auth/Gates/PRODUCTION_DEPT';
     if(!in_array( $Gate['VIEW_ASSIGNED_JOB_PAGE'] , $_SESSION['ACCESS_LIST']  )) {
-    header("Location:index.php?msg=You are not authorized to access Assigned Job List Page!" );
+        header("Location:index.php?msg=You are not authorized to access Assigned Job List Page!" );
     }
-
     require_once '../App/partials/Menu/MarketingMenu.inc';    
 
     // SELECT ALL MACHINES FOR USER TO SELECT FOR EACH JOB CYCLE  
@@ -27,7 +26,6 @@
         carton.CTNColor, 
         production_cycle.cycle_plan_qty,
         designinfo.DesignImage,
-        
         machine.machine_name , used_machine.status
     FROM carton
         INNER JOIN production_cycle ON production_cycle.CTNId = carton.CTNId
@@ -51,8 +49,12 @@
             carton.CTNUnit,
             carton.CTNQTY, 
             carton.CTNType, 
-            carton.CTNColor , 
+            carton.CTNColor ,
+            carton.CTNLength,
+            carton.CTNWidth,
+            carton.CTNHeight, 
             carton.ProductQTY, 
+            production_cycle.cycle_plan_qty,
             designinfo.DesignImage,
             machine.machine_name,  used_machine.status
         FROM carton
@@ -64,7 +66,6 @@
        
     }
 
-    // echo $Query; 
     
     $production_cycle  = $Controller->QueryData($Query  , $QueryInput ); 
 
@@ -73,19 +74,17 @@
     {
 
       
-        $CycleId=$_POST['CycleId'];
-        $CTNID=$_POST['CTNID'];
-        $machine_id = $_POST['machine_id1']; 
-        
-        $MachineName=$_POST['MachineName'];
-
-        $OperatorName=$_POST['OperatorName'];
-        $NoOflabor=$_POST['NoOflabor'];
-        $ProducedQTY=$_POST['ProducedQTY'];
-        $Waste=$_POST['Waste'];
-        $Date=$_POST['Date'];
-        $StartTime=$_POST['StartTime'];
-        $EndTime=$_POST['EndTime'];
+        $CycleId= $Controller->CleanInput($_POST['CycleId']);
+        $CTNID= $Controller->CleanInput($_POST['CTNID']);
+        $machine_id =  $Controller->CleanInput($_POST['machine_id1']); 
+        $MachineName= $Controller->CleanInput($_POST['MachineName']);
+        $OperatorName= $Controller->CleanInput($_POST['OperatorName']);
+        $NoOflabor= $Controller->CleanInput($_POST['NoOflabor']);
+        $ProducedQTY= $Controller->CleanInput($_POST['ProducedQTY']);
+        $Waste= $Controller->CleanInput($_POST['Waste']);
+        $Date= $Controller->CleanInput($_POST['Date']);
+        $StartTime= $Controller->CleanInput($_POST['StartTime']);
+        $EndTime= $Controller->CleanInput($_POST['EndTime']);
       
         // foreach ($_POST as $key => $value) {
         //     $_POST[$key] = $Controller->CleanInput($_POST[$key]); 
@@ -102,9 +101,10 @@
 
         if($InsertQuery)
         {
-            $Controller->QueryData('UPDATE used_machine SET status = "Complete" WHERE cycle_id = ? AND machine_id = ? '  , [$CycleId ,$machine_id ] ); 
-
+            $Controller->QueryData('UPDATE used_machine SET status = "Complete" , produced_qty = ? , wast_qty = ?  , number_labor = ?  , start_time = ? , end_time = ?    WHERE cycle_id = ? AND machine_id = ? '  ,
+             [ $ProducedQTY , $Waste , $NoOflabor, $StartTime , $EndTime,   $CycleId ,$machine_id ] ); 
             ?>
+
             <div class="alert alert-success alert-dismissible fade show m-3" role="alert">
                 <strong>Well done!</strong>Produced QTY is Saved.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -318,7 +318,7 @@
   <div class="modal-dialog modal-lg ">
     <div class="modal-content">
       <div class="modal-header">
-        <strong class="modal-title text-end" id="exampleModalLabel">لطف نموده ماشین مورد نظر خود را انتخاب نمایید</strong>
+        <strong class="modal-title text-end" id="exampleModalLabel"> لطف نموده تولید ماشین مورد نظر را درج نمایید</strong>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="" id = "machine_form" method="post">
