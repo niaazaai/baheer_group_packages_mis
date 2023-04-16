@@ -669,7 +669,7 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                 <th scope="col" class = "pt-3" > 
                     <?php 
                        
-                        
+                        // var_dump( $cycle['manual_status']); 
                         // show if the cycle has manual machines 
                         if($cycle['has_manual'] == 'Yes') {
                             // echo '<span style = "background-color:#fd7e14; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "has manual" >
@@ -680,6 +680,14 @@ if(isset($_REQUEST['CTNId']) && !empty($_REQUEST['CTNId'])) {
                             else if($cycle['manual_status'] == 'Incomplete')
                               echo '<span style = "background-color:#fd7e14; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "Manual Side is Not Complete" >
                               Manual Not Completed Yet  </span>';
+                            else if(trim($cycle['manual_status']) == 'Production Complete')
+                            //   echo '<a style = "text-decoration:none;" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> 
+                            //   <span style = "background-color:#3EC70B; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "Manual Completed  >
+                            //    </span> </a>';
+                              echo '<a style = "text-decoration:none;"data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"> <span style = "background-color:#3EC70B; padding:2px; margin:4px;  color:white;"  class = "fw-bold" title = "Manual Side is Complete" >
+                              Manual Completed & Approved </span>  </a>';
+
+
                         }
                        
                         echo ($cycle['cycle_status'] == 'Completed') ? '<span style = "background-color:#198754; padding:2px; color:white;">Completed</span>': '<span class ="  " style = "background-color:#d63384; padding:2px; color:white; ">Cycle is Incomplete</span>' ; 

@@ -177,6 +177,17 @@
         }
     }
 
+
+
+    $manual_completed_cycle  = $Controller->QueryData("SELECT COUNT(cycle_id) AS manual_completed_cycle 
+    FROM production_cycle
+    INNER JOIN carton ON production_cycle.CTNId = carton.CTNId
+    LEFT JOIN designinfo ON carton.CTNId = designinfo.CaId
+    WHERE (cycle_status = 'Incomplete' OR cycle_status = 'Task List') AND has_manual = 'Yes' AND manual_status = 'Complete' ",[])->fetch_assoc()['manual_completed_cycle']; 
+
+   
+
+
 ?>
 
 <style>
@@ -216,13 +227,21 @@
         <span class = "fs-bold fs-4 ps-2" > Task List   </span> 
     </div>    
     <div>
-        <a href="Manual/CustomerRegistrationForm_Manual.php" class="text-primary me-2  " style = "margin-top:4px;"  title="Click to Read the User Guide ">
+        <a href="ManualCycleForProduction.php"   class="btn btn-primary btn-sm  mt-1 position-relative">
+            Manual Cycle
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                <?=$manual_completed_cycle;?>
+                <span class="visually-hidden">unread jobs</span>
+            </span>
+        </a>
+
+        <!-- <a href="Manual/CustomerRegistrationForm_Manual.php" style = "text-decoration:none;" class="text-primary me-2  " style = "margin-top:4px;"  title="Click to Read the User Guide ">
             <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"></path>
                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"></path>
                 <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"></path>
             </svg>
-        </a>
+        </a> -->
     </div>
     </div>
 </div>

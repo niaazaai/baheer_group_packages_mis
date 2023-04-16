@@ -12,6 +12,38 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
     AND `PrDate` BETWEEN '2019-12-15' AND '2023-01-01'" , []); 
     $C5P_machine = $C5P->fetch_assoc(); 
 
+
+     /*
+    |--------------------------------------------------------------------------
+    | Production Comparative Reports 
+    |--------------------------------------------------------------------------
+    */
+
+    // $PCR_Production = $Controller->QueryData("SELECT  `ProDate`,  SUM(`ProQty`) AS Produced_Qty, `ProBrach` 
+    // FROM `cartonproduction` INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId 
+    // INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 
+    // where ProStatus='Accept' and ProBrach='Production' and ProDate > DATE_SUB(NOW(), INTERVAL 1 WEEK) group by  ProDate order by ProDate",[]);
+
+    // $PCR_Manual = $Controller->QueryData("SELECT  `ProDate`,  SUM(`ProQty`) AS Produced_Qty, `ProBrach`  
+    // FROM `cartonproduction` INNER JOIN ppcustomer ON ppcustomer.CustId=cartonproduction.CompId 
+    // INNER JOIN carton ON carton.CTNId=cartonproduction.CtnId1 
+    // where ProStatus='Accept' and ProBrach='Manual' and ProDate > DATE_SUB(NOW(), INTERVAL 1 WEEK) group by  ProDate order by ProDate ",[]);
+
+    // $PCR_Manual_Arr = [];
+    // $PCR_Production_Arr = [];  
+    // while($PCR_ =  $PCR_Production->fetch_assoc()) {
+    //     array_push($PCR_Production_Arr , [$PCR_['ProDate'] => $PCR_['Produced_Qty'] ]) ; 
+    // }
+
+    // while($PCR_ =  $PCR_Manual->fetch_assoc()) {
+    //     array_push($PCR_Manual_Arr , [$PCR_['ProDate'] => $PCR_['Produced_Qty'] ]) ; 
+    // }
+
+    // $PCR_Production_Arr = json_encode($PCR_Production_Arr); 
+    // $PCR_Manual_Arr = json_encode($PCR_Manual_Arr); 
+
+  
+
     /*
     |--------------------------------------------------------------------------
     | Query for header cards 
@@ -386,10 +418,11 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
         <?php } ?>
         <?php  if(in_array( $Gate['VIEW_PD_PRODUCTION_REPORT'] , $_SESSION['ACCESS_LIST']  )) { ?>
         <div class="col-sm-6 col-md-3 col-lg-2 col-xl-2 col-xs-12">
+        <a href="Reports.php" style = "text-decoration:none;">
             <div class="card shadow-lg" style="border:2px solid #04009A;" title = "Generate Reports"   >
                 <div class="card-body d-flex justify-content-between align-items-center" >
                     <div>
-                        <h4 class = "m-0 p-0">Production Reports</h4>
+                        <h4 class = "m-0 p-0" style = "color:#04009A" >Production Reports</h4>
                     </div>
                     <div class = "">
                         <svg width="50" height="50" viewBox="0 0 220 251" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -400,6 +433,7 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
                     </div>
                 </div>
             </div> <!-- END OF CARD -->
+        </a>
         </div> <!-- END OF COL-LG-2 --> 
         <?php } ?>
         <?php  if(in_array( $Gate['VIEW_PD_RENTED_CARTON'] , $_SESSION['ACCESS_LIST']  )) { ?>
@@ -453,7 +487,7 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
 </div><!-- END OF M-3  -->
 <script>
 
-    let c5p  = <?php if($C5P_machine['C5P_Production'] == NULL) echo 0 ; else $C5P_machine['C5P_Production'];   ?> ; 
+    let c5p  = <?php if($C5P_machine['C5P_Production'] == NULL) echo 0 ; else echo $C5P_machine['C5P_Production'];   ?> ; 
     var xValues = ["Carrogation 5P", "Carrogation 3P", "Flexo 1", " Flexo 2", "Glue Folder 1" , "Glue Folder 2" , '4 Khat'];
     var yValues = [c5p, 8000300, 2500000, 7000000, 6000000 , 3400000, 7700000];
     const labels = xValues;
@@ -501,32 +535,72 @@ require_once '../App/partials/Menu/MarketingMenu.inc'; ?>
         },
     };
 
+    
     var myChart = new Chart( document.getElementById('myChart'), config );
 
+    // var linechart_production_x_values = []; 
+    // var linechart_manual_x_values = []; 
+    var linechart_production_y_values = []; 
+    var linechart_manual_y_values = []; 
 
-    var xValues = [100,200,300,400,500,600,700,800,900,1000];
-    new Chart("myChart1", {
-    type: "line",
-    data: {
-        labels: xValues,
-        datasets: [{
-        data: [500,1140,1060,1060,1070,1110,1330,2210,7830,2478],
-        borderColor: "red",
-        fill: false
-        },{
-        data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-        borderColor: "green",
-        fill: false
-        },{
-        data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-        borderColor: "blue",
-        fill: false
-        }]
-    },
-    options: {
-        legend: {display: false}
+    function AJAXSearch(str) 
+    {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function()   {
+            if (this.readyState == 4 && this.status == 200)  
+            {
+                    var response = JSON.parse(this.responseText);
+                    var html = ''; 
+                        if(response != '-1')
+                        {
+                            for(var count = 0; count < response.length; count++) {
+
+                                    if(str == 'Production') {
+                                        // linechart_production_x_values.push(response[count].ProDate) 
+                                        linechart_production_y_values.push(Number(response[count].Produced_Qty))
+                                    }
+                                    else if(str == 'Manual') {
+                                        // linechart_manual_x_values.push(response[count].ProDate)
+                                        linechart_manual_y_values.push(Number(response[count].Produced_Qty))
+                                    }
+
+                            }
+                        }
+                        else console.log(response ) 
+            }
+        }
+        xmlhttp.open("GET", "ReportAjaxCall.php?query=" + str, true);
+        xmlhttp.send();
     }
-    });
+
+    AJAXSearch('Production'); 
+    AJAXSearch('Manual'); 
+
+    var xValues = ['شنبه','یک شنبه','دو شنبه','سه شنبه','چهار شنبه','پنج شنبه','جمعه'];
+
+    setTimeout(() => {
+        new Chart("myChart1", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                        data: linechart_production_y_values,
+                        borderColor: "blue",
+                        fill: false, 
+                        label: 'PKG Production'
+                    },{
+                        data: linechart_manual_y_values,
+                        borderColor: "green",
+                        fill: false , 
+                        label: 'PKG Manual'
+                    }
+                ]
+            },
+            options: {
+                legend: {display: true}
+            }
+        });
+    }, 100);
 
 </script>
 <?php  require_once '../App/partials/Footer.inc'; ?>

@@ -132,7 +132,7 @@
 <div class="card m-3 shadow">
     <div class="card-body pt-2">
 
-        <div class = "mb-2 text-end" style = "">
+        <div class = "mb-2 text-end" >
             <a href = "#" onclick = "PutSearchTermToInputBox('Under Process')"><span class = "badge bg-warning  ">Under Process Job</span></a>
             <a href = "#" onclick = "PutSearchTermToInputBox('New Job')"><span class = "badge bg-info  ">New Jobs</span></a>
             <a href = "#" onclick = "PutSearchTermToInputBox('Urgent')"><span class = "badge bg-danger  ">Urgent Jobs</span></a>
