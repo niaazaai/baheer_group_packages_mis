@@ -21,7 +21,7 @@
 
 <div class=" m-3">
     <div class="card " >
-      <div class="card-body d-flex justify-content-between align-item-center shadow">
+        <div class="card-body d-flex justify-content-between align-item-center shadow">
             <h3 class="m-0 p-0"> 
                 <a class="btn btn-outline-primary   me-1" href="index.php">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
@@ -42,17 +42,17 @@
         </div>
     </div>
 </div>
- 
-<div class="card">
-    <div class="card-body">
-        <ul class="list-group">
-            <li class="list-group-item"><a style = "text-decoration:none;" href="WeeklyComparative.php">Weekly Comparative</a></li>
-            <li class="list-group-item"><a style = "text-decoration:none;" href="ReportTimeTrackByDepartment.php"> Department Report</a></li>
-            <li class="list-group-item"><a style = "text-decoration:none;" href="ReportMachineCapacityProduction.php">Capacity Report </a> </li>
-            <li class="list-group-item"><a style = "text-decoration:none;" href="ReportTimeTrackReportByMachine.php">Time Track By Machine </a></li>
-        </ul>
+
+<div class="m-3 shadow">
+    <div class="card">
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item"><a style = "text-decoration:none;" href="WeeklyComparative.php">Weekly Comparative</a></li>
+                <li class="list-group-item"><a style = "text-decoration:none;" href="ReportTimeTrackByDepartment.php"> Department Report</a></li>
+                <li class="list-group-item"><a style = "text-decoration:none;" href="ReportMachineCapacityProduction.php">Capacity Report </a> </li>
+                <li class="list-group-item"><a style = "text-decoration:none;" href="ReportTimeTrackReportByMachine.php">Time Track By Machine </a></li>
+            </ul>
+        </div>
     </div>
 </div>
-
-
 <?php  require_once '../App/partials/Footer.inc'; ?>
