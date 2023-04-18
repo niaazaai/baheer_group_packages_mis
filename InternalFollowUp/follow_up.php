@@ -9,11 +9,11 @@
 
         if($Follow == 'Yes') {
             if($Controller->QueryData("UPDATE carton SET followed_up = 'Yes' WHERE CTNId = ? " , [ $CTNId  ])) {
-                header('Location:internal_follow_up_center.php?msg=Followed up successfully&class=success'); 
+                header('Location:index.php?msg=Followed up successfully&class=success'); 
             }
-            else   header('Location:internal_follow_up_center.php?msg=Followed up failed&class=danger');
+            else   header('Location:index.php?msg=Followed up failed&class=danger');
         } 
-        else header('Location:internal_follow_up_center.php'); 
+        else header('Location:index.php'); 
     }//end of first if 
     
 
@@ -24,11 +24,11 @@
 
         if($Extend == 'Yes') {
             if($Controller->QueryData("UPDATE carton SET job_arrival_time=current_timestamp WHERE CTNId=?",[  $CTNId]) ) {
-                header('Location:internal_follow_up_center.php?msg=Job Extended successfully&class=success'); 
+                header('Location:index.php?msg=Job Extended successfully&class=success'); 
             }
-            else   header('Location:internal_follow_up_center.php?msg=Something went wrong !&class=danger');
+            else   header('Location:index.php?msg=Something went wrong !&class=danger');
         } 
-        else header('Location:internal_follow_up_center.php'); 
+        else header('Location:index.php'); 
     }//end of first if 
-    else   header('Location:internal_follow_up_center.php');  
+    else   header('Location:index.php');  
 ?>

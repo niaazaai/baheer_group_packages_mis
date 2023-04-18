@@ -73,7 +73,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <a href="InternalFollowUp.php"   style='color:white;text-decoration:none; mt-5'>
+                        <a href="InternalFollowUp.php"  >
                             <div class="card-footer circle-Customer   text-center " id = "card-footer"  >
                                 <strong>
                                     Internal Follow Up  
@@ -88,6 +88,32 @@
             </div>  <!-- END OF COL   -->
 
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                    <a href="../InternalFollowUp/index.php">
+                    <div class="card pendingCus-bg  shadow">
+                        <div class="card-body pb-3 pt-3"  >
+                            <div class= "text-center text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
+                                    <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <a href="../InternalFollowUp/index.php"    >
+                            <div class="card-footer circle-Customer   text-center " id = "card-footer"  >
+                                <strong>
+                                    Internal Follow Up  
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                                    </svg>
+                                </strong>
+                            </div>
+                        </a> 
+                    </div> <!-- END OF CARD  -->
+                    </a> 
+            </div>  <!-- END OF COL   -->
+            
+
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 mt-3">
                 <a href="IndividualFollowUpPage.php?Type=General">
                     <div class="card task-bg shadow-lg">
                         <div class="card-body pb-3 pt-3"  >

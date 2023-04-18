@@ -3,27 +3,28 @@ require_once '../App/partials/Header.inc';
 require_once '../App/partials/Menu/MarketingMenu.inc';  
 require_once 'InternalFollowUpController.php';    
 require_once '../Assets/Zebra/Zebra_Pagination.php';
-$pagination = new Zebra_Pagination();
-$RECORD_PER_PAGE = 15;
-$Query = "SELECT  CTNId, JobNo ,CTNOrderDate , ProductName , CTNQTY ,   CustName  ,   CTNStatus,  ProQty , ProDate ,ProOutQty , ppcustomer.CustId ,  CustMobile , follow_result
-            FROM carton
-            INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
-            INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
-            LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY CTNId DESC
-             
-            ";
- $Query .= ' LIMIT ' . (($pagination->get_page() - 1) * $RECORD_PER_PAGE) . ',' . $RECORD_PER_PAGE .' ';
-$DataRows  = $Controller->QueryData( $Query, [] );
 
-$PaginateQuery= "SELECT COUNT(CTNId) AS RowCount , JobNo
-            FROM carton
-            INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
-            INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
-            LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY CTNId DESC";
-$RowCount =  $Controller->QueryData( $PaginateQuery ,[]  );
-$row = $RowCount->fetch_assoc(); 
-$pagination->records($RowCount->num_rows);
-$pagination->records_per_page($RECORD_PER_PAGE);
+    $pagination = new Zebra_Pagination();
+    $RECORD_PER_PAGE = 15;
+    $Query = "SELECT  CTNId, JobNo ,CTNOrderDate , ProductName , CTNQTY ,   CustName  ,   CTNStatus,  ProQty , ProDate ,ProOutQty , ppcustomer.CustId ,  CustMobile , follow_result
+    FROM carton
+    INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
+    INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
+    LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY CTNId DESC
+    ";
+
+    $Query .= ' LIMIT ' . (($pagination->get_page() - 1) * $RECORD_PER_PAGE) . ',' . $RECORD_PER_PAGE .' ';
+    $DataRows  = $Controller->QueryData( $Query, [] );
+
+    $PaginateQuery= "SELECT COUNT(CTNId) AS RowCount , JobNo
+    FROM carton
+    INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
+    INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
+    LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY CTNId DESC";
+    $RowCount =  $Controller->QueryData( $PaginateQuery ,[]  );
+    $row = $RowCount->fetch_assoc(); 
+    $pagination->records($RowCount->num_rows);
+    $pagination->records_per_page($RECORD_PER_PAGE);
 
 ?>
 

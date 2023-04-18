@@ -28,23 +28,24 @@
 
 
 <?php if(isset($_GET['msg']) && !empty($_GET['msg']))  {
-          echo' <div class="alert alert-'. $_GET['class'] .' alert-dismissible fade show m-3" role="alert">
-                  <strong>Attention: </strong>'. $_GET['msg'] .' 
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>'; 
+        echo' <div class="alert alert-'. $_GET['class'] .' alert-dismissible fade show m-3" role="alert">
+                <strong>Attention: </strong>'. $_GET['msg'] .' 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>'; 
       }  
 ?>
 
   <div class="m-3">
-    <div class="card " style = "background-color:# ;" >
+    <div class="card" >
       <div class="card-body d-flex justify-content-between shadow">
           <h3 class="m-0 p-0">
-              <a class="btn btn-outline-primary btn-sm P-1 " href="index.php">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-                      <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"></path>
-                  </svg>
-              </a>
-              Internal Follow Up Center</h3>
+            <a class="btn btn-outline-primary btn-sm P-1 " href="index.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"></path>
+                </svg>
+            </a>
+            Internal Follow Department Time Setting
+          </h3>
       </div>
     </div>
   </div>

@@ -52,32 +52,14 @@
             }
             // var_dump( $_SESSION['ACCESS_LIST']); echo  $Employeet['role_id'];   die(); // <- remove this line in deployment
           
-
-            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            } else {
-                $ip = $_SERVER['REMOTE_ADDR'];
+            // this block is used to redirect specific users to specific pages 
+            $redirect_to = "../index.php?msg=$UserName"; 
+            $user_login_router = $Controller->QueryData("SELECT * FROM user_login_router WHERE EId = ?  ", [$Employeet['EId']]);
+            if($user_login_router->num_rows > 0 ) {
+                $route_to = $user_login_router->fetch_assoc()['route_to'];
+                $redirect_to = $route_to; 
             }
-            
-            // echo $_SESSION['EId']; echo "<br>"; 
-            // echo $EDepartment; echo "<br>"; 
-            // echo $ip ; echo "<br>"; 
-
-        
-
-                
-            $Notification = $Controller->QueryData("INSERT INTO notification1 ( NotDepartment, NotTitle, NotComment, NotUser, NotStatus, PCIP, NotUnit) 
-            VALUES ( ? , 'Login', 'Login to system', ? , 'NotRead', ? , 'Sign In')", [ $EDepartment , $_SESSION['EId'] , $ip]);
-            
-
-            // var_dump($Notification); 
-            // die();
-
-            if ($Notification) header("Location: ../index.php?msg=$UserName");
-            else header("Location:Login.php?msg=Notification Issue");
-
+            header("Location: $redirect_to ");
         } # END OF PASSWORD COMPARE BLOCK
         else header("Location:Login.php?msg= Wrong username or password!");
     } else header("Location:Login.php?msg=Wrong User Name!");
