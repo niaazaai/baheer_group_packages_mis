@@ -6,7 +6,7 @@ require_once '../Assets/Zebra/Zebra_Pagination.php';
 
     $pagination = new Zebra_Pagination();
     $RECORD_PER_PAGE = 15;
-    $Query = "SELECT  CTNId, JobNo ,CTNOrderDate , ProductName , CTNQTY ,   CustName  ,   CTNStatus,  ProQty , ProDate ,ProOutQty , ppcustomer.CustId ,  CustMobile , follow_result
+    $Query = "SELECT  carton.CTNId, JobNo ,CTNOrderDate , ProductName , CTNQTY ,   CustName  ,   CTNStatus,  ProQty , ProDate ,ProOutQty , ppcustomer.CustId ,  CustMobile , follow_result
     FROM carton
     INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
     INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
@@ -16,11 +16,11 @@ require_once '../Assets/Zebra/Zebra_Pagination.php';
     $Query .= ' LIMIT ' . (($pagination->get_page() - 1) * $RECORD_PER_PAGE) . ',' . $RECORD_PER_PAGE .' ';
     $DataRows  = $Controller->QueryData( $Query, [] );
 
-    $PaginateQuery= "SELECT COUNT(CTNId) AS RowCount , JobNo
+    $PaginateQuery= "SELECT COUNT(carton.CTNId) AS RowCount , JobNo
     FROM carton
     INNER JOIN ppcustomer ON carton.CustId1 = ppcustomer.CustId 
     INNER JOIN cartonproduction ON carton.CTNId  = cartonproduction.CtnId1
-    LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY CTNId DESC";
+    LEFT JOIN follow_up ON carton.CustId1  = follow_up.customer_id  GROUP BY JobNo ORDER BY carton.CTNId DESC";
     $RowCount =  $Controller->QueryData( $PaginateQuery ,[]  );
     $row = $RowCount->fetch_assoc(); 
     $pagination->records($RowCount->num_rows);
@@ -32,9 +32,9 @@ require_once '../Assets/Zebra/Zebra_Pagination.php';
 <div class="card  mb-3">
     <div class="card-body d-flex justify-content-between">
         <div class="d-flex justify-content-start">
-            <h3 style = " "> 
+            <h3 > 
                 <a class= "btn btn-outline-primary  " href="InternalFollowUp.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"  viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
                 </svg> 
                 </a>  

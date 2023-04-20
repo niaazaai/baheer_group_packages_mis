@@ -45,7 +45,7 @@
                                 </svg>
                             </div>
                         </div>
-                            <a href="IndividualFollowUpPage.php?Type=Individual"   style='color:white;text-decoration:none; mt-5'>
+                            <a href="IndividualFollowUpPage.php?Type=Individual"   style='color:white;text-decoration:none;  '>
                                 <div class="card-footer circle-Product  text-center " id = "card-footer"  >
                                     <strong>
                                         Individual Follow Up  
@@ -139,7 +139,7 @@
                                 </svg>
                                 </div>
                         </div>
-                        <a href='IndividualFollowUpPage.php?Type=General'   style='color:white;text-decoration:none; mt-5'>
+                        <a href='IndividualFollowUpPage.php?Type=General'   style='color:white;text-decoration:none;  '>
                             <div class="card-footer circle-task  text-center " id = "card-footer"  >
                                 <strong>
                                     General Follow Up  
@@ -152,9 +152,6 @@
                     </div> <!-- END OF CARD  -->
                     </a>
             </div>  <!-- END OF COL   -->
-
-
-
         </div>   
 
     </div>
